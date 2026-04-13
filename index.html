@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Nagesh CH — Data Science & AI/ML Architect</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#1a1f2e;--bg2:#1f2538;--bg3:#252c42;--bg4:#2c344f;
+  --border:rgba(129,140,248,0.1);--border2:rgba(129,140,248,0.2);--border3:rgba(129,140,248,0.35);
+  --text:#e2e4f0;--muted:#6b7199;--faint:#404668;
+  --accent:#818cf8;--accent2:#a5b4fc;--accent3:#6366f1;--glow:rgba(129,140,248,0.12);
+  --serif:'Syne',sans-serif;--sans:'Inter',sans-serif;--mono:'JetBrains Mono',monospace;
+}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:15px;line-height:1.6;overflow-x:hidden;}
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(ellipse 60% 50% at 80% 10%,rgba(99,102,241,0.07) 0%,transparent 70%),
+             radial-gradient(ellipse 40% 40% at 10% 80%,rgba(129,140,248,0.04) 0%,transparent 70%);
+}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:18px 56px;display:flex;justify-content:space-between;align-items:center;transition:all 0.3s;}
+nav.scrolled{background:rgba(26,31,46,0.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
+.nav-logo{font-family:var(--mono);font-size:13px;color:var(--accent);letter-spacing:0.08em;text-decoration:none;display:flex;align-items:center;gap:8px;}
+.nav-logo::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--accent);display:block;}
+.nav-links{display:flex;gap:36px;list-style:none;}
+.nav-links a{font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color 0.2s;}
+.nav-links a:hover{color:var(--accent2);}
+
+/* HERO */
+#hero{min-height:100vh;display:grid;grid-template-columns:1.1fr 0.9fr;align-items:center;padding:120px 56px 80px;position:relative;gap:60px;}
+.hero-grid-bg{position:absolute;inset:0;z-index:0;
+  background-image:linear-gradient(rgba(129,140,248,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(129,140,248,0.04) 1px,transparent 1px);
+  background-size:48px 48px;
+  mask-image:radial-gradient(ellipse 70% 90% at 60% 40%,black 20%,transparent 80%);}
+.hero-left{position:relative;z-index:2;}
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11px;
+  color:var(--accent);letter-spacing:0.16em;text-transform:uppercase;margin-bottom:32px;
+  background:rgba(129,140,248,0.06);border:1px solid var(--border2);padding:6px 14px;border-radius:2px;
+}
+.hero-eyebrow span{width:4px;height:4px;border-radius:50%;background:var(--accent);display:block;}
+h1{font-family:var(--serif);font-size:clamp(56px,6.5vw,88px);font-weight:800;line-height:0.95;color:var(--text);margin-bottom:6px;letter-spacing:-0.02em;}
+h1 .outline{color:transparent;-webkit-text-stroke:1px var(--accent);display:block;}
+.hero-role{font-family:var(--serif);font-size:clamp(15px,1.8vw,21px);font-weight:400;color:var(--muted);margin-bottom:28px;}
+.hero-desc{font-size:15px;color:rgba(226,228,240,0.52);max-width:460px;line-height:1.8;margin-bottom:40px;font-weight:300;}
+.hero-cta{display:flex;gap:14px;flex-wrap:wrap;}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 22px;font-size:12px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;text-decoration:none;border-radius:3px;transition:all 0.2s;cursor:pointer;border:none;}
+.btn-primary{background:var(--accent);color:#1a1f2e;}
+.btn-primary:hover{background:var(--accent2);transform:translateY(-1px);}
+.btn-ghost{background:transparent;color:var(--text);border:1px solid var(--border3);}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent);background:var(--glow);}
+.hero-right{position:relative;z-index:2;}
+.metrics-card{background:var(--bg2);border:1px solid var(--border2);border-radius:6px;padding:36px;position:relative;overflow:hidden;}
+.metrics-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--accent),transparent);}
+.metrics-row{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-bottom:28px;}
+.metrics-row:last-child{margin-bottom:0;}
+.metric-val{font-family:var(--serif);font-size:40px;font-weight:700;color:var(--text);line-height:1;margin-bottom:5px;letter-spacing:-0.02em;}
+.metric-val em{color:var(--accent);font-style:normal;}
+.metric-label{font-family:var(--mono);font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);}
+.metric-hr{height:1px;background:var(--border);margin:0 0 28px;}
+
+/* SECTIONS */
+section{padding:100px 56px;position:relative;z-index:1;}
+.section-label{display:flex;align-items:center;gap:14px;margin-bottom:64px;}
+.section-num{font-family:var(--mono);font-size:11px;color:var(--accent);letter-spacing:0.15em;background:rgba(129,140,248,0.07);border:1px solid var(--border2);padding:4px 10px;border-radius:2px;}
+h2{font-family:var(--serif);font-size:clamp(30px,3.5vw,46px);font-weight:700;color:var(--text);line-height:1.1;letter-spacing:-0.02em;}
+h2 em{font-style:italic;color:var(--accent);font-weight:400;}
+
+/* ABOUT */
+#about{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+.about-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:80px;align-items:start;}
+.about-text p{color:rgba(226,228,240,0.62);line-height:1.85;margin-bottom:20px;font-size:15px;font-weight:300;}
+.about-text p strong{color:var(--text);font-weight:500;}
+.about-text a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent;transition:border-color 0.2s;}
+.about-text a:hover{border-bottom-color:var(--accent);}
+.sidebar-block{margin-bottom:28px;padding-bottom:28px;border-bottom:1px solid var(--border);}
+.sidebar-block:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+.sidebar-key{font-family:var(--mono);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;}
+.sidebar-val{font-size:13px;color:rgba(226,228,240,0.68);line-height:1.65;}
+.sidebar-val a{color:var(--accent2);text-decoration:none;}
+.tag-wrap{display:flex;flex-wrap:wrap;gap:7px;}
+.tag{font-family:var(--mono);font-size:10px;padding:4px 10px;border:1px solid var(--border2);border-radius:2px;color:var(--muted);}
+.tag.hi{border-color:var(--accent3);color:var(--accent2);background:rgba(99,102,241,0.08);}
+
+/* EXPERIENCE */
+.exp-item{display:grid;grid-template-columns:190px 1fr;gap:52px;padding:52px 0;border-bottom:1px solid var(--border);}
+.exp-item:first-of-type{padding-top:0;}
+.exp-item:last-of-type{border-bottom:none;}
+.exp-co{font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);margin-bottom:6px;}
+.exp-period{font-size:12px;color:var(--muted);margin-bottom:10px;}
+.exp-badge{display:inline-block;font-family:var(--mono);font-size:10px;padding:3px 8px;border:1px solid var(--border2);border-radius:2px;color:var(--faint);}
+.exp-title{font-family:var(--serif);font-size:26px;font-weight:600;color:var(--text);margin-bottom:10px;line-height:1.2;letter-spacing:-0.01em;}
+.exp-summary{font-size:14px;color:rgba(226,228,240,0.52);line-height:1.75;margin-bottom:18px;font-weight:300;}
+.exp-list{list-style:none;margin-bottom:18px;}
+.exp-list li{font-size:13px;color:rgba(226,228,240,0.7);padding:5px 0 5px 18px;position:relative;line-height:1.55;}
+.exp-list li::before{content:'›';position:absolute;left:0;color:var(--accent);font-size:14px;}
+.exp-list li strong{color:var(--text);font-weight:500;}
+.exp-pills{display:flex;flex-wrap:wrap;gap:6px;}
+.exp-pill{font-family:var(--mono);font-size:10px;padding:3px 8px;border-radius:2px;background:var(--bg3);color:var(--muted);}
+
+/* SKILLS */
+#skills{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+.skills-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);}
+.skill-block{background:var(--bg2);padding:30px;}
+.skill-block-title{font-family:var(--mono);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:14px;}
+.skill-pills{display:flex;flex-wrap:wrap;gap:6px;}
+.skill-p{font-size:12px;padding:5px 11px;border:1px solid var(--border);border-radius:20px;color:rgba(226,228,240,0.58);transition:all 0.2s;cursor:default;}
+.skill-p:hover{border-color:var(--accent);color:var(--accent);background:var(--glow);}
+
+/* PROJECTS */
+.projects-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);}
+.proj-card{background:var(--bg);padding:40px;position:relative;overflow:hidden;transition:background 0.3s;}
+.proj-card:hover{background:var(--bg2);}
+.proj-card::after{content:'';position:absolute;bottom:0;left:0;width:0;height:1px;background:var(--accent);transition:width 0.4s ease;}
+.proj-card:hover::after{width:100%;}
+.proj-card.feat{grid-column:span 2;background:var(--bg2);display:grid;grid-template-columns:1fr 1fr;gap:52px;}
+.proj-card.feat::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,var(--accent3),var(--accent),transparent);}
+.proj-num{font-family:var(--mono);font-size:10px;color:var(--muted);margin-bottom:18px;letter-spacing:0.1em;}
+.proj-name{font-family:var(--serif);font-size:26px;font-weight:600;color:var(--text);margin-bottom:6px;line-height:1.2;letter-spacing:-0.01em;}
+.proj-name a{color:inherit;text-decoration:none;transition:color 0.2s;}
+.proj-name a:hover{color:var(--accent2);}
+.proj-client{font-family:var(--mono);font-size:11px;color:var(--accent);letter-spacing:0.08em;margin-bottom:14px;}
+.proj-desc{font-size:13px;color:rgba(226,228,240,0.52);line-height:1.7;margin-bottom:18px;font-weight:300;}
+.proj-impacts{list-style:none;margin-bottom:22px;}
+.proj-impacts li{font-family:var(--mono);font-size:12px;color:rgba(226,228,240,0.62);padding:5px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;}
+.proj-impacts li:last-child{border-bottom:none;}
+.proj-impacts li span{color:var(--accent2);font-weight:500;}
+.proj-tech{display:flex;flex-wrap:wrap;gap:6px;}
+.proj-tech span{font-family:var(--mono);font-size:10px;padding:3px 8px;background:var(--bg3);border-radius:2px;color:var(--muted);}
+
+/* CHALLENGES */
+#challenges{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+.ch-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+.ch-card{padding:28px;border:1px solid var(--border);border-radius:4px;background:var(--bg);transition:border-color 0.2s;position:relative;overflow:hidden;}
+.ch-card:hover{border-color:var(--border3);}
+.ch-card::before{content:'';position:absolute;top:0;left:0;width:2px;height:100%;background:linear-gradient(180deg,var(--accent3),var(--accent));}
+.ch-q{font-family:var(--serif);font-size:17px;font-weight:600;color:var(--text);margin-bottom:10px;line-height:1.3;letter-spacing:-0.01em;}
+.ch-a{font-size:13px;color:rgba(226,228,240,0.52);line-height:1.7;font-weight:300;}
+
+/* CONTACT */
+#contact{min-height:65vh;display:flex;flex-direction:column;justify-content:center;text-align:center;overflow:hidden;}
+.contact-bg-word{position:absolute;font-family:var(--serif);font-size:clamp(80px,16vw,200px);font-weight:800;color:rgba(129,140,248,0.03);white-space:nowrap;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;user-select:none;letter-spacing:-0.04em;}
+.contact-inner{position:relative;z-index:2;}
+.contact-pre{font-family:var(--mono);font-size:11px;color:var(--accent);letter-spacing:0.18em;text-transform:uppercase;margin-bottom:20px;}
+#contact h2{margin-bottom:14px;}
+.contact-note{color:var(--muted);font-size:14px;margin-bottom:44px;font-weight:300;}
+.contact-row{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-bottom:44px;}
+.c-link{display:inline-flex;align-items:center;gap:8px;padding:11px 18px;border:1px solid var(--border2);border-radius:3px;font-family:var(--mono);font-size:11px;color:var(--muted);text-decoration:none;transition:all 0.2s;letter-spacing:0.05em;}
+.c-link:hover{border-color:var(--accent);color:var(--accent);background:var(--glow);}
+.c-link svg{width:14px;height:14px;flex-shrink:0;}
+
+/* FOOTER */
+footer{padding:22px 56px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;position:relative;z-index:1;}
+.footer-l,.footer-r{font-family:var(--mono);font-size:11px;color:var(--faint);}
+.footer-r a{color:var(--accent);text-decoration:none;}
+
+/* ANIM */
+.fade-in{opacity:0;transform:translateY(20px);animation:fi 0.7s ease forwards;}
+@keyframes fi{to{opacity:1;transform:translateY(0);}}
+.d1{animation-delay:0.1s;}.d2{animation-delay:0.25s;}.d3{animation-delay:0.4s;}
+.d4{animation-delay:0.55s;}.d5{animation-delay:0.7s;}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  nav{padding:16px 24px;}.nav-links{display:none;}
+  #hero{grid-template-columns:1fr;padding:100px 24px 60px;gap:48px;}
+  section{padding:64px 24px;}
+  .about-grid{grid-template-columns:1fr;gap:44px;}
+  .exp-item{grid-template-columns:1fr;gap:12px;}
+  .skills-grid,.projects-grid{grid-template-columns:1fr;}
+  .proj-card.feat{grid-column:span 1;grid-template-columns:1fr;}
+  .ch-grid{grid-template-columns:1fr;}
+  footer{flex-direction:column;gap:8px;text-align:center;}
+}
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <a href="#hero" class="nav-logo">NCH · AI/ML Architect</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<section id="hero">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-left">
+    <div class="hero-eyebrow fade-in"><span></span>Data Science &amp; AI/ML Architect / Engineer · 11+ YOE</div>
+    <h1 class="fade-in d1">Nagesh<span class="outline">CH</span></h1>
+    <p class="hero-role fade-in d2">Agentic AI · LLM Engineering · Data Engineering · Cloud · Enterprise AI Strategy</p>
+    <p class="hero-desc fade-in d3">11+ years building production AI systems — multi-agent orchestration, RAG pipelines, LLM evaluation, and enterprise-scale data engineering. Based in Hyderabad.</p>
+    <div class="hero-cta fade-in d4">
+      <a href="#projects" class="btn btn-primary">View Work</a>
+      <a href="#contact" class="btn btn-ghost">Get in Touch</a>
+    </div>
+  </div>
+  <div class="hero-right fade-in d5">
+    <div class="metrics-card">
+      <div class="metrics-row">
+        <div><div class="metric-val">$<em>9M</em>+</div><div class="metric-label">Business Impact</div></div>
+        <div><div class="metric-val"><em>11</em>+</div><div class="metric-label">Years Experience</div></div>
+      </div>
+      <div class="metric-hr"></div>
+      <div class="metrics-row">
+        <div><div class="metric-val">$<em>1.5</em>M</div><div class="metric-label">Largest AI Deal</div></div>
+        <div><div class="metric-val"><em>93</em>%</div><div class="metric-label">BERT Accuracy</div></div>
+      </div>
+      <div class="metric-hr"></div>
+      <div class="metrics-row">
+        <div><div class="metric-val"><em>90</em>%</div><div class="metric-label">Time Reduction</div></div>
+        <div><div class="metric-val"><em>60</em>%</div><div class="metric-label">MTTR Reduction</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="section-label"><span class="section-num">01</span><h2>About <em>Me</em></h2></div>
+  <div class="about-grid">
+    <div class="about-text">
+      <p>I'm a <strong>Data Science &amp; AI/ML Architect / Engineer</strong> with 11+ years shipping production-grade GenAI, Agentic AI &amp; ML systems across CPG, Telecom, and Chemical/Materials industries.</p>
+      <p>Currently leading <strong>Enterprise AI Strategy &amp; Architecture</strong> at Celanese, where I engineered <a href="https://askchemille.com" target="_blank" rel="noopener">askchemille.com</a> — a client-facing multi-agent AI platform for polymer grade selection that directly contributed <strong>$1.5M in closed sales</strong>. Full-stack ownership: NLP-NER models, RAG pipelines, orchestrator/guardrail/validator agents, and CI/CD on Azure.</p>
+      <p>My edge sits at the intersection of <strong>LLM engineering, agentic orchestration, and production MLOps</strong> — zero hallucinations in production, $9M+ in measurable business impact, and systems that actually scale.</p>
+      <p>I hold an <strong>ADaSci Certification in Agentic AI System Architecture</strong> and an eCornell Data Analytics 360 credential. Open to global opportunities.</p>
+    </div>
+    <div>
+      <div class="sidebar-block">
+        <div class="sidebar-key">Location</div>
+        <div class="sidebar-val">Hyderabad, Telangana<br/>Open to Global Opportunities</div>
+      </div>
+      <div class="sidebar-block">
+        <div class="sidebar-key">Reach me</div>
+        <div class="sidebar-val">
+          <a href="mailto:ncheripally@outlook.com">ncheripally@outlook.com</a><br/>
+          <a href="https://linkedin.com/in/ncheripally9/" target="_blank">linkedin.com/in/ncheripally9</a><br/>
+          <a href="https://github.com/nagesh-ch" target="_blank">github.com/nagesh-ch</a>
+        </div>
+      </div>
+      <div class="sidebar-block">
+        <div class="sidebar-key">Certifications</div>
+        <div class="tag-wrap">
+          <span class="tag hi">ADaSci Agentic AI Architect</span>
+          <span class="tag">eCornell Data Analytics 360</span>
+          <span class="tag">Google PM Certificate</span>
+        </div>
+      </div>
+      <div class="sidebar-block">
+        <div class="sidebar-key">Awards</div>
+        <div class="tag-wrap">
+          <span class="tag">Pragathi Award — Wipro</span>
+          <span class="tag">I Made a Difference — Sitel</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="experience">
+  <div class="section-label"><span class="section-num">02</span><h2>Work <em>History</em></h2></div>
+
+  <div class="exp-item">
+    <div>
+      <div class="exp-co">Celanese</div>
+      <div class="exp-period">Jan 2025 – Present</div>
+      <div class="exp-badge">Chemical / Materials</div>
+    </div>
+    <div>
+      <div class="exp-title">Sr. AI Engineer / Architect</div>
+      <div class="exp-summary">Engineered askchemille.com for Celanese — a production multi-agent AI platform for polymer grade selection powering the global sales team. Owned end-to-end architecture and delivery.</div>
+      <ul class="exp-list">
+        <li>Contributed to <strong>$1.5M closed sales</strong> via AI-driven grade recommendation</li>
+        <li>Improved recommendation accuracy by <strong>26%</strong> — GPT-4.1 + LLaMA-3-8B hybrid</li>
+        <li>Reduced material comparison time by <strong>90%</strong> using o1-mini and o3-mini</li>
+        <li>Cut customer query resolution time by <strong>40%</strong>; satisfaction up 15%</li>
+        <li>Orchestrator, guardrail, validator &amp; assumptions agents in production</li>
+      </ul>
+      <div class="exp-pills">
+        <span class="exp-pill">LangGraph</span><span class="exp-pill">Azure OpenAI</span><span class="exp-pill">RAG</span>
+        <span class="exp-pill">GPT-4.1</span><span class="exp-pill">LLaMA-3</span><span class="exp-pill">NLP-NER</span>
+        <span class="exp-pill">Azure DevOps</span><span class="exp-pill">CI/CD</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="exp-item">
+    <div>
+      <div class="exp-co">Acies Global</div>
+      <div class="exp-period">Apr 2022 – Aug 2024</div>
+      <div class="exp-badge">Enterprise Consulting</div>
+    </div>
+    <div>
+      <div class="exp-title">Senior Data Scientist</div>
+      <div class="exp-summary">Led GenAI and data science engagements for Google, Waymo, Bose, Under Armour, Kraft Heinz, and Ecolab. Managed a cross-functional team of 4 data scientists.</div>
+      <ul class="exp-list">
+        <li>Identified <strong>$3M in Google Ad revenue</strong> opportunities through spend analysis</li>
+        <li>Streamlit app cut analysis time from <strong>2 hrs → 10 min</strong></li>
+        <li>RAG pipeline reduced query resolution time by <strong>40%</strong></li>
+        <li><strong>Zero hallucination/jailbreak</strong> in production — BERTScore + ROUGE guardrails</li>
+      </ul>
+      <div class="exp-pills">
+        <span class="exp-pill">GPT-4o</span><span class="exp-pill">RAG</span><span class="exp-pill">BERTScore</span>
+        <span class="exp-pill">ROUGE</span><span class="exp-pill">Streamlit</span><span class="exp-pill">BigQuery</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="exp-item">
+    <div>
+      <div class="exp-co">Sitel Group</div>
+      <div class="exp-period">Mar 2021 – Apr 2022</div>
+      <div class="exp-badge">Telecom / UCaaS</div>
+    </div>
+    <div>
+      <div class="exp-title">Data Scientist</div>
+      <div class="exp-summary">Multilingual helpdesk automation, churn prediction, and intent classification at scale for a Telecom UCaaS client.</div>
+      <ul class="exp-list">
+        <li><strong>60% decrease in MTTR</strong> via Deep Translator NLP model (5+ languages)</li>
+        <li>Generated <strong>$136K/year</strong> — app licensing + deprecated third-party tools</li>
+        <li><strong>93% BERT accuracy</strong> on 1.5M transcript multi-class classification</li>
+        <li>29% improvement in retention; 3.5% reduction in churn revenue loss</li>
+      </ul>
+      <div class="exp-pills">
+        <span class="exp-pill">BERT</span><span class="exp-pill">Deep Translator</span><span class="exp-pill">NLP</span><span class="exp-pill">Scikit-learn</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="exp-item">
+    <div>
+      <div class="exp-co">Wipro</div>
+      <div class="exp-period">May 2017 – Feb 2021</div>
+      <div class="exp-badge">Enterprise Analytics</div>
+    </div>
+    <div>
+      <div class="exp-title">Group Lead Analytics</div>
+      <div class="exp-summary">Enterprise analytics — CLV modelling, product recommendation engines, renewal prediction, and BI dashboards for global clients.</div>
+      <ul class="exp-list">
+        <li>RFM model on <strong>2M customers</strong> — Gaussian Mixture + Gradient Boosting</li>
+        <li><strong>85–90% accuracy</strong> on renewal prediction models</li>
+        <li>Saved <strong>$224K/year</strong> — won PRAGATHI AWARD</li>
+      </ul>
+      <div class="exp-pills">
+        <span class="exp-pill">Scikit-learn</span><span class="exp-pill">PySpark</span><span class="exp-pill">Gradient Boosting</span>
+        <span class="exp-pill">Power BI</span><span class="exp-pill">Tableau</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="skills">
+  <div class="section-label"><span class="section-num">03</span><h2>Technical <em>Skills</em></h2></div>
+  <div class="skills-grid">
+    <div class="skill-block">
+      <div class="skill-block-title">LLMs &amp; GenAI</div>
+      <div class="skill-pills">
+        <span class="skill-p">GPT-4.1</span><span class="skill-p">Claude</span><span class="skill-p">LLaMA</span>
+        <span class="skill-p">LangChain</span><span class="skill-p">LlamaIndex</span><span class="skill-p">Hugging Face</span>
+        <span class="skill-p">RAG Pipelines</span><span class="skill-p">Embeddings</span><span class="skill-p">LoRA / QLoRA</span>
+        <span class="skill-p">PEFT</span><span class="skill-p">RLHF</span>
+      </div>
+    </div>
+    <div class="skill-block">
+      <div class="skill-block-title">Agentic AI</div>
+      <div class="skill-pills">
+        <span class="skill-p">LangGraph</span><span class="skill-p">AutoGen</span><span class="skill-p">CrewAI</span>
+        <span class="skill-p">OpenAI Agent SDK</span><span class="skill-p">n8n</span><span class="skill-p">Multi-agent Systems</span>
+        <span class="skill-p">Tool Use</span><span class="skill-p">Memory Management</span><span class="skill-p">Redis</span>
+      </div>
+    </div>
+    <div class="skill-block">
+      <div class="skill-block-title">ML Frameworks</div>
+      <div class="skill-pills">
+        <span class="skill-p">PyTorch</span><span class="skill-p">TensorFlow</span><span class="skill-p">Scikit-learn</span>
+        <span class="skill-p">Transformers</span><span class="skill-p">LangFuse</span><span class="skill-p">FastAPI</span>
+        <span class="skill-p">Flask</span><span class="skill-p">MLFlow</span>
+      </div>
+    </div>
+    <div class="skill-block">
+      <div class="skill-block-title">Data &amp; Vector DBs</div>
+      <div class="skill-pills">
+        <span class="skill-p">FAISS</span><span class="skill-p">Pinecone</span><span class="skill-p">Weaviate</span>
+        <span class="skill-p">Qdrant</span><span class="skill-p">BigQuery</span><span class="skill-p">Snowflake</span>
+        <span class="skill-p">Redshift</span><span class="skill-p">Spark</span><span class="skill-p">Kafka</span>
+      </div>
+    </div>
+    <div class="skill-block">
+      <div class="skill-block-title">Cloud &amp; MLOps</div>
+      <div class="skill-pills">
+        <span class="skill-p">Azure Cloud</span><span class="skill-p">Azure DevOps</span><span class="skill-p">Docker</span>
+        <span class="skill-p">CI/CD Pipelines</span><span class="skill-p">Git</span><span class="skill-p">Postman</span><span class="skill-p">JIRA</span>
+      </div>
+    </div>
+    <div class="skill-block">
+      <div class="skill-block-title">Languages &amp; Viz</div>
+      <div class="skill-pills">
+        <span class="skill-p">Python</span><span class="skill-p">SQL</span><span class="skill-p">JavaScript</span>
+        <span class="skill-p">Bash</span><span class="skill-p">REST / gRPC</span>
+        <span class="skill-p">Power BI</span><span class="skill-p">Tableau</span><span class="skill-p">Plotly</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="projects">
+  <div class="section-label"><span class="section-num">04</span><h2>Featured <em>Projects</em></h2></div>
+  <div class="projects-grid">
+    <div class="proj-card feat">
+      <div>
+        <div class="proj-num">01 · FEATURED</div>
+        <div class="proj-name">askchemille.com <span style="font-size:13px;font-family:var(--mono);color:var(--muted);font-weight:400;">· Celanese</span></div>
+        <div class="proj-client">Celanese Corporation · Jan 2025–Present</div>
+        <div class="proj-desc">Production multi-agent AI platform for polymer grade selection. Built as sole architect — NLP-NER, RAG, orchestrator/guardrail/validator agents deployed on Azure.</div>
+        <div class="proj-tech">
+          <span>GPT-4.1</span><span>LLaMA-3-8B</span><span>LangGraph</span>
+          <span>Azure OpenAI</span><span>RAG</span><span>NLP-NER</span><span>Azure DevOps</span>
+        </div>
+      </div>
+      <div>
+        <ul class="proj-impacts">
+          <li>Sales contribution <span>$1.5M</span></li>
+          <li>Recommendation accuracy <span>+26%</span></li>
+          <li>Comparison time reduction <span>−90%</span></li>
+          <li>Query resolution time <span>−40%</span></li>
+          <li>Customer satisfaction <span>+15%</span></li>
+          <li>Production hallucinations <span>0</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="proj-card">
+      <div class="proj-num">02</div>
+      <div class="proj-name">GenAI Product Intelligence</div>
+      <div class="proj-client">Acies Global · Google, Bose, Under Armour</div>
+      <div class="proj-desc">GPT-4o review summarisation, RAG support pipeline, BERTScore + ROUGE eval guardrails — zero hallucination in production.</div>
+      <ul class="proj-impacts">
+        <li>Ad revenue identified <span>$3M</span></li>
+        <li>Analysis time (2hrs→10min) <span>−92%</span></li>
+        <li>Query resolution <span>−40%</span></li>
+      </ul>
+      <div class="proj-tech"><span>GPT-4o</span><span>RAG</span><span>BERTScore</span><span>ROUGE</span><span>Streamlit</span></div>
+    </div>
+
+    <div class="proj-card">
+      <div class="proj-num">03</div>
+      <div class="proj-name">Multilingual Helpdesk Automation</div>
+      <div class="proj-client">Sitel Group · Telecom UCaaS Client</div>
+      <div class="proj-desc">Multilingual NLP across 5+ languages. Deprecated third-party tools. 93% BERT classification accuracy on 1.5M transcripts.</div>
+      <ul class="proj-impacts">
+        <li>MTTR reduction <span>60%</span></li>
+        <li>Annual savings <span>$136K</span></li>
+        <li>Retention improvement <span>+29%</span></li>
+      </ul>
+      <div class="proj-tech"><span>BERT</span><span>Deep Translator</span><span>NLP</span><span>Scikit-learn</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="challenges">
+  <div class="section-label"><span class="section-num">05</span><h2>Hard Problems <em>Solved</em></h2></div>
+  <div class="ch-grid">
+    <div class="ch-card">
+      <div class="ch-q">LLM hallucination in production</div>
+      <div class="ch-a">Implemented BERTScore + ROUGE evaluation pipeline with an automated guardrail agent. Result: zero hallucination or jailbreak incidents in Celanese's production deployment.</div>
+    </div>
+    <div class="ch-card">
+      <div class="ch-q">Multi-agent orchestration at scale</div>
+      <div class="ch-a">Designed orchestrator-validator-guardrail pattern using Azure OpenAI Agent SDK. Agents are modular and independently swappable — no cascading failures during updates.</div>
+    </div>
+    <div class="ch-card">
+      <div class="ch-q">Multilingual helpdesk at scale</div>
+      <div class="ch-a">Built Deep Translator + custom NLP pipeline across 5+ languages, replacing expensive third-party tools while delivering 60% faster mean time to resolution.</div>
+    </div>
+    <div class="ch-card">
+      <div class="ch-q">Grade recommendation accuracy</div>
+      <div class="ch-a">Combined GPT-4.1 with Meta LLaMA-3-8B via a custom NLP-NER hybrid — 26% accuracy improvement over baseline, contributing directly to live sales deals.</div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="contact-bg-word">Let's Talk</div>
+  <div class="contact-inner">
+    <div class="contact-pre">Open to Global Opportunities</div>
+    <h2>Let's <em>Build</em> Together</h2>
+    <p class="contact-note">Agentic AI Specialist · Enterprise AI Strategy · Immediate availability</p>
+    <div class="contact-row">
+      <a href="mailto:ncheripally@outlook.com" class="c-link">
+        <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/></svg>
+        ncheripally@outlook.com
+      </a>
+      <a href="https://linkedin.com/in/ncheripally9/" target="_blank" rel="noopener" class="c-link">
+        <svg fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        LinkedIn
+      </a>
+      <a href="https://github.com/nagesh-ch" target="_blank" rel="noopener" class="c-link">
+        <svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+        GitHub
+      </a>
+
+    </div>
+    <a href="mailto:ncheripally@outlook.com" class="btn btn-primary">Start a Conversation →</a>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-l">© 2025 Nagesh CH</div>
+  <div class="footer-r">Hyderabad · <a href="mailto:ncheripally@outlook.com">ncheripally@outlook.com</a></div>
+</footer>
+
+<script>
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>40));
+</script>
+</body>
+</html>
