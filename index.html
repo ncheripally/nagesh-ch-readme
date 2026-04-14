@@ -51,7 +51,7 @@ nav.scrolled{background:rgba(10,14,31,0.85);backdrop-filter:blur(30px);border-bo
 .nav-links a:hover::after{width:100%;}
 @keyframes pulse{0%,100%{box-shadow:0 0 16px var(--accent),inset 0 0 8px rgba(255,255,255,0.3);}50%{box-shadow:0 0 32px var(--accent),inset 0 0 12px rgba(255,255,255,0.5);}}
 
-/* HERO INTRO — FIX 1: smaller text to prevent overflow */
+/* HERO INTRO */
 .hero-intro{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;background:rgba(10,14,31,0.95);backdrop-filter:blur(20px);animation:introFadeOut 0.8s cubic-bezier(0.4,0,0.2,1) 3.2s forwards;}
 .hero-intro-content{text-align:center;max-width:580px;padding:40px 32px;}
 .intro-title{font-family:var(--sans);font-size:clamp(11px,1.4vw,14px);letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-bottom:16px;font-weight:500;}
@@ -89,26 +89,50 @@ nav.scrolled{background:rgba(10,14,31,0.85);backdrop-filter:blur(30px);border-bo
 h1{font-family:var(--serif);font-size:clamp(40px,5vw,80px);font-weight:900;line-height:0.95;margin-bottom:12px;letter-spacing:-0.03em;background:var(--grad3);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-shadow:0 20px 60px rgba(0,255,255,0.15);filter:drop-shadow(0 20px 60px rgba(0,255,255,0.1));}
 h1 .outline{color:transparent;-webkit-text-stroke:2px var(--accent);display:block;}
 
-/* FIX 2: role tags — wrap properly, add bottom margin so they don't overlap hero-desc */
 .hero-role{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:24px;}
-.role-tag{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:8px 14px;background:rgba(0,255,255,0.05);border:2px solid rgba(0,255,255,0.25);border-radius:25px;font-size:11px;font-weight:700;white-space:nowrap;position:relative;overflow:hidden;transition:all 0.5s cubic-bezier(0.4,0,0.2,1);letter-spacing:0.6px;backdrop-filter:blur(10px);text-transform:uppercase;box-shadow:0 0 20px rgba(0,255,255,0.15);color:var(--accent);}
+.role-tag{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:8px 14px;background:rgba(0,217,255,0.05);border:2px solid rgba(0,217,255,0.25);border-radius:25px;font-size:11px;font-weight:700;white-space:nowrap;position:relative;overflow:hidden;transition:all 0.5s cubic-bezier(0.4,0,0.2,1);letter-spacing:0.6px;backdrop-filter:blur(10px);text-transform:uppercase;box-shadow:0 0 20px rgba(0,255,255,0.15);color:var(--accent);}
 
 .hero-desc{font-size:15px;color:#e0e7ff;max-width:520px;line-height:1.85;margin-bottom:48px;font-weight:400;letter-spacing:0.4px;background:linear-gradient(135deg,rgba(0,255,255,0.08),rgba(236,72,153,0.05));padding:28px 32px;border:1.5px solid var(--border2);border-radius:12px;backdrop-filter:blur(10px);box-shadow:0 8px 32px rgba(0,255,255,0.12);position:relative;overflow:hidden;}
 .hero-desc::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,transparent 0%,rgba(0,255,255,0.05) 100%);pointer-events:none;}
 .hero-desc::after{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(0,255,255,0.3),transparent);}
 .hero-cta{display:flex;gap:16px;flex-wrap:wrap;}
 .btn{display:inline-flex;align-items:center;gap:10px;padding:15px 32px;font-size:13px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;text-decoration:none;border-radius:10px;transition:all 0.4s cubic-bezier(0.4,0,0.2,1);cursor:pointer;border:none;position:relative;overflow:hidden;}
-.btn::before{content:'';position:absolute;inset:0;background:var(--grad1);opacity:0;transition:opacity 0.4s;z-index:-1;}
-.btn::after{content:'';position:absolute;inset:0;background:linear-gradient(45deg,transparent 30%,rgba(255,255,255,0.1) 50%,transparent 70%);opacity:0;transform:translateX(-100%);transition:transform 0.6s;}
 .btn-primary{background:var(--grad1);color:#0a0e1f;box-shadow:0 12px 32px rgba(0,255,255,0.35),inset 0 1px 0 rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.1);}
 .btn-primary:hover{transform:translateY(-4px) scale(1.02);box-shadow:0 16px 48px rgba(0,255,255,0.45),inset 0 1px 0 rgba(255,255,255,0.3);filter:drop-shadow(0 8px 24px rgba(0,255,255,0.25));}
-.btn-primary:hover::after{transform:translateX(100%);}
 .btn-ghost{background:rgba(0,255,255,0.08);color:var(--accent);border:2px solid var(--accent);backdrop-filter:blur(10px);box-shadow:0 8px 24px rgba(0,255,255,0.15);}
 .btn-ghost:hover{background:rgba(0,255,255,0.15);border-color:var(--accent2);color:var(--accent2);transform:translateY(-4px) scale(1.02);box-shadow:0 16px 40px rgba(0,255,255,0.25);filter:drop-shadow(0 8px 20px rgba(0,255,255,0.2));}
+
 .hero-right{position:relative;z-index:2;display:flex;flex-direction:column;gap:32px;}
-.profile-image{width:100%;max-width:320px;aspect-ratio:1;border-radius:16px;border:2px solid var(--accent);overflow:hidden;box-shadow:0 20px 80px rgba(0,255,255,0.25),inset 0 1px 0 rgba(255,255,255,0.1);position:relative;}
-.profile-image::before{content:'';position:absolute;inset:0;border-radius:16px;border:2px solid transparent;border-image:var(--grad1) 1;background:linear-gradient(135deg,rgba(0,255,255,0.1),transparent);}
-.profile-image img{width:100%;height:100%;object-fit:cover;}
+
+/* Profile Image Block */
+.profile-image{
+  width:100%;
+  max-width:320px;
+  aspect-ratio:1;
+  border-radius:16px;
+  border:2px solid var(--accent);
+  overflow:hidden;
+  box-shadow:0 20px 80px rgba(0,255,255,0.25);
+  position:relative;
+  background:var(--bg2);
+}
+.profile-image img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+  /* Visual enhancement for lower res images */
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+}
+.profile-image::after{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:linear-gradient(to bottom, transparent 60%, rgba(10,14,31,0.4));
+  pointer-events:none;
+}
+
 .metrics-card{background:linear-gradient(135deg,rgba(0,255,255,0.06),rgba(236,72,153,0.04));border:2px solid var(--border2);border-radius:12px;padding:36px;position:relative;overflow:hidden;backdrop-filter:blur(20px);box-shadow:0 8px 32px rgba(0,255,255,0.12);}
 .metrics-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--accent),transparent);box-shadow:0 0 20px rgba(0,255,255,0.2);}
 .metrics-row{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-bottom:28px;}
@@ -245,7 +269,7 @@ h2 em{font-style:italic;background:var(--grad3);-webkit-background-clip:text;-we
 .c-link svg{width:18px;height:18px;stroke:currentColor;}
 .c-link:hover{border-color:var(--accent);color:var(--accent);background:rgba(0,217,255,0.12);transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,217,255,0.15);}
 
-/* FOOTER — FIX 3: updated year to 2026 (in HTML below) */
+/* FOOTER */
 footer{display:flex;justify-content:space-between;align-items:center;padding:32px 56px;border-top:1px solid var(--border);background:var(--bg);font-size:12px;color:var(--muted);}
 .footer-l{font-weight:600;color:var(--text);}
 .footer-r{display:flex;gap:8px;}
@@ -290,10 +314,10 @@ footer{display:flex;justify-content:space-between;align-items:center;padding:32p
       <a href="mailto:ncheripally@outlook.com" class="intro-link">
         ncheripally@outlook.com
       </a>
-      <a href="#" target="_blank" class="intro-link">LinkedIn</a>
-      <a href="#" target="_blank" class="intro-link">GitHub</a>
+      <a href="https://linkedin.com/in/ncheripally9/" target="_blank" class="intro-link">LinkedIn</a>
+      <a href="https://github.com/nagesh-ch" target="_blank" class="intro-link">GitHub</a>
     </div>
-    <button class="intro-cta">Start a Conversation →</button>
+    <button class="intro-cta" onclick="document.querySelector('.hero-intro').style.display='none'">Start a Conversation →</button>
   </div>
 </div>
 
@@ -315,7 +339,6 @@ footer{display:flex;justify-content:space-between;align-items:center;padding:32p
   <div class="hero-left">
     <div class="hero-eyebrow fade-in"><span></span>Data Science &amp; AI/ML Architect / Engineer · 11+ YOE</div>
     <h1 class="fade-in d1"><span class="lightning-bolt">⚡</span>Nagesh<span class="outline">CH</span></h1>
-    <!-- FIX 2: role tags now in a flex-wrap container with bottom margin -->
     <div class="hero-role fade-in d2">
       <span class="role-tag">🤖 Agentic AI</span>
       <span class="role-tag">⚡ LLM Engineering</span>
@@ -331,7 +354,9 @@ footer{display:flex;justify-content:space-between;align-items:center;padding:32p
   </div>
   <div class="hero-right fade-in d5">
     <div class="profile-image">
-      <img src="https://via.placeholder.com/320x320?text=Your+Photo" alt="Nagesh CH Profile">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0sncQe6svnkEj_qbnMbpr8LqBjeLHv77SwQ&s" 
+           alt="Nagesh CH Profile Photo"
+           loading="lazy">
     </div>
     <div class="metrics-card">
       <div class="metrics-row">
@@ -711,7 +736,6 @@ footer{display:flex;justify-content:space-between;align-items:center;padding:32p
   </div>
 </section>
 
-<!-- FIX 3: year corrected to 2026 -->
 <footer>
   <div class="footer-l">© 2026 Nagesh CH</div>
   <div class="footer-r">Hyderabad · <a href="mailto:ncheripally@outlook.com">ncheripally@outlook.com</a></div>
