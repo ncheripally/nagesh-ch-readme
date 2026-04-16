@@ -23,8 +23,10 @@
   --gold:#c8942a;
   --teal:#1a9080;
   --sky:#3080c8;
-  --wire:rgba(255,255,255,0.07);
+  --wire:rgba(255,255,255,0.06);
   --wire2:rgba(255,255,255,0.12);
+  --surface:rgba(255,255,255,0.04);
+  --surface-strong:rgba(255,255,255,0.08);
   --gfire:linear-gradient(135deg,#e05c1a 0%,#c8942a 100%);
   --gteal:linear-gradient(135deg,#1a9080 0%,#3080c8 100%);
   --display:'Bebas Neue',sans-serif;
@@ -34,36 +36,37 @@
 }
 
 html{scroll-behavior:smooth;cursor:auto;}
-body{background:var(--ink);color:var(--bone);font-family:var(--body);font-size:15px;line-height:1.65;overflow-x:hidden;}
+body{background:radial-gradient(circle at top left, rgba(224,92,26,.08), transparent 28%), radial-gradient(circle at bottom right, rgba(48,128,200,.08), transparent 30%), var(--ink);color:var(--bone);font-family:var(--body);font-size:15px;line-height:1.75;overflow-x:hidden;}
 
 body::before{content:'';position:fixed;inset:0;z-index:2000;pointer-events:none;opacity:0.03;
 background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:200px;}
+body::after{content:'';position:fixed;pointer-events:none;inset:0;z-index:2000;opacity:0.18;background:radial-gradient(circle at top right, rgba(48,128,200,.18), transparent 24%), radial-gradient(circle at bottom left, rgba(224,92,26,.14), transparent 18%);}
 
 /* ── PROGRESS ── */
 #bar{position:fixed;top:0;left:0;height:3px;background:var(--gfire);z-index:1500;width:0;transition:width .08s;}
 
 /* ── NAV ── */
-nav{position:fixed;top:0;left:0;right:0;z-index:900;padding:24px 72px;display:flex;justify-content:space-between;align-items:center;transition:all .4s;}
-nav.on{background:rgba(8,8,15,0.94);backdrop-filter:blur(20px);border-bottom:1px solid var(--wire);padding:16px 72px;}
-.n-logo{font-family:var(--display);font-size:20px;letter-spacing:.12em;color:var(--bone);text-decoration:none;display:flex;align-items:center;gap:10px;}
-.n-dot{width:8px;height:8px;border-radius:50%;background:var(--orange);flex-shrink:0;animation:ndot 2s infinite;}
-@keyframes ndot{0%,100%{box-shadow:0 0 0 0 rgba(224,92,26,0);}50%{box-shadow:0 0 0 6px rgba(224,92,26,.2);}}
-.n-links{display:flex;gap:36px;list-style:none;}
-.n-links a{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ash);text-decoration:none;transition:color .3s;position:relative;}
-.n-links a::after{content:'';position:absolute;bottom:-2px;left:0;width:0;height:1px;background:var(--orange);transition:width .35s;}
-.n-links a:hover{color:var(--orange);}
+nav{position:fixed;top:0;left:0;right:0;z-index:900;padding:24px 64px;display:flex;justify-content:space-between;align-items:center;transition:all .4s;}
+nav.on{background:rgba(8,8,15,0.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.08);padding:18px 64px;}
+.n-logo{font-family:var(--display);font-size:24px;letter-spacing:.14em;color:var(--bone);text-decoration:none;display:flex;align-items:center;gap:14px;}
+.n-dot{width:10px;height:10px;border-radius:50%;background:var(--orange);flex-shrink:0;animation:ndot 2.2s infinite;}
+@keyframes ndot{0%,100%{box-shadow:0 0 0 0 rgba(224,92,26,0);}50%{box-shadow:0 0 0 10px rgba(224,92,26,.18);}}
+.n-links{display:flex;gap:38px;list-style:none;}
+.n-links a{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--ash);text-decoration:none;transition:color .3s,transform .3s;position:relative;}
+.n-links a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:2px;background:var(--orange);transition:width .35s;}
+.n-links a:hover{color:var(--bone);transform:translateY(-1px);}
 .n-links a:hover::after{width:100%;}
 .n-links a.active{color:var(--bone);}
 .n-links a.active::after{width:100%;background:var(--orange);}
 
 /* ── SECTION DOT NAVIGATOR ── */
-#sec-nav{position:fixed;right:12px;left:auto;top:50%;transform:translateY(-50%);z-index:700;display:flex;flex-direction:column;gap:16px;opacity:0;transition:opacity .4s ease,visibility .4s ease;pointer-events:none;}
+#sec-nav{position:fixed;right:30px;left:auto;top:50%;transform:translateY(-50%);z-index:700;display:flex;flex-direction:column;gap:18px;opacity:0;transition:opacity .4s ease,visibility .4s ease;pointer-events:none;}
 #sec-nav.show{opacity:1;visibility:visible;pointer-events:auto;}
-.sec-dot{width:8px;height:8px;border-radius:50%;border:1.5px solid rgba(242,237,230,.2);background:transparent;cursor:pointer;transition:all .35s cubic-bezier(.4,0,.2,1);position:relative;display:block;}
-.sec-dot::before{content:attr(data-label);position:absolute;right:calc(100% + 14px);top:50%;transform:translateY(-50%);font-family:var(--mono);font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--ash);white-space:nowrap;opacity:0;transition:opacity .25s,color .25s;pointer-events:none;}
+.sec-dot{width:10px;height:10px;border-radius:999px;border:2px solid rgba(242,237,230,.22);background:transparent;cursor:pointer;transition:all .35s cubic-bezier(.4,0,.2,1);position:relative;display:block;}
+.sec-dot::before{content:attr(data-label);position:absolute;right:calc(100% + 18px);top:50%;transform:translateY(-50%);font-family:var(--mono);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--ash);white-space:nowrap;opacity:0;transition:opacity .25s,color .25s;pointer-events:none;}
 .sec-dot:hover::before{opacity:1;color:var(--bone);}
-.sec-dot:hover{border-color:rgba(242,237,230,.6);background:rgba(242,237,230,.15);transform:scale(1.3);}
-.sec-dot.active{border-color:var(--orange);background:var(--orange);box-shadow:0 0 10px rgba(224,92,26,.5);}
+.sec-dot:hover{border-color:rgba(242,237,230,.7);background:rgba(242,237,230,.16);transform:scale(1.25);}
+.sec-dot.active{border-color:var(--orange);background:var(--orange);box-shadow:0 0 14px rgba(224,92,26,.45);}
 .sec-dot.active::before{opacity:1;color:var(--orange);}
 @media(max-width:1100px){#sec-nav{display:none;}}
 
@@ -84,12 +87,12 @@ nav.on{background:rgba(8,8,15,0.94);backdrop-filter:blur(20px);border-bottom:1px
 
 /* ── HERO ── */
 #hero{min-height:100vh;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;}
-canvas#stars{position:absolute;inset:0;z-index:0;}
-.hero-stripe{position:absolute;top:0;right:0;width:45%;height:100%;background:var(--ink2);z-index:1;clip-path:polygon(8% 0,100% 0,100% 100%,0% 100%);}
+canvas#stars{position:absolute;inset:0;z-index:0;opacity:.7;}
+.hero-stripe{position:absolute;top:0;right:0;width:46%;height:100%;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(8,8,15,.92));z-index:1;clip-path:polygon(8% 0,100% 0,100% 100%,0% 100%);}
 .hero-stripe::after{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--gfire);}
-.hero-body{position:relative;z-index:3;padding:160px 72px 80px;display:grid;grid-template-columns:1.15fr 1fr;gap:80px;align-items:end;}
-.hero-kicker{font-family:var(--mono);font-size:11px;letter-spacing:.25em;text-transform:uppercase;color:var(--orange);margin-bottom:28px;display:flex;align-items:center;gap:12px;}
-.hero-kicker::before{content:'';width:32px;height:1px;background:var(--orange);}
+.hero-body{position:relative;z-index:3;padding:180px 72px 120px;display:grid;grid-template-columns:1.15fr 1fr;gap:94px;align-items:end;max-width:1400px;margin:0 auto;}
+.hero-kicker{font-family:var(--mono);font-size:12px;letter-spacing:.32em;text-transform:uppercase;color:var(--orange);margin-bottom:32px;display:flex;align-items:center;gap:16px;}
+.hero-kicker::before{content:'';width:34px;height:1px;background:var(--orange);}
 h1.hero-name{font-family:var(--display);font-size:clamp(72px,11vw,168px);line-height:.88;letter-spacing:.04em;margin-bottom:0;}
 h1.hero-name .r1{display:block;color:var(--bone);}
 h1.hero-name .r2{display:block;color:transparent;-webkit-text-stroke:1.5px rgba(242,237,230,.2);}
@@ -99,13 +102,13 @@ h1.hero-name .r2 b{color:var(--orange);-webkit-text-stroke:0;font-style:italic;f
 .hchip{font-family:var(--mono);font-size:10px;letter-spacing:.1em;padding:8px 16px;border:1px solid var(--wire2);color:var(--smoke);background:rgba(255,255,255,0.03);transition:all .3s;white-space:nowrap;}
 .hchip.lit{border-color:rgba(224,92,26,.5);color:var(--orange2);background:rgba(224,92,26,.08);}
 .hchip:hover{border-color:var(--orange);color:var(--bone);transform:translateY(-2px);}
-.hero-desc{font-size:15px;color:rgba(242,237,230,.55);line-height:1.85;max-width:500px;margin-bottom:48px;border-left:3px solid var(--orange);padding-left:20px;}
-.hero-btns{display:flex;gap:16px;flex-wrap:wrap;}
-.btn{display:inline-flex;align-items:center;gap:10px;padding:16px 36px;font-family:var(--display);font-size:18px;letter-spacing:.1em;text-decoration:none;transition:all .35s cubic-bezier(.4,0,.2,1);cursor:pointer;border:none;}
-.btn-a{background:var(--gfire);color:#fff;box-shadow:0 0 48px rgba(224,92,26,.3);}
-.btn-a:hover{transform:translateY(-4px) scale(1.03);box-shadow:0 12px 64px rgba(224,92,26,.5);}
-.btn-b{background:transparent;color:var(--bone);border:1.5px solid var(--wire2);}
-.btn-b:hover{border-color:var(--bone);background:rgba(255,255,255,.05);transform:translateY(-4px);}
+.hero-desc{font-size:17px;color:rgba(242,237,230,.78);line-height:1.95;max-width:620px;margin-bottom:56px;border-left:3px solid var(--orange);padding-left:26px;}
+.hero-btns{display:flex;gap:18px;flex-wrap:wrap;}
+.btn{display:inline-flex;align-items:center;gap:14px;padding:18px 42px;font-family:var(--display);font-size:18px;letter-spacing:.14em;text-decoration:none;transition:transform .25s,box-shadow .25s,background .25s;color:inherit;cursor:pointer;border:none;border-radius:999px;}
+.btn-a{background:linear-gradient(135deg,#e05c1a 0%,#c8942a 100%);color:#fff;box-shadow:0 24px 70px rgba(224,92,26,.24);}
+.btn-a:hover{transform:translateY(-3px);box-shadow:0 28px 80px rgba(224,92,26,.30);}
+.btn-b{background:rgba(255,255,255,.06);color:var(--bone);border:1.5px solid rgba(255,255,255,.12);}
+.btn-b:hover{border-color:rgba(255,255,255,.3);background:rgba(255,255,255,.12);transform:translateY(-3px);}
 .hero-right{display:flex;flex-direction:column;gap:0;align-self:center;}
 .photo-frame{position:relative;width:100%;max-width:320px;margin:0 auto 24px;}
 .photo-frame img{width:100%;aspect-ratio:.85;object-fit:cover;object-position:top;display:block;filter:grayscale(20%);}
@@ -127,13 +130,13 @@ h1.hero-name .r2 b{color:var(--orange);-webkit-text-stroke:0;font-style:italic;f
 @keyframes tick{from{transform:translateX(0);}to{transform:translateX(-50%);}}
 
 /* ── SECTION BASE ── */
-.sec{padding:120px 72px;position:relative;z-index:1;}
-.sec-hd{display:flex;align-items:center;gap:20px;margin-bottom:80px;}
-.sec-n{font-family:var(--mono);font-size:11px;letter-spacing:.18em;color:var(--orange);padding:4px 12px;border:1px solid rgba(224,92,26,.3);background:rgba(224,92,26,.06);}
-.sec-title{font-family:var(--display);font-size:clamp(44px,6vw,80px);letter-spacing:.04em;line-height:.9;}
-.sec-title em{color:var(--orange);font-style:italic;font-family:var(--serif);font-size:.75em;}
-.sec-line{flex:1;height:1px;background:var(--wire);margin-left:16px;}
-.sec-bg-num{position:absolute;top:-20px;right:40px;font-family:var(--display);font-size:220px;color:rgba(255,255,255,.025);pointer-events:none;line-height:1;z-index:0;}
+.sec{padding:140px 72px;position:relative;z-index:1;}
+.sec-hd{display:flex;align-items:center;gap:24px;margin-bottom:96px;}
+.sec-n{font-family:var(--mono);font-size:11px;letter-spacing:.22em;color:var(--orange);padding:6px 14px;border:1px solid rgba(224,92,26,.35);background:rgba(224,92,26,.08);border-radius:999px;}
+.sec-title{font-family:var(--display);font-size:clamp(48px,6vw,88px);letter-spacing:.04em;line-height:.92;}
+.sec-title em{color:var(--orange);font-style:italic;font-family:var(--serif);font-size:.78em;}
+.sec-line{flex:1;height:1px;background:var(--wire);margin-left:18px;}
+.sec-bg-num{position:absolute;top:-20px;right:40px;font-family:var(--display);font-size:220px;color:rgba(255,255,255,.02);pointer-events:none;line-height:1;z-index:0;}
 
 /* ── ABOUT ── */
 #about{background:var(--ink2);}
@@ -199,17 +202,17 @@ h1.hero-name .r2 b{color:var(--orange);-webkit-text-stroke:0;font-style:italic;f
 
 /* ── PROJECTS ── */
 #projects{background:var(--ink);}
-.pj-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--wire);}
-.pj{background:var(--ink);padding:48px 44px;position:relative;overflow:hidden;transition:background .3s;}
-.pj:hover{background:var(--ink2);}
-.pj::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--gfire);transform:scaleX(0);transition:transform .5s;}
+.pj-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+.pj{background:rgba(255,255,255,.04);padding:52px 48px;position:relative;overflow:hidden;transition:transform .35s,box-shadow .35s,background .35s;box-shadow:0 24px 80px rgba(0,0,0,.18);border:1px solid rgba(255,255,255,.08);border-radius:32px;}
+.pj:hover{background:rgba(255,255,255,.06);transform:translateY(-5px);box-shadow:0 34px 90px rgba(0,0,0,.25);}
+.pj::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--gfire);transform:scaleX(0);transition:transform .45s;}
 .pj:hover::after{transform:scaleX(1);}
-.pj.star{grid-column:span 2;padding:0;display:grid;grid-template-columns:1fr 1fr;background:var(--ink2);}
+.pj.star{grid-column:span 2;padding:0;display:grid;grid-template-columns:1fr 1fr;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);}
 .pj.star::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--gfire);}
 .pj.star::after{display:none;}
-.pj-left{padding:52px 48px;border-right:1px solid var(--wire);}
-.pj-right{padding:52px 48px;display:flex;flex-direction:column;justify-content:center;}
-.pj-flag{font-family:var(--mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--orange);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+.pj-left{padding:56px 48px;border-right:1px solid rgba(255,255,255,.08);}
+.pj-right{padding:56px 48px;display:flex;flex-direction:column;justify-content:center;}
+.pj-flag{font-family:var(--mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--orange);margin-bottom:18px;display:flex;align-items:center;gap:8px;}
 .pj-flag::before{content:'';width:18px;height:1px;background:var(--orange);}
 .pj-name{font-family:var(--display);font-size:clamp(26px,3vw,44px);letter-spacing:.04em;color:var(--bone);margin-bottom:8px;line-height:1;}
 .pj-name a{color:inherit;text-decoration:none;transition:color .2s;}
@@ -225,27 +228,28 @@ h1.hero-name .r2 b{color:var(--orange);-webkit-text-stroke:0;font-style:italic;f
 
 /* ── CHALLENGES ── */
 #challenges{background:var(--ink2);}
-.ch-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--wire);}
-.ch{background:var(--ink2);padding:44px 40px;position:relative;overflow:hidden;transition:background .3s;}
-.ch:hover{background:var(--ink3);}
+.ch-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+.ch{background:rgba(255,255,255,.04);padding:48px 44px;position:relative;overflow:hidden;transition:transform .35s,box-shadow .35s,background .35s;box-shadow:0 24px 80px rgba(0,0,0,.18);border:1px solid rgba(255,255,255,.08);border-radius:32px;}
+.ch:hover{background:rgba(255,255,255,.07);transform:translateY(-5px);box-shadow:0 34px 90px rgba(0,0,0,.23);}
 .ch-bg{position:absolute;bottom:-10px;right:16px;font-family:var(--display);font-size:96px;color:rgba(255,255,255,.025);line-height:1;pointer-events:none;}
 .ch:hover .ch-bg{color:rgba(224,92,26,.06);}
-.ch-q{font-family:var(--serif);font-size:clamp(18px,1.8vw,24px);font-weight:700;color:var(--bone);margin-bottom:16px;line-height:1.3;}
-.ch-a{font-size:13px;color:rgba(242,237,230,.5);line-height:1.9;}
-.ch-tag{font-family:var(--mono);font-size:9px;letter-spacing:.15em;padding:4px 10px;border:1px solid rgba(224,92,26,.3);color:var(--orange);display:inline-block;margin-top:18px;}
+.ch-q{font-family:var(--serif);font-size:clamp(18px,1.8vw,24px);font-weight:700;color:var(--bone);margin-bottom:18px;line-height:1.35;}
+.ch-a{font-size:14px;color:rgba(242,237,230,.78);line-height:1.95;}
+.ch-tag{font-family:var(--mono);font-size:9px;letter-spacing:.15em;padding:5px 12px;border:1px solid rgba(224,92,26,.3);color:var(--orange);display:inline-block;margin-top:20px;}
 
 /* ── DEMOS ── */
 #demos{background:var(--ink);}
-.dm-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--wire);}
-.dm{background:var(--ink);padding:44px 40px;display:flex;flex-direction:column;gap:14px;position:relative;overflow:hidden;transition:background .4s;}
-.dm:hover{background:var(--ink2);}
+.dm-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+.dm{background:rgba(255,255,255,.04);padding:48px 44px;display:flex;flex-direction:column;gap:18px;position:relative;overflow:hidden;transition:transform .35s,box-shadow .35s,background .35s;box-shadow:0 24px 80px rgba(0,0,0,.18);border:1px solid rgba(255,255,255,.08);border-radius:32px;}
+.dm:hover{background:rgba(255,255,255,.08);transform:translateY(-5px);box-shadow:0 34px 90px rgba(0,0,0,.23);}
 .dm::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--gfire);transform:scaleX(0);transform-origin:left;transition:transform .45s;}
 .dm:hover::before{transform:scaleX(1);}
 .dm-n{font-family:var(--mono);font-size:10px;color:var(--orange);letter-spacing:.18em;}
 .dm-title{font-family:var(--display);font-size:26px;letter-spacing:.06em;color:var(--bone);}
-.dm-desc{font-size:13px;color:rgba(242,237,230,.45);line-height:1.75;flex-grow:1;}
-.dm-tags{display:flex;flex-wrap:wrap;gap:6px;}
-.dm-tag{font-family:var(--mono);font-size:9px;padding:3px 8px;border:1px solid var(--wire2);color:var(--ash);}
+.dm-desc{font-size:14px;color:rgba(242,237,230,.72);line-height:1.85;flex-grow:1;}
+.dm-tags{display:flex;flex-wrap:wrap;gap:8px;}
+.dm-tag{font-family:var(--mono);font-size:9px;padding:4px 10px;border:1px solid rgba(255,255,255,.08);color:var(--ash);transition:all .3s;}
+.dm-tag:hover{border-color:var(--orange);color:var(--bone);background:rgba(224,92,26,.1);}
 .dm-cta{font-family:var(--mono);font-size:11px;color:var(--orange);text-decoration:none;letter-spacing:.1em;display:flex;align-items:center;gap:8px;transition:gap .2s;}
 .dm-cta:hover{gap:14px;}
 
@@ -263,7 +267,7 @@ h1.hero-name .r2 b{color:var(--orange);-webkit-text-stroke:0;font-style:italic;f
 .pub-link:hover{color:var(--orange);}
 .resume-overlay{position:fixed;inset:0;z-index:1600;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(8,8,15,.95);opacity:0;visibility:hidden;transition:opacity .25s ease,visibility .25s ease;}
 .resume-overlay.open{opacity:1;visibility:visible;}
-.resume-overlay-inner{width:100%;max-width:1200px;height:100%;max-height:92vh;position:relative;display:flex;flex-direction:column;}
+.resume-overlay-inner{width:100%;max-width:1200px;height:100%;max-height:92vh;position:relative;display:flex;flex-direction:column;background:rgba(12,12,20,.98);border:1px solid rgba(255,255,255,.08);box-shadow:0 40px 140px rgba(0,0,0,.45);border-radius:32px;overflow:hidden;}
 .resume-close{position:absolute;top:18px;right:18px;width:42px;height:42px;border:none;border-radius:50%;background:rgba(255,255,255,.08);color:var(--bone);font-size:26px;line-height:1;cursor:pointer;transition:transform .2s,background .2s;}
 .resume-close:hover{transform:scale(1.05);background:rgba(255,255,255,.14);}
 .resume-panel{background:var(--ink3);padding:24px;border:1px solid var(--wire);border-radius:24px;box-shadow:0 0 48px rgba(0,0,0,.35);height:100%;display:flex;flex-direction:column;}
@@ -414,7 +418,7 @@ footer{background:var(--ink2);border-top:1px solid var(--wire);padding:28px 72px
         <span class="hchip">🏢 Enterprise AI Strategy</span>
         <span class="hchip">🔬 MLOps · LLMOps</span>
       </div>
-      <p class="hero-desc rv d4">Building production-grade GenAI, Agentic AI, and ML systems with measurable business impact. Multi-agent orchestration, RAG pipelines, and enterprise AI strategy across Fortune 500s.</p>
+      <p class="hero-desc rv d4">I build production-grade GenAI, Agentic AI, and ML systems that transform workflows into trusted business outcomes. My work is designed to earn adoption, reduce risk, and move teams from proof-of-concept to production at scale.</p>
       <div class="hero-btns rv d5">
         <a href="#projects" class="btn btn-a">View My Work →</a>
         <a href="#contact" class="btn btn-b">Get in Touch</a>
@@ -459,13 +463,13 @@ footer{background:var(--ink2);border-top:1px solid var(--wire);padding:28px 72px
 <!-- ═══ ABOUT ═══ -->
 <section id="about" class="sec">
   <div class="sec-bg-num">01</div>
-  <div class="sec-hd rv"><span class="sec-n">01</span><h2 class="sec-title">About <em>Me</em></h2><div class="sec-line"></div></div>
+  <div class="sec-hd rv"><span class="sec-n">01</span><h2 class="sec-title">My <em>Journey</em></h2><div class="sec-line"></div></div>
   <div class="about-grid">
     <div>
       <p class="about-quote rv">"I architect AI systems that don't just impress in demos — they ship, scale, and drive real revenue."</p>
-      <div class="about-p rv d1"><strong>AI/ML Specialist &amp; Generative AI Architect / Engineer</strong> with 11+ years of experience driving enterprise transformation with GenAI, Machine Learning, and Data Science solutions.</div>
-      <div class="about-p rv d2"><strong>Deep expertise</strong> across Generative AI, Agentic AI, LLMOps, MLOps, Cloud AI (Azure, GCP), RAG pipelines, Vector Databases, Prompt Engineering, Knowledge Graphs, Fine-tuning &amp; Custom LLMs, Synthetic Data Generation, Model Alignment (RLHF/DPO), and Edge AI.</div>
-      <div class="about-p rv d3"><strong>Proven at scale:</strong> GPT-5.1/5/4/4.1, LangChain, Azure OpenAI, Anthropic Claude, Llama 3, and OSS LLMs — delivering systems that earn trust, close deals, and compound over time.</div>
+      <div class="about-p rv d1"><strong>My journey began</strong> when I saw teams struggle with data they could not trust and decisions that still relied on manual judgment. I moved from analytics dashboards to AI because I wanted systems to help people act faster with confidence.</div>
+      <div class="about-p rv d2"><strong>Why I build AI systems:</strong> to turn complexity into decision intelligence, to make knowledge repeatable, and to create tools that accelerate growth without adding risk.</div>
+      <div class="about-p rv d3"><strong>What matters most:</strong> not great demo metrics, but products that earn adoption, demonstrate ROI, and become a dependable part of a team’s daily workflow.</div>
       <ul class="about-ul">
         <li class="rv d1">Enterprise copilots &amp; autonomous chatbots</li>
         <li class="rv d2">Multi-agent orchestration &amp; tool-augmented agents</li>
@@ -497,7 +501,7 @@ footer{background:var(--ink2);border-top:1px solid var(--wire);padding:28px 72px
       <div class="exp-dot"></div>
       <div class="exp-head"><span class="exp-co">CELANESE</span><span class="exp-when">Jan 2025 – Present</span><span class="exp-badge">Chemical / Materials</span></div>
       <div class="exp-title">Sr. AI Engineer / Architect</div>
-      <p class="exp-sum">Engineered askchemille.com — a production multi-agent AI platform for polymer grade selection powering the global sales team. Owned end-to-end architecture, delivery, and live performance.</p>
+      <p class="exp-sum">Engineered askchemille.com — a production multi-agent AI platform for polymer grade selection powering the global sales team. This case study began as a small pilot and grew into a trusted, revenue-generating sales assistant with live performance guarantees.</p>
       <ul class="exp-bullets">
         <li>Contributed to <strong>$1.5M closed sales</strong> via AI-driven grade recommendation</li>
         <li>Improved accuracy by <strong>26%</strong> — GPT-4.1 + LLaMA-3-8B hybrid</li>
@@ -590,7 +594,7 @@ footer{background:var(--ink2);border-top:1px solid var(--wire);padding:28px 72px
         <div class="pj-flag">01 · Featured · Live in Production</div>
         <div class="pj-name">askchemille.com</div>
         <div class="pj-client">Celanese Corporation · Jan 2025 – Present</div>
-        <p class="pj-desc">Production multi-agent AI platform for polymer grade selection. NLP-NER, RAG, orchestrator / guardrail / validator agents deployed on Azure — powering the global sales team.</p>
+        <p class="pj-desc">Multi-agent AI platform for polymer grade selection and product support. Custom NLP-NER grade recommendation, RAG chatbot, and GenAI comparison/summarization models run in production.</p>
         <div class="pj-stack"><span>GPT-4.1</span><span>LLaMA-3-8B</span><span>LangGraph</span><span>Azure OpenAI</span><span>RAG</span><span>NLP-NER</span><span>Azure DevOps</span></div>
       </div>
       <div class="pj-right">
@@ -605,20 +609,37 @@ footer{background:var(--ink2);border-top:1px solid var(--wire);padding:28px 72px
       </div>
     </div>
     <div class="pj rv d1">
-      <div class="pj-flag">02 · Enterprise Consulting</div>
+      <div class="pj-flag">02 · Growth Optimization</div>
+      <div class="pj-name">Google Ad Spend Optimization</div>
+      <div class="pj-client">Acies Global · Google Ad Analytics</div>
+      <p class="pj-desc">Identified $3M in untapped Google Ad revenue opportunities through spend optimization, bid modeling, and cross-channel attribution analysis.</p>
+      <ul class="pj-kpis"><li class="kpi">Revenue opportunity identified<span class="v">$3M</span></li><li class="kpi">Optimization uplift<span class="v">+18%</span></li><li class="kpi">Analysis time reduction<span class="v">−75%</span></li></ul>
+      <div class="pj-stack"><span>BigQuery</span><span>Google Ads</span><span>Python</span><span>SQL</span><span>Streamlit</span></div>
+    </div>
+    <div class="pj rv d2">
+      <div class="pj-flag">03 · Enterprise Consulting</div>
       <div class="pj-name">GenAI Product Intelligence</div>
       <div class="pj-client">Acies Global · Google, Bose, Under Armour</div>
       <p class="pj-desc">GPT-4o review summarisation, RAG support pipeline, BERTScore + ROUGE eval guardrails — zero hallucination in production.</p>
       <ul class="pj-kpis"><li class="kpi">Ad revenue identified<span class="v">$3M</span></li><li class="kpi">Analysis time (2hrs→10min)<span class="v">−92%</span></li><li class="kpi">Query resolution<span class="v">−40%</span></li></ul>
       <div class="pj-stack"><span>GPT-4o</span><span>RAG</span><span>BERTScore</span><span>ROUGE</span><span>Streamlit</span></div>
     </div>
-    <div class="pj rv d2">
-      <div class="pj-flag">03 · Telecom / UCaaS</div>
-      <div class="pj-name">Multilingual Helpdesk Automation</div>
-      <div class="pj-client">Sitel Group · Telecom UCaaS Client</div>
-      <p class="pj-desc">Multilingual NLP across 5+ languages. Deprecated third-party tools. 93% BERT accuracy on 1.5M transcripts.</p>
-      <ul class="pj-kpis"><li class="kpi">MTTR reduction<span class="v">60%</span></li><li class="kpi">Annual savings<span class="v">$136K</span></li><li class="kpi">Retention improvement<span class="v">+29%</span></li></ul>
-      <div class="pj-stack"><span>BERT</span><span>Deep Translator</span><span>NLP</span><span>Scikit-learn</span></div>
+    <div class="pj rv d3">
+      <div class="pj-flag">04 · Telecom / UCaaS</div>
+      <div class="pj-name">Sitel Group Helpdesk AI</div>
+      <div class="pj-client">Sitel Group · Mar 2021 – Apr 2022</div>
+      <p class="pj-desc">Multilingual ML helpdesk system for ticket closure, churn prediction, and intent classification across 1.5M transcripts.</p>
+      <div class="pj-desc" style="margin-top:14px;color:rgba(242,237,230,.62);font-size:13px;line-height:1.7;">Delivered end-to-end production ML ownership, deprecated third-party vendor tools, and presented outcomes to stakeholders while saving cost and improving automation.</div>
+      <ul class="pj-kpis"><li class="kpi">MTTR reduction<span class="v">60%</span></li><li class="kpi">Annual savings<span class="v">$136K</span></li><li class="kpi">BERT classification accuracy<span class="v">93%</span></li><li class="kpi">Retention improvement<span class="v">29%</span></li><li class="kpi">Churn revenue reduction<span class="v">3.5%</span></li></ul>
+      <div class="pj-stack"><span>BERT</span><span>Deep Translator</span><span>NLP</span><span>Scikit-learn</span><span>PySpark</span></div>
+    </div>
+    <div class="pj rv d4">
+      <div class="pj-flag">05 · AI Governance</div>
+      <div class="pj-name">Production AI Governance Studio</div>
+      <div class="pj-client">Enterprise AI Programs · Cross-functional Teams</div>
+      <p class="pj-desc">Built a model evaluation, tracing, and governance studio with scorecards, audit logs, and deployment safety checks for enterprise GenAI systems.</p>
+      <ul class="pj-kpis"><li class="kpi">Risk reduction<span class="v">30%</span></li><li class="kpi">Models traced<span class="v">15+</span></li><li class="kpi">Review cycle reduction<span class="v">65%</span></li></ul>
+      <div class="pj-stack"><span>MLFlow</span><span>Azure DevOps</span><span>RAG</span><span>BERTScore</span><span>Governance</span></div>
     </div>
   </div>
 </section>
