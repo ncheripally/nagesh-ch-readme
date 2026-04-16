@@ -43,11 +43,13 @@ background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='htt
 body::after{content:'';position:fixed;pointer-events:none;inset:0;z-index:2000;opacity:0.18;background:radial-gradient(circle at top right, rgba(48,128,200,.18), transparent 24%), radial-gradient(circle at bottom left, rgba(224,92,26,.14), transparent 18%);}
 
 /* ── PROGRESS ── */
-#bar{position:fixed;top:0;left:0;height:3px;background:var(--gfire);z-index:1500;width:0;transition:width .08s;}
+#bar{position:fixed;top:0;left:0;height:3px;background:var(--gfire);z-index:1500;width:0;transition:width .08s;opacity:0;animation:barIn .5s ease 3.5s forwards;}
+@keyframes barIn{to{opacity:1;}}
 
 /* ── NAV ── */
-nav{position:fixed;top:0;left:0;right:0;z-index:900;padding:24px 64px;display:flex;justify-content:space-between;align-items:center;transition:all .4s;}
+nav{position:fixed;top:0;left:0;right:0;z-index:900;padding:24px 64px;display:flex;justify-content:space-between;align-items:center;transition:all .4s;opacity:0;animation:navIn .5s ease 3.5s forwards;}
 nav.on{background:rgba(8,8,15,0.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.08);padding:18px 64px;}
+@keyframes navIn{to{opacity:1;}}
 .n-logo{font-family:var(--display);font-size:24px;letter-spacing:.14em;color:var(--bone);text-decoration:none;display:flex;align-items:center;gap:14px;}
 .n-dot{width:10px;height:10px;border-radius:50%;background:var(--orange);flex-shrink:0;animation:ndot 2.2s infinite;}
 @keyframes ndot{0%,100%{box-shadow:0 0 0 0 rgba(224,92,26,0);}50%{box-shadow:0 0 0 10px rgba(224,92,26,.18);}}
@@ -60,8 +62,9 @@ nav.on{background:rgba(8,8,15,0.92);backdrop-filter:blur(20px);border-bottom:1px
 .n-links a.active::after{width:100%;background:var(--orange);}
 
 /* ── SECTION DOT NAVIGATOR ── */
-#sec-nav{position:fixed;right:30px;left:auto;top:50%;transform:translateY(-50%);z-index:700;display:flex;flex-direction:column;gap:18px;opacity:0;transition:opacity .4s ease,visibility .4s ease;pointer-events:none;}
+#sec-nav{position:fixed;right:30px;left:auto;top:50%;transform:translateY(-50%);z-index:700;display:flex;flex-direction:column;gap:18px;opacity:0;visibility:hidden;transition:opacity .4s ease,visibility .4s ease;pointer-events:none;animation:dotNavIn .5s ease 3.5s forwards;}
 #sec-nav.show{opacity:1;visibility:visible;pointer-events:auto;}
+@keyframes dotNavIn{to{opacity:1;visibility:visible;}}
 .sec-dot{width:10px;height:10px;border-radius:999px;border:2px solid rgba(242,237,230,.22);background:transparent;cursor:pointer;transition:all .35s cubic-bezier(.4,0,.2,1);position:relative;display:block;}
 .sec-dot::before{content:attr(data-label);position:absolute;right:calc(100% + 18px);top:50%;transform:translateY(-50%);font-family:var(--mono);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--ash);white-space:nowrap;opacity:0;transition:opacity .25s,color .25s;pointer-events:none;}
 .sec-dot:hover::before{opacity:1;color:var(--bone);}
