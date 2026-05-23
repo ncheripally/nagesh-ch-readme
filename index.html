@@ -133,6 +133,32 @@ h1.hero-name .r2 b{color:var(--orange);-webkit-text-stroke:0;font-style:italic;f
 .t-item::after{content:'◆';font-size:10px;opacity:.5;}
 @keyframes tick{from{transform:translateX(0);}to{transform:translateX(-50%);}}
 
+/* ── BRAND SCROLLER SECTION ── */
+.brands-section{background:rgba(8,8,15,0.6);border-bottom:1px solid rgba(255,255,255,0.06);padding:44px 0 36px 0;position:relative;z-index:5;}
+.brands-header{text-align:center;margin-bottom:28px;padding:0 24px;}
+.brands-header-title{font-family:var(--mono);font-size:11px;letter-spacing:0.35em;text-transform:uppercase;color:var(--orange);font-weight:600;display:flex;align-items:center;justify-content:center;gap:16px;}
+.brands-header-title::before, .brands-header-title::after{content:'';width:24px;height:1px;background:rgba(224,92,26,0.4);.05}
+.brands-marquee-wrap{display:flex;white-space:nowrap;overflow:hidden;width:100%;position:relative;}
+.brands-marquee-inner{display:inline-flex;align-items:center;animation:brandScroll 38s linear infinite;}
+.brand-showcase-box{display:inline-flex;align-items:center;gap:14px;padding:0 44px;height:34px;font-family:var(--body);font-size:21px;font-weight:700;letter-spacing:-0.01em;transition:transform 0.3s ease;cursor:default;}
+.brand-showcase-box svg{height:100%;width:auto;fill:currentColor;}
+.brand-showcase-box:hover{transform:scale(1.05);}
+
+/* Authentic Vibrant Color Mapping Schematics */
+.brand-showcase-box.google-node{color:#4285F4;}
+.brand-showcase-box.waymo-node{color:#1A73E8;}
+.brand-showcase-box.celanese-node{color:#005A9C;}
+.brand-showcase-box.bose-node{color:#FFFFFF;}
+.brand-showcase-box.underarmour-node{color:#FFFFFF;}
+.brand-showcase-box.kraftheinz-node{color:#E4002B;}
+.brand-showcase-box.itc-node{color:#31812F;}
+.brand-showcase-box.tripadvisor-node{color:#00AF87;}
+.brand-showcase-box.ecolab-node{color:#0076A8;}
+.brand-showcase-box.zenni-node{color:#3F9C9F;}
+.brand-showcase-box.mcc-node{color:#D31245;}
+
+@keyframes brandScroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
 /* ── SECTION BASE ── */
 .sec{padding:180px 72px;position:relative;z-index:1;}
 .sec-hd{display:flex;align-items:center;gap:40px;margin-bottom:120px;}
@@ -258,7 +284,7 @@ h1.hero-name .r2 b{color:var(--orange);-webkit-text-stroke:0;font-style:italic;f
 .hero-desc{font-size:17px;color:rgba(242,237,230,.82);}
 .hero-role{color:rgba(242,237,230,.72);}
 .pj, .dm, .ch{will-change:transform,box-shadow;}
-@media (prefers-reduced-motion: reduce){.pj:hover, .dm:hover, .ch:hover{transform:none;}} 
+@media (prevents-reduced-motion: reduce){.pj:hover, .dm:hover, .ch:hover{transform:none;}} 
 
 /* ── CHALLENGES ── */
 #challenges{background:var(--ink2);}
@@ -349,6 +375,7 @@ footer{background:var(--ink2);border-top:1px solid var(--wire);padding:28px 72px
   .stat-stack{flex:1;}
   nav,nav.on{padding:16px 32px;}
   .sec{padding:88px 40px;}
+  .brands-section{padding:36px 0 28px 0;}
   #contact{padding:88px 40px;}
   .ct-inner{max-width:100%;}
   .ctlink{max-width:100%;}
@@ -392,7 +419,6 @@ footer{background:var(--ink2);border-top:1px solid var(--wire);padding:28px 72px
   </div>
 </div>
 
-<!-- SECTION DOT NAVIGATOR -->
 <nav id="sec-nav" aria-label="Section navigation">
   <a class="sec-dot" data-label="Home" data-target="hero" href="#hero"></a>
   <a class="sec-dot" data-label="About" data-target="about" href="#about"></a>
@@ -406,7 +432,6 @@ footer{background:var(--ink2);border-top:1px solid var(--wire);padding:28px 72px
   <a class="sec-dot" data-label="Contact" data-target="contact" href="#contact"></a>
 </nav>
 
-<!-- SPLASH -->
 <div id="splash">
   <div class="sp-inner">
     <div class="sp-tag">Portfolio · 2026 · Agentic AI</div>
@@ -417,7 +442,6 @@ footer{background:var(--ink2);border-top:1px solid var(--wire);padding:28px 72px
   </div>
 </div>
 
-<!-- NAV -->
 <nav id="nav">
   <a href="#hero" class="n-logo"><span class="n-dot"></span>NCH · AI Architect / Engineer</a>
   <ul class="n-links">
@@ -432,7 +456,6 @@ footer{background:var(--ink2);border-top:1px solid var(--wire);padding:28px 72px
   </ul>
 </nav>
 
-<!-- ═══ HERO ═══ -->
 <section id="hero">
   <div class="hero-flow">
     <div class="flow-dot"></div>
@@ -481,7 +504,6 @@ footer{background:var(--ink2);border-top:1px solid var(--wire);padding:28px 72px
   </div>
 </section>
 
-<!-- TICKER -->
 <div class="ticker">
   <div class="ticker-inner" id="tick">
     <span class="t-item">$1.5M Closed Sales · askchemille.com</span>
@@ -501,7 +523,60 @@ footer{background:var(--ink2);border-top:1px solid var(--wire);padding:28px 72px
   </div>
 </div>
 
-<!-- ═══ ABOUT ═══ -->
+<div class="brands-section">
+  <div class="brands-header">
+    <div class="brands-header-title">Enterprises Empowered by My Solutions</div>
+  </div>
+  <div class="brands-marquee-wrap">
+    <div class="brands-marquee-inner" id="brand-marquee">
+      <div class="brand-showcase-box google-node">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12.24 10.285V13.4h6.887c-.275 1.565-1.88 4.604-6.887 4.604-4.33 0-7.865-3.577-7.865-8s3.535-8 7.865-8c2.46 0 4.105 1.025 5.047 1.926l2.427-2.334C18.155.573 15.433 0 12.24 0 5.582 0 0 5.373 0 12s5.582 12 12.24 12c6.96 0 11.57-4.81 11.57-11.79 0-.79-.085-1.39-.195-1.925H12.24z"/></svg>
+        <span>Google</span>
+      </div>
+      <div class="brand-showcase-box waymo-node">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M0 16.142h4.552l2.628-7.39h.074l2.651 7.39h8.307l2.843-8.113h.052l2.843 8.113H24l-4.912-13.43h-4.954l-2.825 7.822h-.053l-2.853-7.822H3.504z"/></svg>
+        <span>Waymo</span>
+      </div>
+      <div class="brand-showcase-box celanese-node">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10-10-4.486-10-10 4.486-10 10-10zm0-2c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm-2 8v8h4v-2h-2v-1h2v-2h-2v-1h2v-2h-4z"/></svg>
+        <span>Celanese</span>
+      </div>
+      <div class="brand-showcase-box bose-node">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M0 16.58h4.093c1.396 0 2.474-.298 3.234-.894.693-.545 1.04-1.298 1.04-2.257 0-.756-.217-1.383-.65-1.88a3.146 3.146 0 0 0-1.745-1.077v-.071c1.233-.356 1.85-1.258 1.85-2.705 0-.916-.32-1.633-.96-2.152C6.223 5.025 5.112 4.76 3.53 4.76H0zm2.748-8.812H3.37c.756 0 1.293.11 1.61.334.343.235.515.613.515 1.135 0 .546-.172.942-.515 1.189-.317.228-.854.342-1.61.342h-.622zm0 4.41h.775c.813 0 1.393.127 1.741.382.355.26.533.682.533 1.266 0 .584-.178 1-.533 1.248-.348.246-.928.37-1.741.37h-.775z"/></svg>
+        <span>Bose</span>
+      </div>
+      <div class="brand-showcase-box underarmour-node">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 10.124c-1.638 0-3.153-.553-4.364-1.48a7.086 7.086 0 0 1-2.584-4.22c3.084 1.942 6.168 1.942 9.252 0a7.086 7.086 0 0 1-2.584 4.22 7.15 7.15 0 0 1-4.364 1.48zm0 3.752c1.638 0 3.153.553 4.364 1.48a7.086 7.086 0 0 1 2.584 4.22c-3.084-1.942-6.168-1.942-9.252 0a7.086 7.086 0 0 1 2.584-4.22 7.15 7.15 0 0 1 4.364-1.48z"/></svg>
+        <span>Under Armour</span>
+      </div>
+      <div class="brand-showcase-box kraftheinz-node">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12.062 17.51a1.983 1.983 0 0 1-1.96-2.007c0-1.121.867-2.008 1.96-2.008s1.959.887 1.959 2.008a1.983 1.983 0 0 1-1.959 2.007zM24 8.784v6.432c0 2.215-2.028 4.02-4.512 4.02h-14.976C2.028 19.236 0 17.431 0 15.216V8.784C0 6.57 2.028 4.764 4.512 4.764h14.976C21.972 4.764 24 6.57 24 8.784z"/></svg>
+        <span>Kraft Heinz</span>
+      </div>
+      <div class="brand-showcase-box itc-node">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3.24 2.4h17.52v3.36h-7.08v15.84h-3.36v-15.84h-7.08zm1.08 6.24h4.32v8.64h-4.32zm12.12 0h4.32v8.64h-4.32z"/></svg>
+        <span>ITC</span>
+      </div>
+      <div class="brand-showcase-box tripadvisor-node">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 0C5.383 0 0 5.383 0 12s5.383 12 12 12 12-5.383 12-12S18.617 0 12 0zm0 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12 6.477 2 10 2zm-4.5 5C5.57 7 4 8.57 4 10.5S5.57 14 7.5 14s3.5-1.57 3.5-3.5S9.43 7 7.5 7zm9 0c-1.93 0-3.5 1.57-3.5 3.5s1.57 3.5 3.5 3.5 3.5-1.57 3.5-3.5S18.43 7 16.5 7z"/></svg>
+        <span>TripAdvisor</span>
+      </div>
+      <div class="brand-showcase-box ecolab-node">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 0C5.376 0 0 5.376 0 12s5.376 12 12 12 12-5.376 12-12S18.324 0 12 0zm0 4.32c4.248 0 7.68 3.432 7.68 7.68s-3.432 7.68-7.68 7.68-7.68-3.432-7.68-7.68 3.432-7.68 7.68-7.68zm-3.24 4.32v6.48h1.62v-2.43h2.16v-1.62h-2.16v-1.08h2.7v-1.35z"/></svg>
+        <span>Ecolab</span>
+      </div>
+      <div class="brand-showcase-box zenni-node">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M2 7h20v2H2zm0 8h20v2H2zm4-4h12v2H6z"/></svg>
+        <span>Zenni</span>
+      </div>
+      <div class="brand-showcase-box mcc-node">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M2 4h6v3H2zm14 0h6v3h-6zm-7 5h6v3H9zm-7 5h6v3H2zm14 0h6v3h-6z"/></svg>
+        <span>MCC</span>
+      </div>
+    </div>
+  </div>
+</div>
+
 <section id="about" class="sec">
   <div class="sec-bg-num">01</div>
   <div class="sec-hd rv"><span class="sec-n">01</span><h2 class="sec-title">My <em>Journey</em></h2><div class="sec-line"></div></div>
@@ -533,7 +608,6 @@ footer{background:var(--ink2);border-top:1px solid var(--wire);padding:28px 72px
   </div>
 </section>
 
-<!-- ═══ EXPERIENCE ═══ -->
 <section id="experience" class="sec">
   <div class="sec-bg-num">02</div>
   <div class="sec-hd rv"><span class="sec-n">02</span><h2 class="sec-title">Work <em>History</em></h2><div class="sec-line"></div></div>
@@ -595,7 +669,6 @@ footer{background:var(--ink2);border-top:1px solid var(--wire);padding:28px 72px
   </div>
 </section>
 
-<!-- ═══ SKILLS ═══ -->
 <section id="skills" class="sec">
   <div class="sec-bg-num">03</div>
   <div class="sec-hd rv"><span class="sec-n">03</span><h2 class="sec-title">Technical <em>Skills</em></h2><div class="sec-line"></div></div>
@@ -609,7 +682,6 @@ footer{background:var(--ink2);border-top:1px solid var(--wire);padding:28px 72px
   </div>
 </section>
 
-<!-- ═══ DEMOS ═══ -->
 <section id="demos" class="sec">
   <div class="sec-bg-num">04</div>
   <div class="sec-hd rv"><span class="sec-n">04</span><h2 class="sec-title">AI <em>Demos</em></h2><div class="sec-line"></div></div>
@@ -626,7 +698,6 @@ footer{background:var(--ink2);border-top:1px solid var(--wire);padding:28px 72px
   <div style="text-align:center;margin-top:80px;"><div class="rv d9"><p style="color:rgba(242,237,230,.65);font-size:17px;margin-bottom:28px;font-weight:400;">See these systems in action. Discuss which fits your roadmap.</p><a href="#contact" class="btn btn-a">Schedule a Demo →</a></div></div>
 </section>
 
-<!-- ═══ PROJECTS ═══ -->
 <section id="projects" class="sec">
   <div class="sec-bg-num">05</div>
   <div class="sec-hd rv"><span class="sec-n">05</span><h2 class="sec-title">Featured <em>Projects</em></h2><div class="sec-line"></div></div>
@@ -688,7 +759,6 @@ footer{background:var(--ink2);border-top:1px solid var(--wire);padding:28px 72px
   </div>
 </section>
 
-<!-- ═══ CHALLENGES ═══ -->
 <section id="challenges" class="sec">
   <div class="sec-bg-num">06</div>
   <div class="sec-hd rv"><span class="sec-n">06</span><h2 class="sec-title">Hard Problems <em>Solved</em></h2><div class="sec-line"></div></div>
@@ -700,7 +770,6 @@ footer{background:var(--ink2);border-top:1px solid var(--wire);padding:28px 72px
   </div>
 </section>
 
-<!-- ═══ PUBLICATIONS ═══ -->
 <section id="publications" class="sec">
   <div class="sec-bg-num">07</div>
   <div class="sec-hd rv"><span class="sec-n">07</span><h2 class="sec-title">Research &<em>Writing</em></h2><div class="sec-line"></div></div>
@@ -712,7 +781,6 @@ footer{background:var(--ink2);border-top:1px solid var(--wire);padding:28px 72px
   </div>
 </section>
 
-<!-- ═══ CONTACT ── -->
 <section id="contact">
   <div class="ct-bg"><div class="ct-bg-word">CONNECT</div></div>
   <div class="ct-inner">
@@ -857,9 +925,12 @@ const frame=()=>{
 };
 frame();
 
-/* TICKER CLONE */
+/* TICKER CLONES */
 const tk=document.getElementById('tick');
 tk.innerHTML+=tk.innerHTML;
+
+const brandMarquee=document.getElementById('brand-marquee');
+brandMarquee.innerHTML+=brandMarquee.innerHTML;
 
 /* KEYBOARD NAVIGATION — Arrow keys jump between sections */
 const sectionEls=sections.map(id=>document.getElementById(id));
@@ -882,6 +953,8 @@ document.addEventListener('keydown',e=>{
   if(e.key==='End'){e.preventDefault();sectionEls[sectionEls.length-1].scrollIntoView({behavior:'smooth'});}
 });
 
+
+ /* # updated code with keyboard navigation and section dot navigator */
 /* Init */
 updateSecNav();
 </script>
