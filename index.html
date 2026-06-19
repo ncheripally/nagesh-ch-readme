@@ -150,6 +150,7 @@ h1.hero-name .r2 b{color:var(--orange);-webkit-text-stroke:0;font-style:italic;f
 @keyframes tick{from{transform:translateX(0);}to{transform:translateX(-50%);}}
 
 /* ── BRAND SCROLLER SECTION ── */
+<<<<<<< HEAD
 .brands-section{background:linear-gradient(135deg,rgba(10,14,39,.8) 0%,rgba(15,20,52,.8) 50%,rgba(10,26,58,.8) 100%);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,.06);padding:44px 0 36px 0;position:relative;z-index:5;}
 .brands-header{text-align:center;margin-bottom:28px;padding:0 24px;}
 .brands-header-title{font-family:var(--mono);font-size:11px;letter-spacing:0.35em;text-transform:uppercase;color:var(--orange);font-weight:600;display:flex;align-items:center;justify-content:center;gap:16px;}
@@ -159,6 +160,17 @@ h1.hero-name .r2 b{color:var(--orange);-webkit-text-stroke:0;font-style:italic;f
 .brand-showcase-box{display:inline-flex;align-items:center;gap:14px;padding:0 44px;height:34px;font-family:var(--body);font-size:21px;font-weight:700;letter-spacing:-0.01em;transition:transform 0.3s ease,filter .3s ease;cursor:default;}
 .brand-showcase-box svg{height:100%;width:auto;fill:currentColor;}
 .brand-showcase-box:hover{transform:scale(1.08);filter:drop-shadow(0 0 10px rgba(255,107,53,.25));}
+=======
+.brands-section{background:rgba(8,8,15,0.6);border-bottom:1px solid rgba(255,255,255,0.06);padding:44px 0 36px 0;position:relative;z-index:5;}
+.brands-header{text-align:center;margin-bottom:28px;padding:0 24px;}
+.brands-header-title{font-family:var(--mono);font-size:11px;letter-spacing:0.35em;text-transform:uppercase;color:var(--orange);font-weight:600;display:flex;align-items:center;justify-content:center;gap:16px;}
+.brands-header-title::before, .brands-header-title::after{content:'';width:24px;height:1px;background:rgba(224,92,26,0.4);.05}
+.brands-marquee-wrap{display:flex;white-space:nowrap;overflow:hidden;width:100%;position:relative;}
+.brands-marquee-inner{display:inline-flex;align-items:center;animation:brandScroll 38s linear infinite;}
+.brand-showcase-box{display:inline-flex;align-items:center;gap:14px;padding:0 44px;height:34px;font-family:var(--body);font-size:21px;font-weight:700;letter-spacing:-0.01em;transition:transform 0.3s ease;cursor:default;}
+.brand-showcase-box svg{height:100%;width:auto;fill:currentColor;}
+.brand-showcase-box:hover{transform:scale(1.05);}
+>>>>>>> e1e78faf14a22b931bb7949c34457e494a7c37c6
 
 /* Authentic Vibrant Color Mapping Schematics */
 .brand-showcase-box.google-node{color:#4285F4;}
