@@ -44,16 +44,13 @@ export default {
     const origin = request.headers.get('Origin') || '';
     const corsHeaders = getCorsHeaders(origin);
 
-    // Handle CORS preflight
     if (request.method === 'OPTIONS') {
       return new Response(null, { status: 204, headers: corsHeaders });
     }
-
     if (request.method !== 'POST') {
       return new Response('Method not allowed', { status: 405, headers: corsHeaders });
     }
 
-    // Rate limiting
     const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
     const rateRecord = getRateLimit(ip);
     if (rateRecord.count >= RATE_LIMIT_REQUESTS) {
@@ -64,17 +61,21 @@ export default {
     rateRecord.count++;
     ipStore.set(ip, rateRecord);
 
-    // Parse body
     let body;
     try { body = await request.json(); }
     catch { return new Response(JSON.stringify({ error: 'Invalid JSON' }), { status: 400, headers: corsHeaders }); }
 
-    const { messages } = body;
+    const { messages, temperature, top_p, frequency_penalty, presence_penalty } = body;
     if (!messages || !Array.isArray(messages) || messages.length === 0 || messages.length > 10) {
       return new Response(JSON.stringify({ error: 'Invalid messages' }), { status: 400, headers: corsHeaders });
     }
 
-    // Call Groq
+    // Clamp sampling params to safe ranges
+    const temp  = Math.min(Math.max(parseFloat(temperature)        || 0.7,  0.0),  2.0);
+    const topp  = Math.min(Math.max(parseFloat(top_p)              || 0.9,  0.01), 1.0);
+    const freq  = Math.min(Math.max(parseFloat(frequency_penalty)  || 0.0, -2.0),  2.0);
+    const pres  = Math.min(Math.max(parseFloat(presence_penalty)   || 0.0, -2.0),  2.0);
+
     try {
       const groqResponse = await fetch('https://api.groq.com/openai/v1/chat/completions', {
         method: 'POST',
@@ -85,7 +86,10 @@ export default {
         body: JSON.stringify({
           model: 'llama-3.3-70b-versatile',
           max_tokens: MAX_TOKENS,
-          temperature: 0.7,
+          temperature: temp,
+          top_p: topp,
+          frequency_penalty: freq,
+          presence_penalty: pres,
           messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...messages],
         }),
       });
