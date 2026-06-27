@@ -570,87 +570,174 @@ footer:hover{border-top-color:rgba(255,107,53,.3);}
 .n-link-live .live-pill::before{content:'';width:4px;height:4px;border-radius:50%;background:#fff;animation:livePulse 1.5s infinite;}
 @keyframes livePulse{0%,100%{opacity:1;}50%{opacity:.3;}}
 
-/* ══════════════════════════════════
-   NLP CLASSIFICATION DEMO MODAL
-══════════════════════════════════ */
-.nlp-overlay{position:fixed;inset:0;z-index:1700;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.6);backdrop-filter:blur(8px);opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s;}
+/* Live badge nav */
+.n-link-live{position:relative;}
+.n-link-live .live-pill{font-family:var(--mono);font-size:7px;letter-spacing:.12em;padding:2px 5px;background:#dc2626;color:#fff;border-radius:3px;position:absolute;top:-8px;right:-22px;display:flex;align-items:center;gap:3px;line-height:1;}
+.n-link-live .live-pill::before{content:'';width:4px;height:4px;border-radius:50%;background:#fff;animation:livePulse 1.5s infinite;}
+@keyframes livePulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* Demo modal white */
+.demo-overlay{position:fixed;inset:0;z-index:1700;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.6);backdrop-filter:blur(8px);opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s;}
+.demo-overlay.open{opacity:1;visibility:visible;}
+.demo-modal{width:100%;max-width:1040px;height:88vh;background:#fff;border-radius:16px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.18);}
+.demo-modal-header{padding:18px 24px;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;background:#fff;}
+.demo-modal-title{display:flex;align-items:center;gap:10px;}
+.demo-modal-title h3{font-family:var(--body);font-size:15px;font-weight:600;color:#111827;letter-spacing:-.01em;}
+.demo-model-info{font-family:var(--mono);font-size:9px;color:#6b7280;letter-spacing:.04em;margin-top:2px;}
+.demo-model-info strong{color:#374151;}
+.demo-live-badge{font-family:var(--mono);font-size:8px;letter-spacing:.18em;padding:3px 9px;background:#fef2f2;border:1px solid #fecaca;color:#dc2626;border-radius:4px;display:flex;align-items:center;gap:5px;text-transform:uppercase;}
+.demo-live-badge::before{content:'';width:5px;height:5px;border-radius:50%;background:#dc2626;animation:livePulse 1.5s infinite;}
+.demo-close{width:32px;height:32px;border:1px solid #e5e7eb;border-radius:8px;background:#fff;color:#6b7280;font-size:18px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;}
+.demo-close:hover{background:#f9fafb;color:#111827;}
+.demo-body{display:grid;grid-template-columns:280px 1fr;flex:1;overflow:hidden;}
+.demo-pipeline{padding:16px;border-right:1px solid #f3f4f6;overflow-y:auto;display:flex;flex-direction:column;gap:8px;background:#fafafa;}
+.demo-pipeline-title{font-family:var(--mono);font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;color:#9ca3af;margin-bottom:2px;}
+.agent-card{border:1px solid #e5e7eb;border-radius:8px;padding:10px 12px;background:#fff;transition:all .35s;}
+.agent-card.active{border-color:#fb923c;background:#fff7ed;box-shadow:0 0 0 3px rgba(251,146,60,.1);}
+.agent-card.done{border-color:#86efac;background:#f0fdf4;}
+.agent-card.blocked{border-color:#f87171;background:#fef2f2;box-shadow:0 0 0 3px rgba(248,113,113,.15);}
+.agent-card.idle{opacity:.5;}
+.agent-header{display:flex;align-items:center;gap:8px;margin-bottom:5px;}
+.agent-icon{font-size:14px;}
+.agent-name{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:#374151;font-weight:600;flex:1;}
+.agent-status{font-family:var(--mono);font-size:7.5px;letter-spacing:.08em;padding:2px 7px;border-radius:3px;text-transform:uppercase;}
+.agent-status.thinking{background:#fff7ed;color:#ea580c;border:1px solid #fed7aa;}
+.agent-status.done{background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;}
+.agent-status.idle{background:#f9fafb;color:#9ca3af;border:1px solid #e5e7eb;}
+.agent-status.blocked{background:#fef2f2;color:#dc2626;border:1px solid #fecaca;}
+.agent-role-desc{font-family:var(--mono);font-size:7.5px;color:#9ca3af;letter-spacing:.02em;margin-bottom:3px;}
+.agent-thought{font-size:11px;color:#6b7280;line-height:1.55;font-style:italic;min-height:14px;}
+.agent-arrow{text-align:center;color:#d1d5db;font-size:11px;margin:-4px 0;line-height:1;}
+.demo-model-card{margin-top:12px;border:1px solid #e5e7eb;border-radius:10px;padding:12px;background:#fff;}
+.demo-model-card-title{font-family:var(--mono);font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:#9ca3af;margin-bottom:8px;}
+.demo-model-row{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #f3f4f6;}
+.demo-model-row:last-child{border-bottom:none;}
+.demo-model-row span{color:#6b7280;font-family:var(--mono);font-size:9px;}
+.demo-model-row strong{color:#111827;font-size:9px;font-family:var(--mono);}
+.demo-desc-bar{padding:10px 24px;background:#f8fafc;border-bottom:1px solid #e5e7eb;flex-shrink:0;}
+.demo-desc-text{font-size:12px;color:#4b5563;line-height:1.6;}
+.demo-desc-text strong{color:#111827;font-weight:600;}
+.demo-objective{padding:10px 24px;background:#fff;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.demo-objective-label{font-family:var(--mono);font-size:8px;letter-spacing:.18em;text-transform:uppercase;color:#6b7280;white-space:nowrap;}
+.demo-objective-text{font-family:var(--body);font-size:12.5px;font-weight:600;color:#111827;}
+.demo-chat{display:flex;flex-direction:column;overflow:hidden;background:#fff;}
+.demo-messages{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:10px;scrollbar-width:thin;}
+.demo-msg{max-width:82%;padding:11px 15px;border-radius:12px;font-size:13.5px;line-height:1.65;font-family:var(--body);}
+.demo-msg.user{align-self:flex-end;background:#111827;color:#fff;border-bottom-right-radius:3px;}
+.demo-msg.assistant{align-self:flex-start;background:#f9fafb;border:1px solid #e5e7eb;color:#111827;border-bottom-left-radius:3px;}
+.demo-msg.system{align-self:center;background:#f0fdf4;border:1px solid #bbf7d0;color:#15803d;font-family:var(--mono);font-size:10px;border-radius:6px;text-align:center;padding:8px 14px;}
+.demo-msg .msg-label{font-family:var(--mono);font-size:8px;letter-spacing:.15em;text-transform:uppercase;opacity:.45;margin-bottom:4px;color:inherit;}
+.demo-input-area{padding:14px 20px;border-top:1px solid #f3f4f6;flex-shrink:0;background:#fff;}
+.demo-counter{font-family:var(--mono);font-size:9px;color:#9ca3af;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;}
+.demo-counter-dots{display:flex;gap:4px;}
+.demo-counter-dot{width:7px;height:7px;border-radius:50%;border:1.5px solid #d1d5db;transition:all .3s;}
+.demo-counter-dot.used{background:#111827;border-color:#111827;}
+.demo-suggestions{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;}
+.demo-suggestion{font-family:var(--mono);font-size:9px;padding:5px 11px;border:1px solid #e5e7eb;border-radius:20px;color:#6b7280;cursor:pointer;transition:all .2s;background:#fff;}
+.demo-suggestion:hover{border-color:#111827;color:#111827;}
+.demo-input-row{display:flex;gap:8px;}
+.demo-input{flex:1;background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;padding:10px 14px;color:#111827;font-family:var(--body);font-size:13px;outline:none;transition:border-color .2s;resize:none;}
+.demo-input:focus{border-color:#111827;background:#fff;}
+.demo-input::placeholder{color:#9ca3af;}
+.demo-send{background:#111827;border:none;border-radius:10px;padding:10px 20px;color:#fff;font-family:var(--mono);font-size:10px;letter-spacing:.1em;cursor:pointer;transition:all .2s;white-space:nowrap;}
+.demo-send:hover:not(:disabled){background:#1f2937;box-shadow:0 4px 12px rgba(0,0,0,.15);}
+.demo-send:disabled{opacity:.35;cursor:not-allowed;}
+.dm-launch{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:10px;letter-spacing:.12em;padding:9px 20px;border:1.5px solid #111827;color:#111827;background:#fff;border-radius:7px;cursor:pointer;transition:all .25s;text-decoration:none;text-transform:uppercase;}
+.dm-launch:hover{background:#111827;color:#fff;box-shadow:0 4px 14px rgba(0,0,0,.15);}
+.dm-launch::before{content:'▶';font-size:8px;}
+
+/* NLP Demo */
+.nlp-overlay{position:fixed;inset:0;z-index:1700;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.65);backdrop-filter:blur(10px);opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s;}
 .nlp-overlay.open{opacity:1;visibility:visible;}
-.nlp-modal{width:100%;max-width:1000px;max-height:90vh;background:#fff;border-radius:16px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.18);}
-
-/* Header */
-.nlp-header{padding:18px 24px;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
-.nlp-header-left{display:flex;align-items:center;gap:10px;}
-.nlp-header-left h3{font-family:var(--body);font-size:15px;font-weight:600;color:#111827;}
-.nlp-model-info{font-family:var(--mono);font-size:9px;color:#6b7280;margin-top:2px;}
-.nlp-model-info strong{color:#374151;}
-.nlp-close{width:32px;height:32px;border:1px solid #e5e7eb;border-radius:8px;background:#fff;color:#6b7280;font-size:18px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;}
+.nlp-modal{width:100%;max-width:1060px;height:90vh;background:#fff;border-radius:16px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,.2),0 0 0 1px rgba(0,0,0,.06);}
+.nlp-header{padding:16px 24px;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.nlp-header-left{display:flex;align-items:center;gap:12px;}
+.nlp-header-icon{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#6366f1,#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.nlp-header-title{font-family:var(--body);font-size:15px;font-weight:600;color:#111827;letter-spacing:-.01em;}
+.nlp-header-meta{display:flex;align-items:center;gap:8px;margin-top:3px;flex-wrap:wrap;}
+.nlp-badge{font-family:var(--mono);font-size:8px;letter-spacing:.12em;padding:2px 8px;border-radius:4px;text-transform:uppercase;}
+.nlp-badge.model{background:#f0fdf4;border:1px solid #bbf7d0;color:#15803d;}
+.nlp-badge.tasks{background:#eff6ff;border:1px solid #bfdbfe;color:#1d4ed8;}
+.nlp-badge.live{background:#fef2f2;border:1px solid #fecaca;color:#dc2626;display:flex;align-items:center;gap:4px;}
+.nlp-badge.live::before{content:'';width:5px;height:5px;border-radius:50%;background:#dc2626;animation:livePulse 1.5s infinite;}
+.nlp-close{width:30px;height:30px;border:1px solid #e5e7eb;border-radius:7px;background:#fff;color:#6b7280;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;}
 .nlp-close:hover{background:#f9fafb;color:#111827;}
-
-/* Objective bar */
-.nlp-objective{padding:10px 24px;background:#f8fafc;border-bottom:1px solid #e5e7eb;font-size:12px;color:#4b5563;display:flex;align-items:center;gap:10px;flex-shrink:0;}
-.nlp-objective-label{font-family:var(--mono);font-size:8px;letter-spacing:.18em;text-transform:uppercase;color:#6b7280;white-space:nowrap;}
-.nlp-objective strong{color:#111827;}
-
-/* Input area */
-.nlp-input-section{padding:20px 24px;border-bottom:1px solid #f3f4f6;flex-shrink:0;}
-.nlp-examples{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;}
-.nlp-example{font-family:var(--mono);font-size:8.5px;padding:4px 10px;border:1px solid #e5e7eb;border-radius:20px;color:#6b7280;cursor:pointer;transition:all .2s;background:#fff;}
-.nlp-example:hover{border-color:#111827;color:#111827;background:#f9fafb;}
-.nlp-input-row{display:flex;gap:10px;}
-.nlp-textarea{flex:1;background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;padding:10px 14px;color:#111827;font-family:var(--body);font-size:13px;outline:none;transition:border-color .2s;resize:none;height:72px;}
-.nlp-textarea:focus{border-color:#111827;background:#fff;}
+.nlp-infobar{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid #e5e7eb;flex-shrink:0;background:#fafafa;}
+.nlp-info-cell{padding:12px 20px;border-right:1px solid #e5e7eb;display:flex;flex-direction:column;gap:3px;}
+.nlp-info-cell:last-child{border-right:none;}
+.nlp-info-label{font-family:var(--mono);font-size:7.5px;letter-spacing:.18em;text-transform:uppercase;color:#9ca3af;}
+.nlp-info-value{font-family:var(--mono);font-size:11px;color:#111827;font-weight:600;}
+.nlp-info-value.green{color:#16a34a;}
+.nlp-input-section{padding:18px 24px;border-bottom:1px solid #e5e7eb;flex-shrink:0;}
+.nlp-input-label{font-family:var(--mono);font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:#6b7280;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;}
+.nlp-char-count{color:#9ca3af;}
+.nlp-input-row{display:flex;gap:10px;margin-bottom:12px;}
+.nlp-textarea{flex:1;background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;padding:12px 16px;color:#111827;font-family:var(--body);font-size:13px;line-height:1.6;outline:none;transition:border-color .2s;resize:none;height:80px;}
+.nlp-textarea:focus{border-color:#6366f1;background:#fff;box-shadow:0 0 0 3px rgba(99,102,241,.08);}
 .nlp-textarea::placeholder{color:#9ca3af;}
-.nlp-analyse-btn{background:#111827;border:none;border-radius:10px;padding:10px 24px;color:#fff;font-family:var(--mono);font-size:10px;letter-spacing:.1em;cursor:pointer;transition:all .2s;white-space:nowrap;align-self:flex-end;}
-.nlp-analyse-btn:hover:not(:disabled){background:#1f2937;box-shadow:0 4px 12px rgba(0,0,0,.15);}
-.nlp-analyse-btn:disabled{opacity:.4;cursor:not-allowed;}
-
-/* Results */
-.nlp-results{flex:1;overflow-y:auto;padding:20px 24px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
-.nlp-results.loading{display:flex;align-items:center;justify-content:center;}
-.nlp-placeholder{text-align:center;color:#9ca3af;font-family:var(--mono);font-size:11px;letter-spacing:.1em;}
-.nlp-placeholder-icon{font-size:32px;margin-bottom:12px;}
-
-/* Result cards */
-.nlp-card{border:1px solid #e5e7eb;border-radius:12px;padding:18px;background:#fff;display:flex;flex-direction:column;gap:12px;}
-.nlp-card-title{font-family:var(--mono);font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:#9ca3af;margin-bottom:4px;}
-
-/* Category card */
-.nlp-category-name{font-family:var(--serif);font-size:18px;font-weight:700;color:#111827;margin-bottom:4px;}
-.nlp-category-domain{font-family:var(--mono);font-size:9px;color:#6b7280;margin-bottom:12px;}
-.nlp-bar-wrap{margin-bottom:6px;}
-.nlp-bar-label{display:flex;justify-content:space-between;font-family:var(--mono);font-size:9px;color:#374151;margin-bottom:4px;}
-.nlp-bar-track{height:6px;background:#f3f4f6;border-radius:3px;overflow:hidden;}
-.nlp-bar-fill{height:100%;border-radius:3px;width:0;transition:width 1s cubic-bezier(.23,1,.32,1);}
+.nlp-analyse-btn{background:#111827;border:none;border-radius:10px;padding:12px 28px;color:#fff;font-family:var(--mono);font-size:10px;letter-spacing:.12em;cursor:pointer;transition:all .2s;white-space:nowrap;align-self:flex-end;text-transform:uppercase;}
+.nlp-analyse-btn:hover:not(:disabled){background:#1f2937;box-shadow:0 4px 14px rgba(0,0,0,.15);transform:translateY(-1px);}
+.nlp-analyse-btn:disabled{opacity:.4;cursor:not-allowed;transform:none;}
+.nlp-examples-label{font-family:var(--mono);font-size:8px;letter-spacing:.16em;text-transform:uppercase;color:#9ca3af;margin-bottom:7px;}
+.nlp-examples{display:flex;flex-wrap:wrap;gap:6px;}
+.nlp-example{font-family:var(--mono);font-size:8.5px;padding:5px 12px;border:1px solid #e5e7eb;border-radius:6px;color:#4b5563;cursor:pointer;transition:all .2s;background:#fff;letter-spacing:.02em;}
+.nlp-example:hover{border-color:#6366f1;color:#4338ca;background:#eff6ff;}
+.nlp-results{flex:1;overflow-y:auto;padding:20px 24px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;align-content:start;}
+.nlp-results.loading{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;}
+.nlp-placeholder{text-align:center;color:#9ca3af;font-family:var(--mono);font-size:11px;padding:32px 0;}
+.nlp-placeholder-icon{font-size:36px;margin-bottom:14px;display:block;}
+.nlp-loading-text{font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:#6b7280;}
+.nlp-loading-steps{display:flex;flex-direction:column;gap:5px;margin-top:8px;}
+.nlp-loading-step{font-family:var(--mono);font-size:9px;color:#9ca3af;display:flex;align-items:center;gap:8px;}
+.nlp-loading-step.active{color:#6366f1;}
+.nlp-loading-step::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0;}
+.nlp-card{border:1px solid #e5e7eb;border-radius:12px;padding:20px;background:#fff;display:flex;flex-direction:column;gap:10px;box-shadow:0 1px 4px rgba(0,0,0,.04);}
+.nlp-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:2px;}
+.nlp-card-title{font-family:var(--mono);font-size:7.5px;letter-spacing:.22em;text-transform:uppercase;color:#9ca3af;}
+.nlp-divider{height:1px;background:#f3f4f6;margin:2px 0;}
+.nlp-category-name{font-family:var(--serif);font-size:20px;font-weight:700;color:#111827;letter-spacing:-.01em;line-height:1.2;}
+.nlp-category-domain{font-family:var(--mono);font-size:9px;color:#6b7280;margin-bottom:6px;}
+.nlp-bar-wrap{margin-bottom:2px;}
+.nlp-bar-label{display:flex;justify-content:space-between;font-family:var(--mono);font-size:9px;color:#374151;margin-bottom:5px;}
+.nlp-bar-pct{font-weight:700;color:#111827;}
+.nlp-bar-track{height:5px;background:#f3f4f6;border-radius:3px;overflow:hidden;}
+.nlp-bar-fill{height:100%;border-radius:3px;width:0;transition:width 1.2s cubic-bezier(.23,1,.32,1);}
 .nlp-bar-fill.cat{background:linear-gradient(90deg,#6366f1,#8b5cf6);}
-.nlp-intent{font-family:var(--mono);font-size:9px;padding:4px 10px;background:#f0fdf4;border:1px solid #bbf7d0;color:#15803d;border-radius:4px;width:fit-content;}
-
-/* Sentiment card */
-.nlp-sentiment-label{font-family:var(--serif);font-size:22px;font-weight:700;margin-bottom:4px;}
+.nlp-bar-fill.pos{background:linear-gradient(90deg,#4ade80,#16a34a);}
+.nlp-bar-fill.neg{background:linear-gradient(90deg,#f87171,#dc2626);}
+.nlp-bar-fill.neu{background:linear-gradient(90deg,#fbbf24,#d97706);}
+.nlp-bar-fill.mix{background:linear-gradient(90deg,#a78bfa,#7c3aed);}
+.nlp-intent-wrap{display:flex;align-items:center;gap:6px;margin-top:4px;}
+.nlp-intent-label{font-family:var(--mono);font-size:7.5px;color:#9ca3af;letter-spacing:.1em;text-transform:uppercase;}
+.nlp-intent{font-family:var(--mono);font-size:9px;padding:4px 10px;background:#f0fdf4;border:1px solid #bbf7d0;color:#15803d;border-radius:4px;}
+.nlp-sentiment-row{display:flex;align-items:baseline;gap:8px;}
+.nlp-sentiment-label{font-family:var(--serif);font-size:24px;font-weight:700;letter-spacing:-.01em;}
 .nlp-sentiment-label.positive{color:#16a34a;}
 .nlp-sentiment-label.negative{color:#dc2626;}
 .nlp-sentiment-label.neutral{color:#d97706;}
 .nlp-sentiment-label.mixed{color:#7c3aed;}
-.nlp-bar-fill.pos{background:linear-gradient(90deg,#4ade80,#16a34a);}
-.nlp-bar-fill.neg{background:linear-gradient(90deg,#f87171,#dc2626);}
-.nlp-bar-fill.neu{background:linear-gradient(90deg,#fbbf24,#d97706);}
-.nlp-summary{font-size:12px;color:#6b7280;line-height:1.6;border-top:1px solid #f3f4f6;padding-top:10px;margin-top:4px;}
-
-/* Entities card */
+.nlp-sentiment-sub{font-family:var(--mono);font-size:9px;color:#6b7280;}
+.nlp-summary-label{font-family:var(--mono);font-size:7px;letter-spacing:.18em;text-transform:uppercase;color:#9ca3af;margin-bottom:5px;}
+.nlp-summary{font-size:12px;color:#4b5563;line-height:1.65;border:1px solid #f3f4f6;border-radius:8px;padding:10px 12px;background:#fafafa;}
 .nlp-entities{display:flex;flex-wrap:wrap;gap:7px;}
-.nlp-entity{display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:6px;font-size:11px;}
-.nlp-entity-text{font-weight:600;color:#111827;}
-.nlp-entity-type{font-family:var(--mono);font-size:7.5px;letter-spacing:.08em;opacity:.7;}
-.nlp-entity.TIME_PERIOD{background:#eff6ff;border:1px solid #bfdbfe;}
-.nlp-entity.METRIC{background:#f0fdf4;border:1px solid #bbf7d0;}
-.nlp-entity.KPI{background:#fef3c7;border:1px solid #fde68a;}
-.nlp-entity.STRATEGY{background:#fdf4ff;border:1px solid #e9d5ff;}
-.nlp-entity.TECHNOLOGY{background:#f0f9ff;border:1px solid #bae6fd;}
-.nlp-entity.PERSON{background:#fff1f2;border:1px solid #fecdd3;}
-.nlp-entity.ORGANIZATION{background:#f8fafc;border:1px solid #e2e8f0;}
-.nlp-entity.OTHER{background:#f9fafb;border:1px solid #e5e7eb;}
-
-@media(max-width:800px){.nlp-results{grid-template-columns:1fr;}.nlp-modal{max-height:95vh;}}
-@keyframes spin{to{transform:rotate(360deg);}}
+.nlp-entity{display:inline-flex;flex-direction:column;padding:6px 10px;border-radius:7px;gap:2px;}
+.nlp-entity-text{font-size:11px;font-weight:600;color:#111827;line-height:1.2;}
+.nlp-entity-type{font-family:var(--mono);font-size:7px;letter-spacing:.08em;text-transform:uppercase;opacity:.65;}
+.nlp-entity.TIME_PERIOD{background:#eff6ff;border:1px solid #bfdbfe;color:#1d4ed8;}
+.nlp-entity.METRIC{background:#f0fdf4;border:1px solid #bbf7d0;color:#15803d;}
+.nlp-entity.KPI{background:#fef3c7;border:1px solid #fde68a;color:#92400e;}
+.nlp-entity.STRATEGY{background:#fdf4ff;border:1px solid #e9d5ff;color:#6b21a8;}
+.nlp-entity.TECHNOLOGY{background:#f0f9ff;border:1px solid #bae6fd;color:#0369a1;}
+.nlp-entity.PERSON{background:#fff1f2;border:1px solid #fecdd3;color:#9f1239;}
+.nlp-entity.ORGANIZATION{background:#f8fafc;border:1px solid #e2e8f0;color:#334155;}
+.nlp-entity.OTHER{background:#f9fafb;border:1px solid #e5e7eb;color:#374151;}
+.nlp-entity-legend{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px;padding-top:8px;border-top:1px solid #f3f4f6;}
+.nlp-legend-item{display:flex;align-items:center;gap:4px;font-family:var(--mono);font-size:7.5px;color:#6b7280;}
+.nlp-legend-dot{width:6px;height:6px;border-radius:50%;}
+@media(max-width:900px){.nlp-results{grid-template-columns:1fr 1fr;}.nlp-infobar{grid-template-columns:1fr 1fr;}}
+@media(max-width:600px){.nlp-results{grid-template-columns:1fr;}.nlp-modal{height:95vh;}}
+@media(max-width:800px){.demo-body{grid-template-columns:1fr;}.demo-pipeline{display:none;}.demo-modal{height:95vh;}}
 </style>
 </head>
 <body>
@@ -1023,7 +1110,7 @@ footer:hover{border-top-color:rgba(255,107,53,.3);}
   <div class="dm-grid">
     <div class="dm rv d1"><div class="dm-n">DEMO / 01</div><div class="dm-title">AI Chatbot Assistant</div><div class="dm-desc">Live demo of agentic AI systems with orchestrator, guardrail, and validator agents working in harmony. Watch each agent think in real-time.</div><div class="dm-tags"><span class="dm-tag">LangGraph</span><span class="dm-tag">Claude API</span><span class="dm-tag">Agents</span><span class="dm-tag">Live</span></div><button class="dm-launch" onclick="openDemo()">Launch Live Demo</button></div>
     <div class="dm rv d2"><div class="dm-n">DEMO / 02</div><div class="dm-title">RAG Pipeline Explorer</div><div class="dm-desc">Interactive RAG system showing document retrieval, embedding, and LLM generation with model tracing, evaluation dashboards, and drift detection.</div><div class="dm-tags"><span class="dm-tag">RAG</span><span class="dm-tag">Embeddings</span><span class="dm-tag">LLM</span><span class="dm-tag">Model Tracing</span><span class="dm-tag">Evaluation</span></div><a href="#contact" class="dm-cta">Request Demo →</a></div>
-    <div class="dm rv d3"><div class="dm-n">DEMO / 03</div><div class="dm-title">NLP Classification Engine</div><div class="dm-desc">Multi-task NLP in one inference call — category classification, sentiment analysis, and named entity extraction with confidence scores visualised live.</div><div class="dm-tags"><span class="dm-tag">NLP</span><span class="dm-tag">Classification</span><span class="dm-tag">Sentiment</span><span class="dm-tag">NER</span><span class="dm-tag">Live</span></div><button class="dm-launch" onclick="openNLP()">Launch Live Demo</button></div>
+    <div class="dm rv d3"><div class="dm-n">DEMO / 03</div><div class="dm-title">NLP Classification Engine</div><div class="dm-desc">Multi-task NLP in a single inference call — simultaneous text classification, sentiment analysis, and named entity recognition with confidence scores.</div><div class="dm-tags"><span class="dm-tag">NLP</span><span class="dm-tag">Classification</span><span class="dm-tag">Sentiment</span><span class="dm-tag">NER</span><span class="dm-tag">Live</span></div><button class="dm-launch" onclick="openNLP()">Launch Live Demo</button></div>
     <div class="dm rv d4"><div class="dm-n">DEMO / 04</div><div class="dm-title">Multi-Agent Orchestration</div><div class="dm-desc">End-to-end multi-agent workflow with orchestrator, guardrail, validator and responder agents working autonomously on enterprise tasks.</div><div class="dm-tags"><span class="dm-tag">LangGraph</span><span class="dm-tag">Multi-Agent</span><span class="dm-tag">Tool Use</span><span class="dm-tag">Memory</span><span class="dm-tag">Guardrails</span></div><a href="#contact" class="dm-cta">Request Demo →</a></div>
     <div class="dm rv d5"><div class="dm-n">DEMO / 05</div><div class="dm-title">MLOps &amp; Evaluation Studio</div><div class="dm-desc">State-of-the-art lifecycle demo with CI/CD, model versioning, tracing, evaluation scoring, and governance dashboards for production AI.</div><div class="dm-tags"><span class="dm-tag">MLOps</span><span class="dm-tag">Model Tracing</span><span class="dm-tag">Model Evaluation</span><span class="dm-tag">Monitoring</span></div><a href="#contact" class="dm-cta">Request Demo →</a></div>
     <div class="dm rv d6"><div class="dm-n">DEMO / 06</div><div class="dm-title">Responsible AI Compliance</div><div class="dm-desc">Governance-focused demo for bias mitigation, explainability, and audit trails to meet enterprise AI safety and compliance requirements.</div><div class="dm-tags"><span class="dm-tag">Responsible AI</span><span class="dm-tag">Bias Mitigation</span><span class="dm-tag">Explainability</span><span class="dm-tag">Audit Trail</span></div><a href="#contact" class="dm-cta">Request Demo →</a></div>
@@ -1293,250 +1380,138 @@ document.addEventListener('keydown',e=>{
   </div>
 </div>
 
+
+
+<!-- ═══════════ NLP CLASSIFICATION DEMO ═══════════ -->
+<div id="nlp-modal" class="nlp-overlay" aria-hidden="true">
+  <div class="nlp-modal">
+    <div class="nlp-header">
+      <div class="nlp-header-left">
+        <div class="nlp-header-icon">🔬</div>
+        <div>
+          <div class="nlp-header-title">NLP Classification Engine</div>
+          <div class="nlp-header-meta">
+            <span class="nlp-badge model">LLaMA 3.1 8B · Groq LPU</span>
+            <span class="nlp-badge tasks">3 NLP Tasks · Single Inference</span>
+            <span class="nlp-badge live">LIVE</span>
+          </div>
+        </div>
+      </div>
+      <button class="nlp-close" id="nlp-close">×</button>
+    </div>
+    <div class="nlp-infobar">
+      <div class="nlp-info-cell"><span class="nlp-info-label">Task 1</span><span class="nlp-info-value">Text Classification</span></div>
+      <div class="nlp-info-cell"><span class="nlp-info-label">Task 2</span><span class="nlp-info-value">Sentiment Analysis</span></div>
+      <div class="nlp-info-cell"><span class="nlp-info-label">Task 3</span><span class="nlp-info-value">Named Entity Recognition</span></div>
+      <div class="nlp-info-cell"><span class="nlp-info-label">Inference</span><span class="nlp-info-value green">~750 tok/s · Single call</span></div>
+    </div>
+    <div class="nlp-input-section">
+      <div class="nlp-input-label">
+        <span>Input Text</span>
+        <span class="nlp-char-count" id="nlp-char-count">0 characters</span>
+      </div>
+      <div class="nlp-input-row">
+        <textarea class="nlp-textarea" id="nlp-input" placeholder="Paste any text — business report, technical note, customer feedback, product review..." oninput="updateCharCount()"></textarea>
+        <button class="nlp-analyse-btn" id="nlp-btn" onclick="runNLP()">Analyse →</button>
+      </div>
+      <div class="nlp-examples-label">Try an example</div>
+      <div class="nlp-examples">
+        <button class="nlp-example" onclick="useNLPExample(this)">Q3 churn rate increased 12% despite the new retention campaign launch</button>
+        <button class="nlp-example" onclick="useNLPExample(this)">The transformer model overfits on domain-specific tokens with limited training data</button>
+        <button class="nlp-example" onclick="useNLPExample(this)">Deploy the new RAG pipeline to production by Friday — Jira ticket assigned to backend team</button>
+        <button class="nlp-example" onclick="useNLPExample(this)">Customer satisfaction scores dropped 18% after the latest UI redesign rollout</button>
+        <button class="nlp-example" onclick="useNLPExample(this)">Azure OpenAI GPT-4 integration reduced support ticket resolution time by 40%</button>
+      </div>
+    </div>
+    <div class="nlp-results" id="nlp-results">
+      <div class="nlp-placeholder" style="grid-column:1/-1;">
+        <span class="nlp-placeholder-icon">🔬</span>
+        <div style="font-size:13px;color:#374151;font-weight:500;margin-bottom:6px;">Ready to analyse</div>
+        <div style="font-size:11px;color:#9ca3af;">Select an example or enter your own text, then click Analyse</div>
+        <div style="margin-top:16px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+          <span style="font-family:var(--mono);font-size:9px;padding:4px 12px;background:#eff6ff;border:1px solid #bfdbfe;color:#1d4ed8;border-radius:4px;">📊 Category + Confidence</span>
+          <span style="font-family:var(--mono);font-size:9px;padding:4px 12px;background:#f0fdf4;border:1px solid #bbf7d0;color:#15803d;border-radius:4px;">💬 Sentiment Score</span>
+          <span style="font-family:var(--mono);font-size:9px;padding:4px 12px;background:#fdf4ff;border:1px solid #e9d5ff;color:#6b21a8;border-radius:4px;">🏷 Named Entities</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
-/* ═══════════ MULTI-AGENT DEMO ═══════════ */
-const DEMO_MAX_MSGS = 5;
-let demoMsgCount = 0;
-let demoHistory = [];
-
-function openDemo(){
-  document.getElementById('demo-modal').classList.add('open');
-  document.getElementById('demo-modal').setAttribute('aria-hidden','false');
-  document.body.style.overflow='hidden';
-}
-function closeDemo(){
-  document.getElementById('demo-modal').classList.remove('open');
-  document.getElementById('demo-modal').setAttribute('aria-hidden','true');
-  document.body.style.overflow='';
-}
-document.getElementById('demo-close').addEventListener('click', closeDemo);
-document.getElementById('demo-modal').addEventListener('click', e=>{
-  if(e.target===document.getElementById('demo-modal')) closeDemo();
-});
-document.addEventListener('keydown', e=>{
-  if(e.key==='Escape' && document.getElementById('demo-modal').classList.contains('open')) closeDemo();
-});
-
-function useSuggestion(btn){
-  document.getElementById('demo-input').value = btn.textContent;
-  document.getElementById('demo-suggestions').style.display='none';
-  sendDemoMessage();
-}
-
-function setAgent(id, state, thought=''){
-  const card = document.getElementById('agent-'+id);
-  const status = document.getElementById('status-'+id);
-  const thoughtEl = document.getElementById('thought-'+id);
-  card.className = 'agent-card ' + state;
-  status.className = 'agent-status ' + (state==='active'?'thinking':state==='done'?'done':'idle');
-  status.textContent = state==='active'?'Thinking...':state==='done'?'Done':'Idle';
-  if(thought) thoughtEl.textContent = thought;
-}
-
-function resetAgents(){
-  ['orchestrator','guardrail','validator','responder'].forEach(id=>{
-    setAgent(id,'idle', id==='orchestrator'?'Waiting for query...':'Waiting...');
-  });
-}
-
-function addMessage(role, text){
-  const msgs = document.getElementById('demo-messages');
-  const div = document.createElement('div');
-  div.className = 'demo-msg ' + role;
-  if(role==='user'){
-    div.innerHTML = '<div class="msg-label">You</div>' + text;
-  } else if(role==='assistant'){
-    div.innerHTML = '<div class="msg-label">AI · Nagesh CH Portfolio</div>' + text;
-  } else {
-    div.textContent = text;
-  }
-  msgs.appendChild(div);
-  msgs.scrollTop = msgs.scrollHeight;
-}
-
-function updateCounter(){
-  const remaining = DEMO_MAX_MSGS - demoMsgCount;
-  document.getElementById('counter-text').textContent =
-    remaining > 0 ? remaining + ' message' + (remaining===1?'':'s') + ' remaining' : 'Session limit reached';
-  const dots = document.querySelectorAll('.demo-counter-dot');
-  dots.forEach((d,i)=> d.classList.toggle('used', i < demoMsgCount));
-}
-
+/* ═══ CHATBOT DEMO ═══ */
+const DEMO_MAX_MSGS=5;let demoMsgCount=0;let demoHistory=[];
+const injectionPatterns=[/ignore (all |previous |your )?instructions/i,/reveal (your |the )?(system )?prompt/i,/pretend (you are|to be)/i,/roleplay/i,/jailbreak/i,/bypass/i,/forget (your|all|previous)/i,/you are now/i,/disregard/i];
+function openDemo(){document.getElementById('demo-modal').classList.add('open');document.getElementById('demo-modal').setAttribute('aria-hidden','false');document.body.style.overflow='hidden';}
+function closeDemo(){document.getElementById('demo-modal').classList.remove('open');document.getElementById('demo-modal').setAttribute('aria-hidden','true');document.body.style.overflow='';}
+document.getElementById('demo-close').addEventListener('click',closeDemo);
+document.getElementById('demo-modal').addEventListener('click',e=>{if(e.target===document.getElementById('demo-modal'))closeDemo();});
+function useSuggestion(btn){document.getElementById('demo-input').value=btn.textContent;document.getElementById('demo-suggestions').style.display='none';sendDemoMessage();}
+function setAgent(id,state,thought=''){const card=document.getElementById('agent-'+id);const status=document.getElementById('status-'+id);const thoughtEl=document.getElementById('thought-'+id);if(!card)return;card.className='agent-card '+state;status.className='agent-status '+(state==='active'?'thinking':state==='done'?'done':state==='blocked'?'blocked':'idle');status.textContent=state==='active'?'Thinking...':state==='done'?'Done':state==='blocked'?'Blocked':'Idle';if(thought)thoughtEl.textContent=thought;}
+function resetAgents(){['orchestrator','guardrail','validator','responder'].forEach(id=>setAgent(id,'idle',id==='orchestrator'?'Waiting for query...':'Waiting...'));}
+function addMessage(role,text){const msgs=document.getElementById('demo-messages');const div=document.createElement('div');div.className='demo-msg '+role;if(role==='user')div.innerHTML='<div class="msg-label">You</div>'+text;else if(role==='assistant')div.innerHTML='<div class="msg-label">AI</div>'+text;else div.textContent=text;msgs.appendChild(div);msgs.scrollTop=msgs.scrollHeight;}
+function updateCounter(){const r=DEMO_MAX_MSGS-demoMsgCount;document.getElementById('counter-text').textContent=r>0?r+' message'+(r===1?'':'s')+' remaining':'Session limit reached';document.querySelectorAll('.demo-counter-dot').forEach((d,i)=>d.classList.toggle('used',i<demoMsgCount));}
 async function sendDemoMessage(){
-  const input = document.getElementById('demo-input');
-  const sendBtn = document.getElementById('demo-send');
-  const text = input.value.trim();
-  if(!text || demoMsgCount >= DEMO_MAX_MSGS) return;
-
-  input.value = '';
-  sendBtn.disabled = true;
-  demoMsgCount++;
-  updateCounter();
-  addMessage('user', text);
-  demoHistory.push({role:'user', content: text});
+  const input=document.getElementById('demo-input');const sendBtn=document.getElementById('demo-send');const text=input.value.trim();
+  if(!text||demoMsgCount>=DEMO_MAX_MSGS)return;
+  const isInjection=injectionPatterns.some(p=>p.test(text));
+  input.value='';sendBtn.disabled=true;demoMsgCount++;updateCounter();addMessage('user',text);demoHistory.push({role:'user',content:text});
   document.getElementById('demo-suggestions').style.display='none';
-
-  resetAgents();
-  await delay(300);
-  setAgent('orchestrator','active','Analyzing query intent and routing to appropriate agents...');
-  await delay(900);
-  setAgent('orchestrator','done','Query classified. Routing to guardrail check.');
-  setAgent('guardrail','active','Checking query against safety and scope policies...');
-  await delay(700);
-  setAgent('guardrail','done','✓ Query is safe and within scope.');
-  setAgent('validator','active','Validating context and preparing response parameters...');
-  await delay(600);
-  setAgent('validator','done','✓ Context valid. Max tokens: 300.');
-  setAgent('responder','active','Generating response via Claude API...');
-
-  try {
-    const response = await fetch('https://nageshch.com/api/chat', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ messages: demoHistory })
-    });
-
-    const data = await response.json();
-    const reply = data.content?.[0]?.text || 'Sorry, something went wrong. Please try again.';
-    setAgent('responder','done','✓ Response generated and validated.');
-    addMessage('assistant', reply);
-    demoHistory.push({role:'assistant', content: reply});
-
-    if(demoMsgCount >= DEMO_MAX_MSGS){
-      addMessage('system','Session limit reached — refresh page to start a new session.');
-      sendBtn.disabled = true;
-      input.disabled = true;
-    } else {
-      sendBtn.disabled = false;
-      input.focus();
-    }
-  } catch(err){
-    setAgent('responder','idle','Connection error.');
-    addMessage('system','Connection error — please try again.');
-    sendBtn.disabled = false;
-    demoMsgCount--;
-    updateCounter();
-  }
+  resetAgents();await delay(300);
+  setAgent('orchestrator','active','Analyzing query intent...');await delay(900);
+  setAgent('orchestrator','done','Query classified.');
+  setAgent('guardrail','active','Scanning for policy violations...');await delay(900);
+  if(isInjection){setAgent('guardrail','blocked','Prompt injection detected.');setAgent('validator','idle','Skipped.');setAgent('responder','idle','Skipped.');addMessage('system','Guardrail blocked: Prompt injection detected. Ask about AI/ML topics instead.');sendBtn.disabled=false;demoMsgCount--;updateCounter();return;}
+  setAgent('guardrail','done','Query is safe.');setAgent('validator','active','Validating parameters...');await delay(600);
+  setAgent('validator','done','Context valid. Max tokens: 300.');setAgent('responder','active','Generating response...');
+  try{
+    const res=await fetch('https://nageshch.com/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:demoHistory})});
+    const data=await res.json();const reply=data.content?.[0]?.text||'Sorry, try again.';
+    setAgent('responder','done','Response generated.');addMessage('assistant',reply);demoHistory.push({role:'assistant',content:reply});
+    if(demoMsgCount>=DEMO_MAX_MSGS){addMessage('system','Session limit reached.');sendBtn.disabled=true;document.getElementById('demo-input').disabled=true;}
+    else{sendBtn.disabled=false;document.getElementById('demo-input').focus();}
+  }catch(e){setAgent('responder','idle','Error.');addMessage('system','Connection error — try again.');sendBtn.disabled=false;demoMsgCount--;updateCounter();}
 }
+function delay(ms){return new Promise(r=>setTimeout(r,ms));}
+document.getElementById('demo-input').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendDemoMessage();}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(document.getElementById('demo-modal').classList.contains('open'))closeDemo();if(document.getElementById('nlp-modal').classList.contains('open'))closeNLP();}});
 
-function delay(ms){ return new Promise(r=>setTimeout(r,ms)); }
-
-document.getElementById('demo-input').addEventListener('keydown', e=>{
-  if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); sendDemoMessage(); }
-});
-</script>
-
-
-
-
-
-<script>
-/* ═══════════ NLP CLASSIFICATION DEMO ═══════════ */
-function openNLP(){
-  document.getElementById('nlp-modal').classList.add('open');
-  document.getElementById('nlp-modal').setAttribute('aria-hidden','false');
-  document.body.style.overflow='hidden';
-}
-function closeNLP(){
-  document.getElementById('nlp-modal').classList.remove('open');
-  document.getElementById('nlp-modal').setAttribute('aria-hidden','true');
-  document.body.style.overflow='';
-}
-document.getElementById('nlp-close').addEventListener('click', closeNLP);
-document.getElementById('nlp-modal').addEventListener('click', e=>{
-  if(e.target===document.getElementById('nlp-modal')) closeNLP();
-});
-document.addEventListener('keydown', e=>{
-  if(e.key==='Escape' && document.getElementById('nlp-modal').classList.contains('open')) closeNLP();
-});
-
-function useNLPExample(btn){
-  document.getElementById('nlp-input').value = btn.textContent;
-}
-
+/* ═══ NLP DEMO ═══ */
+function openNLP(){document.getElementById('nlp-modal').classList.add('open');document.getElementById('nlp-modal').setAttribute('aria-hidden','false');document.body.style.overflow='hidden';}
+function closeNLP(){document.getElementById('nlp-modal').classList.remove('open');document.getElementById('nlp-modal').setAttribute('aria-hidden','true');document.body.style.overflow='';}
+document.getElementById('nlp-close').addEventListener('click',closeNLP);
+document.getElementById('nlp-modal').addEventListener('click',e=>{if(e.target===document.getElementById('nlp-modal'))closeNLP();});
+function useNLPExample(btn){document.getElementById('nlp-input').value=btn.textContent;updateCharCount();}
+function updateCharCount(){const len=document.getElementById('nlp-input').value.length;document.getElementById('nlp-char-count').textContent=len+' character'+(len===1?'':'s');}
 async function runNLP(){
-  const input = document.getElementById('nlp-input');
-  const btn = document.getElementById('nlp-btn');
-  const results = document.getElementById('nlp-results');
-  const text = input.value.trim();
-  if(!text) return;
-
-  btn.disabled = true;
-  btn.textContent = 'Analysing...';
-  results.className = 'nlp-results loading';
-  results.innerHTML = '<div class="nlp-placeholder"><div class="nlp-placeholder-icon" style="animation:spin 1s linear infinite">⚙</div><div>Running NLP pipeline...</div></div>';
-
-  const prompt = 'Analyse the following text and return ONLY a valid JSON object with no markdown, no explanation, just the raw JSON.
-
-Text: "' + text + '"
-
-Return exactly this structure:
-{"category":"string","category_confidence":0.0,"domain":"string","intent":"string","sentiment":"Positive or Negative or Neutral or Mixed","sentiment_score":0.0,"entities":[{"text":"string","type":"TIME_PERIOD or METRIC or KPI or STRATEGY or TECHNOLOGY or PERSON or ORGANIZATION or OTHER"}],"summary":"one sentence summary"}';
-
-  try {
-    const response = await fetch('https://nageshch.com/api/chat', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({
-        messages: [{role:'user', content: prompt}],
-        temperature: 0.1,
-        top_p: 0.5
-      })
-    });
-
-    const data = await response.json();
-    const raw = data.content?.[0]?.text || '';
-    const jsonMatch = raw.match(/\{[\s\S]*\}/);
-    if(!jsonMatch) throw new Error('No JSON');
-    const result = JSON.parse(jsonMatch[0]);
-    renderNLPResults(result);
-  } catch(err) {
-    results.className = 'nlp-results loading';
-    results.innerHTML = '<div class="nlp-placeholder"><div style="font-size:24px">⚠</div><div>Analysis failed — please try again</div></div>';
-  }
-
-  btn.disabled = false;
-  btn.textContent = 'Analyse →';
+  const input=document.getElementById('nlp-input');const btn=document.getElementById('nlp-btn');const results=document.getElementById('nlp-results');
+  const text=input.value.trim();if(!text)return;
+  btn.disabled=true;btn.textContent='Analysing...';results.className='nlp-results loading';
+  results.innerHTML='<div style="text-align:center;padding:20px 0;"><div style="font-size:28px;margin-bottom:14px;animation:spin 1.2s linear infinite">⚙</div><div class="nlp-loading-text">Running NLP Pipeline</div><div class="nlp-loading-steps"><div class="nlp-loading-step active">Tokenising input text</div><div class="nlp-loading-step active">Running classification head</div><div class="nlp-loading-step active">Extracting named entities</div><div class="nlp-loading-step active">Scoring sentiment polarity</div></div></div>';
+  const prompt='Analyse this text and return ONLY raw JSON no markdown. Text: '+JSON.stringify(text)+' Return: {"category":"string","category_confidence":0.9,"domain":"string","intent":"string","sentiment":"Positive or Negative or Neutral or Mixed","sentiment_score":0.8,"entities":[{"text":"string","type":"METRIC or KPI or STRATEGY or TECHNOLOGY or TIME_PERIOD or PERSON or ORGANIZATION or OTHER"}],"summary":"one sentence"}';
+  try{
+    const res=await fetch('https://nageshch.com/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:[{role:'user',content:prompt}],temperature:0.1,top_p:0.5})});
+    const data=await res.json();const raw=data.content?.[0]?.text||'';
+    const m=raw.match(/\{[\s\S]*\}/);if(!m)throw new Error('No JSON');
+    renderNLPResults(JSON.parse(m[0]));
+  }catch(e){results.className='nlp-results loading';results.innerHTML='<div class="nlp-placeholder"><div style="font-size:24px">⚠</div><div style="margin-top:8px;">Analysis failed — please try again</div></div>';}
+  btn.disabled=false;btn.textContent='Analyse →';
 }
-
 function renderNLPResults(r){
-  const results = document.getElementById('nlp-results');
-  results.className = 'nlp-results';
-  const sentClass = r.sentiment==='Positive'?'pos':r.sentiment==='Negative'?'neg':'neu';
-  const sentColor = r.sentiment==='Positive'?'positive':r.sentiment==='Negative'?'negative':r.sentiment==='Mixed'?'mixed':'neutral';
-  const entitiesHTML = (r.entities||[]).map(e =>
-    '<span class="nlp-entity '+(e.type||'OTHER')+'"><span class="nlp-entity-text">'+e.text+'</span><span class="nlp-entity-type">'+(e.type||'OTHER').replace(/_/g,' ')+'</span></span>'
-  ).join('');
-
-  results.innerHTML =
-    '<div class="nlp-card">' +
-      '<div class="nlp-card-title">Category</div>' +
-      '<div class="nlp-category-name">'+(r.category||'—')+'</div>' +
-      '<div class="nlp-category-domain">'+(r.domain||'')+'</div>' +
-      '<div class="nlp-bar-wrap"><div class="nlp-bar-label"><span>Confidence</span><span>'+Math.round((r.category_confidence||0)*100)+'%</span></div><div class="nlp-bar-track"><div class="nlp-bar-fill cat" id="bar-cat"></div></div></div>' +
-      '<span class="nlp-intent">'+(r.intent||'')+'</span>' +
-    '</div>' +
-    '<div class="nlp-card">' +
-      '<div class="nlp-card-title">Sentiment</div>' +
-      '<div class="nlp-sentiment-label '+sentColor+'">'+(r.sentiment||'—')+'</div>' +
-      '<div class="nlp-bar-wrap"><div class="nlp-bar-label"><span>Score</span><span>'+Math.round((r.sentiment_score||0)*100)+'%</span></div><div class="nlp-bar-track"><div class="nlp-bar-fill '+sentClass+'" id="bar-sent"></div></div></div>' +
-      '<div class="nlp-summary">'+(r.summary||'')+'</div>' +
-    '</div>' +
-    '<div class="nlp-card">' +
-      '<div class="nlp-card-title">Named Entities · '+(r.entities||[]).length+' found</div>' +
-      '<div class="nlp-entities">'+(entitiesHTML||'<span style="color:#9ca3af;font-size:12px;">No entities found</span>')+'</div>' +
-    '</div>';
-
-  requestAnimationFrame(()=>{
-    setTimeout(()=>{
-      const bc=document.getElementById('bar-cat');
-      const bs=document.getElementById('bar-sent');
-      if(bc) bc.style.width=(r.category_confidence*100)+'%';
-      if(bs) bs.style.width=(r.sentiment_score*100)+'%';
-    },100);
-  });
+  const results=document.getElementById('nlp-results');results.className='nlp-results';
+  const sc=r.sentiment==='Positive'?'pos':r.sentiment==='Negative'?'neg':r.sentiment==='Mixed'?'mix':'neu';
+  const sn=r.sentiment==='Positive'?'positive':r.sentiment==='Negative'?'negative':r.sentiment==='Mixed'?'mixed':'neutral';
+  const cp=Math.round((r.category_confidence||0)*100);const sp=Math.round((r.sentiment_score||0)*100);
+  const lc={TIME_PERIOD:'#3b82f6',METRIC:'#16a34a',KPI:'#d97706',STRATEGY:'#7c3aed',TECHNOLOGY:'#0369a1',PERSON:'#9f1239',ORGANIZATION:'#334155',OTHER:'#374151'};
+  const eh=(r.entities||[]).map(e=>'<span class="nlp-entity '+(e.type||'OTHER')+'"><span class="nlp-entity-text">'+e.text+'</span><span class="nlp-entity-type">'+(e.type||'OTHER').replace(/_/g,' ')+'</span></span>').join('');
+  const lt=[...new Set((r.entities||[]).map(e=>e.type||'OTHER'))];
+  const lh=lt.map(t=>'<span class="nlp-legend-item"><span class="nlp-legend-dot" style="background:'+lc[t]+';"></span>'+t.replace(/_/g,' ')+'</span>').join('');
+  results.innerHTML=
+    '<div class="nlp-card"><div class="nlp-card-title">📊 Classification</div><div class="nlp-divider"></div><div class="nlp-category-name">'+(r.category||'—')+'</div><div class="nlp-category-domain">'+(r.domain||'')+'</div><div class="nlp-bar-wrap"><div class="nlp-bar-label"><span>Confidence</span><span class="nlp-bar-pct">'+cp+'%</span></div><div class="nlp-bar-track"><div class="nlp-bar-fill cat" id="bar-cat"></div></div></div><div class="nlp-intent-wrap"><span class="nlp-intent-label">Intent</span><span class="nlp-intent">'+(r.intent||'—')+'</span></div></div>'+
+    '<div class="nlp-card"><div class="nlp-card-title">💬 Sentiment Analysis</div><div class="nlp-divider"></div><div class="nlp-sentiment-row"><div class="nlp-sentiment-label '+sn+'">'+(r.sentiment||'—')+'</div><span class="nlp-sentiment-sub">'+sp+'% confidence</span></div><div class="nlp-bar-wrap"><div class="nlp-bar-label"><span>Polarity Score</span><span class="nlp-bar-pct">'+sp+'%</span></div><div class="nlp-bar-track"><div class="nlp-bar-fill '+sc+'" id="bar-sent"></div></div></div><div class="nlp-summary-label">Summary</div><div class="nlp-summary">'+(r.summary||'—')+'</div></div>'+
+    '<div class="nlp-card"><div class="nlp-card-title">🏷 Named Entities · '+(r.entities||[]).length+' found</div><div class="nlp-divider"></div><div class="nlp-entities">'+(eh||'<span style="color:#9ca3af;font-size:12px;">No entities detected</span>')+'</div>'+(lh?'<div class="nlp-entity-legend">'+lh+'</div>':'')+'</div>';
+  requestAnimationFrame(()=>{setTimeout(()=>{const bc=document.getElementById('bar-cat');const bs=document.getElementById('bar-sent');if(bc)bc.style.width=cp+'%';if(bs)bs.style.width=sp+'%';},150);});
 }
 </script>
-
 </body>
 </html>
