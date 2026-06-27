@@ -1131,50 +1131,38 @@ document.addEventListener('keydown',e=>{
     </div>
     <div class="demo-desc-bar">
       <div class="demo-desc-text">
-        Watch how a production multi-agent system processes your query in real time. Six specialised agents — <strong>Planner</strong> decomposes and routes, <strong>Guardrail</strong> enforces safety and credential isolation, <strong>Memory</strong> retrieves session context, <strong>Validator</strong> checks format and boundaries, <strong>Executor</strong> synthesises the response, and <strong>Session Logger</strong> maintains the append-only audit trail. Based on state-of-the-art production agent architecture.
+        Watch how a production multi-agent system processes your query in real time. Watch how a production multi-agent system processes your query in real time. Each agent has a distinct role — the <strong>Orchestrator</strong> routes and plans, the <strong>Guardrail</strong> enforces scope and safety policies, the <strong>Validator</strong> checks context integrity, and the <strong>Responder</strong> generates the final output.
       </div>
     </div>
     <div class="demo-objective">
       <div class="demo-objective-label">🎯 Demo Objective</div>
-      <div class="demo-objective-text">Explore the Brain-Hands-Session architecture: Planner · Guardrail · Memory · Validator · Executor · Logger</div>
+      <div class="demo-objective-text">Explore the orchestrator-guardrail-validator pattern that powers production AI systems</div>
     </div>
     <div class="demo-body">
       <div class="demo-pipeline">
-        <div class="demo-pipeline-title">Agent Pipeline · Production Architecture</div>
-        <div class="agent-card idle" id="agent-planner">
-          <div class="agent-header"><span class="agent-icon">🧭</span><span class="agent-name">Planner</span><span class="agent-status idle" id="status-planner">Idle</span></div>
-          <div class="agent-role-desc">Decomposes query · Routes to subagents · Scales effort to complexity</div>
-          <div class="agent-thought" id="thought-planner">Waiting for query...</div>
+        <div class="demo-pipeline-title">Agent Pipeline</div>
+        <div class="agent-card idle" id="agent-orchestrator">
+          <div class="agent-header"><span class="agent-icon">🎯</span><span class="agent-name">Orchestrator</span><span class="agent-status idle" id="status-orchestrator">Idle</span></div>
+          <div class="agent-role-desc">Routes query · Plans execution · Assigns sub-agents</div>
+          <div class="agent-thought" id="thought-orchestrator">Waiting for query...</div>
         </div>
         <div class="agent-arrow">↓</div>
         <div class="agent-card idle" id="agent-guardrail">
           <div class="agent-header"><span class="agent-icon">🛡️</span><span class="agent-name">Guardrail</span><span class="agent-status idle" id="status-guardrail">Idle</span></div>
-          <div class="agent-role-desc">Safety policy · Scope enforcement · Credential isolation · Injection prevention</div>
+          <div class="agent-role-desc">Scope enforcement · Safety policy · Jailbreak prevention</div>
           <div class="agent-thought" id="thought-guardrail">Waiting...</div>
-        </div>
-        <div class="agent-arrow">↓</div>
-        <div class="agent-card idle" id="agent-memory">
-          <div class="agent-header"><span class="agent-icon">🧠</span><span class="agent-name">Memory</span><span class="agent-status idle" id="status-memory">Idle</span></div>
-          <div class="agent-role-desc">Session retrieval · Prior learnings · Context injection</div>
-          <div class="agent-thought" id="thought-memory">Waiting...</div>
         </div>
         <div class="agent-arrow">↓</div>
         <div class="agent-card idle" id="agent-validator">
           <div class="agent-header"><span class="agent-icon">✅</span><span class="agent-name">Validator</span><span class="agent-status idle" id="status-validator">Idle</span></div>
-          <div class="agent-role-desc">Output format · Token budget · Task boundary · Context integrity</div>
+          <div class="agent-role-desc">Context integrity · Token budget · Output constraints</div>
           <div class="agent-thought" id="thought-validator">Waiting...</div>
         </div>
         <div class="agent-arrow">↓</div>
-        <div class="agent-card idle" id="agent-executor">
-          <div class="agent-header"><span class="agent-icon">⚡</span><span class="agent-name">Executor</span><span class="agent-status idle" id="status-executor">Idle</span></div>
-          <div class="agent-role-desc">LLM generation · Tool calls · Response synthesis</div>
-          <div class="agent-thought" id="thought-executor">Waiting...</div>
-        </div>
-        <div class="agent-arrow">↓</div>
-        <div class="agent-card idle" id="agent-logger">
-          <div class="agent-header"><span class="agent-icon">📋</span><span class="agent-name">Session Logger</span><span class="agent-status idle" id="status-logger">Idle</span></div>
-          <div class="agent-role-desc">Append-only audit log · Reasoning trace · Session memory</div>
-          <div class="agent-thought" id="thought-logger">Waiting...</div>
+        <div class="agent-card idle" id="agent-responder">
+          <div class="agent-header"><span class="agent-icon">⚡</span><span class="agent-name">Responder</span><span class="agent-status idle" id="status-responder">Idle</span></div>
+          <div class="agent-role-desc">LLM generation · Response synthesis · Quality check</div>
+          <div class="agent-thought" id="thought-responder">Waiting...</div>
         </div>
         <div class="demo-model-card">
           <div class="demo-model-card-title">Model Details</div>
@@ -1183,7 +1171,7 @@ document.addEventListener('keydown',e=>{
           <div class="demo-model-row"><span>Speed</span><strong>~750 tok/s</strong></div>
           <div class="demo-model-row"><span>Max output</span><strong>300 tokens</strong></div>
           <div class="demo-model-row"><span>Scope</span><strong>AI/ML domain only</strong></div>
-          <div class="demo-model-row"><span>Pattern</span><strong>Planner-Guardrail-Memory-Validator-Executor-Logger</strong></div>
+          <div class="demo-model-row"><span>Pattern</span><strong>Orchestrator-Guardrail-Validator-Responder</strong></div>
         </div>
       </div>
       <div class="demo-chat">
@@ -1336,10 +1324,7 @@ async function sendDemoMessage(){
       input.focus();
     }
   } catch(err){
-    setAgent('executor','idle','Connection error.');
-    setAgent('logger','active','Logging error to audit trail...');
-    await delay(300);
-    setAgent('logger','done','✓ Error logged.');
+    setAgent('responder','idle','Connection error.');
     addMessage('system','Connection error — please try again.');
     sendBtn.disabled = false;
     demoMsgCount--;
@@ -1395,8 +1380,8 @@ function setAgent(id, state, thought=''){
 }
 
 function resetAgents(){
-  ['planner','guardrail','memory','validator','executor','logger'].forEach(id=>{
-    setAgent(id,'idle',id==='planner'?'Waiting for query...':'Waiting...');
+  ['orchestrator','guardrail','validator','responder'].forEach(id=>{
+    setAgent(id,'idle',id==='orchestrator'?'Waiting for query...':'Waiting...');
   });
 }
 
@@ -1449,45 +1434,28 @@ async function sendDemoMessage(){
 
   resetAgents();
   await delay(300);
-
-  // Planner
-  setAgent('planner','active','Decomposing query · Identifying intent · Routing to specialist subagents...');
+  setAgent('orchestrator','active','Analyzing query intent and routing to appropriate agents...');
   await delay(900);
-  setAgent('planner','done','Query decomposed. Task routed to Guardrail for policy check.');
-
-  // Guardrail
-  setAgent('guardrail','active','Scanning for policy violations, injection attempts, scope boundaries...');
+  setAgent('orchestrator','done','Query classified. Routing to guardrail check.');
+  setAgent('guardrail','active','Scanning for policy violations and injection attempts...');
   await delay(900);
 
   if(isInjection){
-    setAgent('guardrail','blocked','⚠ Prompt injection detected. Credential isolation triggered. Request terminated.');
-    setAgent('memory','idle','Skipped — Guardrail terminated pipeline.');
-    setAgent('validator','idle','Skipped — Guardrail terminated pipeline.');
-    setAgent('executor','idle','Skipped — Guardrail terminated pipeline.');
-    setAgent('logger','active','Logging blocked request to audit trail...');
-    await delay(600);
-    setAgent('logger','done','✓ Incident logged. Session audit trail updated.');
-    addMessage('system','⚠ Guardrail blocked: Prompt injection attempt detected and logged. Ask me about Agentic AI, LLMs, or MLOps instead.');
+    setAgent('guardrail','blocked','⚠ Prompt injection detected. Request blocked by policy.');
+    setAgent('validator','idle','Skipped — guardrail blocked this request.');
+    setAgent('responder','idle','Skipped — guardrail blocked this request.');
+    addMessage('system','⚠ Guardrail blocked: Prompt injection attempt detected. Ask me about Agentic AI, LLMs, or MLOps instead.');
     sendBtn.disabled=false;
     demoMsgCount--;
     updateCounter();
     return;
   }
 
-  setAgent('guardrail','done','✓ Safe. Scope validated. No policy violations detected.');
-
-  // Memory
-  setAgent('memory','active','Retrieving session context · Scanning prior learnings · Injecting relevant history...');
-  await delay(700);
-  setAgent('memory','done','✓ Context retrieved. ' + (demoHistory.length > 2 ? demoHistory.length/2 + ' prior exchanges loaded.' : 'Fresh session — no prior context.'));
-
-  // Validator
-  setAgent('validator','active','Checking output format · Token budget · Task boundary constraints...');
+  setAgent('guardrail','done','✓ Query is safe and within scope.');
+  setAgent('validator','active','Validating context and preparing response parameters...');
   await delay(600);
-  setAgent('validator','done','✓ Validated. Max tokens: 300. Format: natural language. Scope: AI/ML.');
-
-  // Executor
-  setAgent('executor','active','Calling LLaMA 3.1 8B via Groq LPU · Synthesising response...');
+  setAgent('validator','done','✓ Context valid. Max tokens: 300.');
+  setAgent('responder','active','Generating response via LLaMA 3.1 8B...');
   try {
     const response=await fetch('https://nageshch.com/api/chat',{
       method:'POST',
@@ -1496,13 +1464,7 @@ async function sendDemoMessage(){
     });
     const data=await response.json();
     const reply=data.content?.[0]?.text||'Sorry, something went wrong.';
-    setAgent('executor','done','✓ Response generated. Quality check passed.');
-
-    // Logger
-    setAgent('logger','active','Appending to session log · Capturing reasoning trace...');
-    await delay(400);
-    setAgent('logger','done','✓ Session logged. Audit trail updated. Turn ' + demoMsgCount + ' complete.');
-
+    setAgent('responder','done','✓ Response generated and validated.');
     addMessage('assistant',reply);
     demoHistory.push({role:'assistant',content:reply});
     if(demoMsgCount>=DEMO_MAX_MSGS){
@@ -1514,10 +1476,7 @@ async function sendDemoMessage(){
       input.focus();
     }
   } catch(err){
-    setAgent('executor','idle','Connection error.');
-    setAgent('logger','active','Logging error to audit trail...');
-    await delay(300);
-    setAgent('logger','done','✓ Error logged.');
+    setAgent('responder','idle','Connection error.');
     addMessage('system','Connection error — please try again.');
     sendBtn.disabled=false;
     demoMsgCount--;
