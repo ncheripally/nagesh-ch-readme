@@ -1,33 +1,34 @@
 /**
  * Cloudflare Worker — Groq API Proxy
- * Deploy to: nageshch.com/api/chat
- *
- * Set environment variable via CLI:
- *   wrangler secret put GROQ_API_KEY
+ * Route: nageshch.com/api/chat
+ * Secret: GROQ_API_KEY
  */
 
-const ALLOWED_ORIGIN = 'https://nageshch.com';
 const MAX_TOKENS = 300;
 const RATE_LIMIT_REQUESTS = 10;
 const RATE_LIMIT_WINDOW = 60 * 60 * 1000;
+
+const ALLOWED_ORIGINS = [
+  'https://nageshch.com',
+  'https://www.nageshch.com',
+];
 
 const ipStore = new Map();
 
 function getRateLimit(ip) {
   const now = Date.now();
   const record = ipStore.get(ip) || { count: 0, resetAt: now + RATE_LIMIT_WINDOW };
-  if (now > record.resetAt) {
-    record.count = 0;
-    record.resetAt = now + RATE_LIMIT_WINDOW;
-  }
+  if (now > record.resetAt) { record.count = 0; record.resetAt = now + RATE_LIMIT_WINDOW; }
   return record;
 }
 
-function corsHeaders(origin) {
+function getCorsHeaders(origin) {
+  const allowed = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
   return {
-    'Access-Control-Allow-Origin': origin === ALLOWED_ORIGIN ? ALLOWED_ORIGIN : '',
+    'Access-Control-Allow-Origin': allowed,
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Max-Age': '86400',
   };
 }
 
@@ -41,78 +42,75 @@ RULES:
 export default {
   async fetch(request, env) {
     const origin = request.headers.get('Origin') || '';
+    const corsHeaders = getCorsHeaders(origin);
 
+    // Handle CORS preflight
     if (request.method === 'OPTIONS') {
-      return new Response(null, { headers: corsHeaders(origin) });
-    }
-    if (request.method !== 'POST') {
-      return new Response('Method not allowed', { status: 405 });
-    }
-    if (origin !== ALLOWED_ORIGIN) {
-      return new Response('Forbidden', { status: 403 });
+      return new Response(null, { status: 204, headers: corsHeaders });
     }
 
-    // Rate limit by IP
+    if (request.method !== 'POST') {
+      return new Response('Method not allowed', { status: 405, headers: corsHeaders });
+    }
+
+    // Rate limiting
     const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
     const rateRecord = getRateLimit(ip);
     if (rateRecord.count >= RATE_LIMIT_REQUESTS) {
-      return new Response(JSON.stringify({ error: 'Rate limit exceeded. Try again later.' }), {
-        status: 429,
-        headers: { 'Content-Type': 'application/json', ...corsHeaders(origin) }
+      return new Response(JSON.stringify({ error: 'Rate limit exceeded. Try again in an hour.' }), {
+        status: 429, headers: { 'Content-Type': 'application/json', ...corsHeaders }
       });
     }
     rateRecord.count++;
     ipStore.set(ip, rateRecord);
 
+    // Parse body
     let body;
-    try {
-      body = await request.json();
-    } catch {
-      return new Response(JSON.stringify({ error: 'Invalid JSON' }), { status: 400 });
-    }
+    try { body = await request.json(); }
+    catch { return new Response(JSON.stringify({ error: 'Invalid JSON' }), { status: 400, headers: corsHeaders }); }
 
     const { messages } = body;
-    if (!messages || !Array.isArray(messages) || messages.length === 0) {
-      return new Response(JSON.stringify({ error: 'Invalid messages' }), { status: 400 });
-    }
-    if (messages.length > 10) {
-      return new Response(JSON.stringify({ error: 'Session limit exceeded' }), { status: 400 });
+    if (!messages || !Array.isArray(messages) || messages.length === 0 || messages.length > 10) {
+      return new Response(JSON.stringify({ error: 'Invalid messages' }), { status: 400, headers: corsHeaders });
     }
 
-    // Call Groq API (OpenAI-compatible format)
-    const groqResponse = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${env.GROQ_API_KEY}`,
-      },
-      body: JSON.stringify({
-        model: 'llama-3.3-70b-versatile',
-        max_tokens: MAX_TOKENS,
-        temperature: 0.7,
-        messages: [
-          { role: 'system', content: SYSTEM_PROMPT },
-          ...messages
-        ],
-      }),
-    });
+    // Call Groq
+    try {
+      const groqResponse = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${env.GROQ_API_KEY}`,
+        },
+        body: JSON.stringify({
+          model: 'llama-3.3-70b-versatile',
+          max_tokens: MAX_TOKENS,
+          temperature: 0.7,
+          messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...messages],
+        }),
+      });
 
-    const data = await groqResponse.json();
+      const data = await groqResponse.json();
 
-    // Normalize to match what frontend expects
-    const normalized = {
-      content: [{
-        type: 'text',
-        text: data.choices?.[0]?.message?.content || 'Sorry, something went wrong.'
-      }]
-    };
+      if (!groqResponse.ok) {
+        return new Response(JSON.stringify({ error: data.error?.message || 'Groq API error' }), {
+          status: 500, headers: { 'Content-Type': 'application/json', ...corsHeaders }
+        });
+      }
 
-    return new Response(JSON.stringify(normalized), {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/json',
-        ...corsHeaders(origin),
-      },
-    });
+      const normalized = {
+        content: [{ type: 'text', text: data.choices?.[0]?.message?.content || 'No response generated.' }]
+      };
+
+      return new Response(JSON.stringify(normalized), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json', ...corsHeaders },
+      });
+
+    } catch (err) {
+      return new Response(JSON.stringify({ error: 'Internal server error' }), {
+        status: 500, headers: { 'Content-Type': 'application/json', ...corsHeaders }
+      });
+    }
   },
 };
