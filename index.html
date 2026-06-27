@@ -738,6 +738,107 @@ footer:hover{border-top-color:rgba(255,107,53,.3);}
 @media(max-width:900px){.nlp-results{grid-template-columns:1fr 1fr;}.nlp-infobar{grid-template-columns:1fr 1fr;}}
 @media(max-width:600px){.nlp-results{grid-template-columns:1fr;}.nlp-modal{height:95vh;}}
 @media(max-width:800px){.demo-body{grid-template-columns:1fr;}.demo-pipeline{display:none;}.demo-modal{height:95vh;}}
+
+/* ══════════════════════════════════
+   RAG PIPELINE EXPLORER
+══════════════════════════════════ */
+.rag-overlay{position:fixed;inset:0;z-index:1700;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.65);backdrop-filter:blur(10px);opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s;}
+.rag-overlay.open{opacity:1;visibility:visible;}
+.rag-modal{width:100%;max-width:1100px;height:92vh;background:#fff;border-radius:16px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,.2);}
+
+/* Header */
+.rag-header{padding:14px 22px;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.rag-header-left{display:flex;align-items:center;gap:12px;}
+.rag-header-icon{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,#0ea5e9,#6366f1);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.rag-header-title{font-family:var(--body);font-size:14px;font-weight:600;color:#111827;}
+.rag-header-meta{display:flex;align-items:center;gap:7px;margin-top:3px;flex-wrap:wrap;}
+.rag-badge{font-family:var(--mono);font-size:8px;letter-spacing:.1em;padding:2px 7px;border-radius:4px;text-transform:uppercase;}
+.rag-badge.model{background:#f0fdf4;border:1px solid #bbf7d0;color:#15803d;}
+.rag-badge.live{background:#fef2f2;border:1px solid #fecaca;color:#dc2626;display:flex;align-items:center;gap:4px;}
+.rag-badge.live::before{content:'';width:5px;height:5px;border-radius:50%;background:#dc2626;animation:livePulse 1.5s infinite;}
+.rag-badge.info{background:#f0f9ff;border:1px solid #bae6fd;color:#0369a1;}
+.rag-close{width:30px;height:30px;border:1px solid #e5e7eb;border-radius:7px;background:#fff;color:#6b7280;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;}
+.rag-close:hover{background:#f9fafb;color:#111827;}
+
+/* Pipeline steps bar */
+.rag-steps{display:flex;align-items:center;padding:10px 22px;border-bottom:1px solid #e5e7eb;background:#fafafa;flex-shrink:0;gap:0;}
+.rag-step{display:flex;align-items:center;gap:8px;flex:1;}
+.rag-step-num{width:22px;height:22px;border-radius:50%;border:2px solid #e5e7eb;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:9px;font-weight:700;color:#9ca3af;flex-shrink:0;transition:all .4s;}
+.rag-step-num.active{border-color:#0ea5e9;background:#0ea5e9;color:#fff;}
+.rag-step-num.done{border-color:#16a34a;background:#16a34a;color:#fff;}
+.rag-step-label{font-family:var(--mono);font-size:8.5px;letter-spacing:.06em;color:#9ca3af;transition:color .3s;}
+.rag-step-label.active{color:#0369a1;font-weight:600;}
+.rag-step-label.done{color:#15803d;}
+.rag-step-arrow{color:#d1d5db;font-size:12px;margin:0 8px;flex-shrink:0;}
+
+/* Input */
+.rag-input-section{padding:14px 22px;border-bottom:1px solid #e5e7eb;flex-shrink:0;}
+.rag-corpus-label{font-family:var(--mono);font-size:8px;letter-spacing:.18em;text-transform:uppercase;color:#6b7280;margin-bottom:8px;display:flex;align-items:center;gap:8px;}
+.rag-corpus-tabs{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;}
+.rag-corpus-tab{font-family:var(--mono);font-size:8.5px;padding:4px 12px;border:1px solid #e5e7eb;border-radius:5px;color:#6b7280;cursor:pointer;transition:all .2s;background:#fff;}
+.rag-corpus-tab.active{border-color:#0ea5e9;background:#f0f9ff;color:#0369a1;font-weight:600;}
+.rag-input-row{display:flex;gap:10px;}
+.rag-query-input{flex:1;background:#f9fafb;border:1px solid #e5e7eb;border-radius:9px;padding:10px 14px;color:#111827;font-family:var(--body);font-size:13px;outline:none;transition:border-color .2s;}
+.rag-query-input:focus{border-color:#0ea5e9;background:#fff;box-shadow:0 0 0 3px rgba(14,165,233,.08);}
+.rag-query-input::placeholder{color:#9ca3af;}
+.rag-run-btn{background:#0f172a;border:none;border-radius:9px;padding:10px 24px;color:#fff;font-family:var(--mono);font-size:10px;letter-spacing:.1em;cursor:pointer;transition:all .2s;white-space:nowrap;text-transform:uppercase;}
+.rag-run-btn:hover:not(:disabled){background:#1e293b;box-shadow:0 4px 12px rgba(0,0,0,.15);}
+.rag-run-btn:disabled{opacity:.4;cursor:not-allowed;}
+.rag-examples{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;}
+.rag-example{font-family:var(--mono);font-size:8px;padding:3px 10px;border:1px solid #e5e7eb;border-radius:4px;color:#6b7280;cursor:pointer;transition:all .2s;background:#fff;}
+.rag-example:hover{border-color:#0ea5e9;color:#0369a1;background:#f0f9ff;}
+
+/* Main body — 3 panels */
+.rag-body{display:grid;grid-template-columns:1fr 1fr 1fr;flex:1;overflow:hidden;gap:0;}
+.rag-panel{display:flex;flex-direction:column;border-right:1px solid #f3f4f6;overflow:hidden;}
+.rag-panel:last-child{border-right:none;}
+.rag-panel-header{padding:10px 16px;border-bottom:1px solid #f3f4f6;flex-shrink:0;background:#fafafa;display:flex;align-items:center;justify-content:space-between;}
+.rag-panel-title{font-family:var(--mono);font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:#6b7280;font-weight:600;}
+.rag-panel-badge{font-family:var(--mono);font-size:8px;padding:2px 7px;border-radius:3px;}
+.rag-panel-content{flex:1;overflow-y:auto;padding:12px 14px;display:flex;flex-direction:column;gap:10px;}
+
+/* Chunk cards */
+.rag-chunk{border:1px solid #e5e7eb;border-radius:9px;padding:12px;background:#fff;transition:all .3s;position:relative;}
+.rag-chunk.highlighted{border-color:#0ea5e9;background:#f0f9ff;box-shadow:0 0 0 2px rgba(14,165,233,.1);}
+.rag-chunk-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.rag-chunk-id{font-family:var(--mono);font-size:8px;letter-spacing:.12em;color:#9ca3af;text-transform:uppercase;}
+.rag-chunk-score{font-family:var(--mono);font-size:11px;font-weight:700;}
+.rag-chunk-score.high{color:#16a34a;}
+.rag-chunk-score.med{color:#d97706;}
+.rag-chunk-score.low{color:#9ca3af;}
+.rag-chunk-text{font-size:11.5px;color:#374151;line-height:1.65;}
+.rag-chunk-text mark{background:#fef3c7;color:#92400e;border-radius:2px;padding:0 2px;}
+.rag-chunk-source{font-family:var(--mono);font-size:8px;color:#9ca3af;margin-top:8px;padding-top:6px;border-top:1px solid #f3f4f6;}
+.rag-chunk-bar{height:3px;background:#f3f4f6;border-radius:2px;margin-top:6px;overflow:hidden;}
+.rag-chunk-bar-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,#0ea5e9,#6366f1);width:0;transition:width 1s cubic-bezier(.23,1,.32,1);}
+.rag-placeholder{text-align:center;padding:30px 10px;color:#9ca3af;font-family:var(--mono);font-size:10px;}
+.rag-placeholder-icon{font-size:28px;margin-bottom:10px;display:block;}
+
+/* Prompt builder */
+.rag-prompt-block{border:1px solid #e5e7eb;border-radius:8px;overflow:hidden;}
+.rag-prompt-label{font-family:var(--mono);font-size:7.5px;letter-spacing:.16em;text-transform:uppercase;padding:6px 10px;border-bottom:1px solid #e5e7eb;display:flex;justify-content:space-between;}
+.rag-prompt-label.sys{background:#fdf4ff;color:#6b21a8;border-bottom-color:#e9d5ff;}
+.rag-prompt-label.ctx{background:#f0f9ff;color:#0369a1;border-bottom-color:#bae6fd;}
+.rag-prompt-label.qry{background:#f0fdf4;color:#15803d;border-bottom-color:#bbf7d0;}
+.rag-prompt-text{font-family:var(--mono);font-size:10px;color:#374151;line-height:1.7;padding:8px 10px;background:#fff;}
+.rag-token-bar{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fafafa;border-top:1px solid #f3f4f6;}
+.rag-token-label{font-family:var(--mono);font-size:8px;color:#6b7280;white-space:nowrap;}
+.rag-token-track{flex:1;height:4px;background:#e5e7eb;border-radius:2px;overflow:hidden;}
+.rag-token-fill{height:100%;background:linear-gradient(90deg,#6366f1,#8b5cf6);width:0;transition:width 1s;}
+.rag-token-count{font-family:var(--mono);font-size:8px;color:#111827;font-weight:600;white-space:nowrap;}
+
+/* Response + trace */
+.rag-response{font-size:12.5px;color:#111827;line-height:1.75;border:1px solid #e5e7eb;border-radius:8px;padding:12px;background:#fafafa;min-height:80px;}
+.rag-trace{border:1px solid #e5e7eb;border-radius:8px;overflow:hidden;margin-top:4px;}
+.rag-trace-title{font-family:var(--mono);font-size:8px;letter-spacing:.18em;text-transform:uppercase;padding:7px 12px;background:#f8fafc;border-bottom:1px solid #e5e7eb;color:#6b7280;}
+.rag-trace-row{display:flex;justify-content:space-between;align-items:center;padding:6px 12px;border-bottom:1px solid #f3f4f6;font-size:11px;}
+.rag-trace-row:last-child{border-bottom:none;}
+.rag-trace-key{font-family:var(--mono);font-size:9px;color:#6b7280;}
+.rag-trace-val{font-family:var(--mono);font-size:9px;color:#111827;font-weight:600;}
+.rag-trace-val.green{color:#16a34a;}
+.rag-trace-val.blue{color:#0369a1;}
+
+@media(max-width:900px){.rag-body{grid-template-columns:1fr;}.rag-panel:not(:first-child){display:none;}.rag-modal{height:95vh;}}
 </style>
 </head>
 <body>
@@ -1109,7 +1210,7 @@ footer:hover{border-top-color:rgba(255,107,53,.3);}
   <div class="sec-hd rv"><span class="sec-n">05</span><h2 class="sec-title">AI <em>Demos</em></h2><div class="sec-line"></div></div>
   <div class="dm-grid">
     <div class="dm rv d1"><div class="dm-n">DEMO / 01</div><div class="dm-title">AI Chatbot Assistant</div><div class="dm-desc">Live demo of agentic AI systems with orchestrator, guardrail, and validator agents working in harmony. Watch each agent think in real-time.</div><div class="dm-tags"><span class="dm-tag">LangGraph</span><span class="dm-tag">Claude API</span><span class="dm-tag">Agents</span><span class="dm-tag">Live</span></div><button class="dm-launch" onclick="openDemo()">Launch Live Demo</button></div>
-    <div class="dm rv d2"><div class="dm-n">DEMO / 02</div><div class="dm-title">RAG Pipeline Explorer</div><div class="dm-desc">Interactive RAG system showing document retrieval, embedding, and LLM generation with model tracing, evaluation dashboards, and drift detection.</div><div class="dm-tags"><span class="dm-tag">RAG</span><span class="dm-tag">Embeddings</span><span class="dm-tag">LLM</span><span class="dm-tag">Model Tracing</span><span class="dm-tag">Evaluation</span></div><a href="#contact" class="dm-cta">Request Demo →</a></div>
+    <div class="dm rv d2"><div class="dm-n">DEMO / 02</div><div class="dm-title">RAG Pipeline Explorer</div><div class="dm-desc">Watch document retrieval, prompt augmentation, and LLM generation happen step by step — with real chunk scores, prompt builder, and model trace.</div><div class="dm-tags"><span class="dm-tag">RAG</span><span class="dm-tag">Retrieval</span><span class="dm-tag">Prompt Builder</span><span class="dm-tag">Model Tracing</span><span class="dm-tag">Live</span></div><button class="dm-launch" onclick="openRAG()">Launch Live Demo</button></div>
     <div class="dm rv d3"><div class="dm-n">DEMO / 03</div><div class="dm-title">NLP Classification Engine</div><div class="dm-desc">Multi-task NLP in a single inference call — simultaneous text classification, sentiment analysis, and named entity recognition with confidence scores.</div><div class="dm-tags"><span class="dm-tag">NLP</span><span class="dm-tag">Classification</span><span class="dm-tag">Sentiment</span><span class="dm-tag">NER</span><span class="dm-tag">Live</span></div><button class="dm-launch" onclick="openNLP()">Launch Live Demo</button></div>
     <div class="dm rv d4"><div class="dm-n">DEMO / 04</div><div class="dm-title">Multi-Agent Orchestration</div><div class="dm-desc">End-to-end multi-agent workflow with orchestrator, guardrail, validator and responder agents working autonomously on enterprise tasks.</div><div class="dm-tags"><span class="dm-tag">LangGraph</span><span class="dm-tag">Multi-Agent</span><span class="dm-tag">Tool Use</span><span class="dm-tag">Memory</span><span class="dm-tag">Guardrails</span></div><a href="#contact" class="dm-cta">Request Demo →</a></div>
     <div class="dm rv d5"><div class="dm-n">DEMO / 05</div><div class="dm-title">MLOps &amp; Evaluation Studio</div><div class="dm-desc">State-of-the-art lifecycle demo with CI/CD, model versioning, tracing, evaluation scoring, and governance dashboards for production AI.</div><div class="dm-tags"><span class="dm-tag">MLOps</span><span class="dm-tag">Model Tracing</span><span class="dm-tag">Model Evaluation</span><span class="dm-tag">Monitoring</span></div><a href="#contact" class="dm-cta">Request Demo →</a></div>
@@ -1399,6 +1500,15 @@ document.addEventListener('keydown',e=>{
       </div>
       <button class="nlp-close" id="nlp-close">×</button>
     </div>
+    <div class="demo-desc-bar">
+      <div class="demo-desc-text">
+        Run <strong>three NLP tasks simultaneously</strong> in a single inference call — text classification with confidence scoring, sentiment polarity analysis, and named entity recognition with type labelling. Powered by a fine-tuned instruction model via Groq LPU.
+      </div>
+    </div>
+    <div class="demo-objective">
+      <span class="demo-objective-label">🎯 Demo Objective</span>
+      <span class="demo-objective-text">Demonstrate multi-task NLP inference — classify, analyse sentiment, and extract entities from any text in under a second</span>
+    </div>
     <div class="nlp-infobar">
       <div class="nlp-info-cell"><span class="nlp-info-label">Task 1</span><span class="nlp-info-value">Text Classification</span></div>
       <div class="nlp-info-cell"><span class="nlp-info-label">Task 2</span><span class="nlp-info-value">Sentiment Analysis</span></div>
@@ -1438,80 +1548,365 @@ document.addEventListener('keydown',e=>{
   </div>
 </div>
 
+<!-- ═══════════ RAG PIPELINE EXPLORER ═══════════ -->
+<div id="rag-modal" class="rag-overlay" aria-hidden="true">
+  <div class="rag-modal">
+    <div class="rag-header">
+      <div class="rag-header-left">
+        <div class="rag-header-icon">🔍</div>
+        <div>
+          <div class="rag-header-title">RAG Pipeline Explorer</div>
+          <div class="rag-header-meta">
+            <span class="rag-badge model">LLaMA 3.1 8B · Groq LPU</span>
+            <span class="rag-badge info">Retrieve · Augment · Generate</span>
+            <span class="rag-badge live">LIVE</span>
+          </div>
+        </div>
+      </div>
+      <button class="rag-close" id="rag-close">×</button>
+    </div>
+    <div class="demo-desc-bar">
+      <div class="demo-desc-text">
+        Watch a full RAG pipeline execute in real time — from <strong>query input</strong> to <strong>document retrieval</strong>, <strong>prompt augmentation</strong>, and <strong>LLM generation</strong>. Each step is visualised with chunk scores, token counts, and a complete model trace.
+      </div>
+    </div>
+    <div class="demo-objective">
+      <span class="demo-objective-label">🎯 Demo Objective</span>
+      <span class="demo-objective-text">Understand how RAG grounds LLM responses in retrieved documents — reducing hallucinations and improving factual accuracy</span>
+    </div>
+
+    <!-- Pipeline steps -->
+    <div class="rag-steps">
+      <div class="rag-step">
+        <div class="rag-step-num" id="rag-step-1">1</div>
+        <span class="rag-step-label" id="rag-step-label-1">Query Input</span>
+      </div>
+      <div class="rag-step-arrow">→</div>
+      <div class="rag-step">
+        <div class="rag-step-num" id="rag-step-2">2</div>
+        <span class="rag-step-label" id="rag-step-label-2">Document Retrieval</span>
+      </div>
+      <div class="rag-step-arrow">→</div>
+      <div class="rag-step">
+        <div class="rag-step-num" id="rag-step-3">3</div>
+        <span class="rag-step-label" id="rag-step-label-3">Prompt Augmentation</span>
+      </div>
+      <div class="rag-step-arrow">→</div>
+      <div class="rag-step">
+        <div class="rag-step-num" id="rag-step-4">4</div>
+        <span class="rag-step-label" id="rag-step-label-4">LLM Generation</span>
+      </div>
+    </div>
+
+    <!-- Input -->
+    <div class="rag-input-section">
+      <div class="rag-corpus-label">📁 Document Corpus</div>
+      <div class="rag-corpus-tabs">
+        <button class="rag-corpus-tab active" onclick="setCorpus('ai',this)">AI Engineering</button>
+        <button class="rag-corpus-tab" onclick="setCorpus('business',this)">Business Analytics</button>
+        <button class="rag-corpus-tab" onclick="setCorpus('mlops',this)">MLOps & Deployment</button>
+      </div>
+      <div class="rag-input-row">
+        <input type="text" class="rag-query-input" id="rag-query" placeholder="Ask a question about the selected corpus..."/>
+        <button class="rag-run-btn" id="rag-btn" onclick="runRAG()">Run Pipeline →</button>
+      </div>
+      <div class="rag-examples" id="rag-examples"></div>
+    </div>
+
+    <!-- 3 panels -->
+    <div class="rag-body">
+      <div class="rag-panel">
+        <div class="rag-panel-header">
+          <span class="rag-panel-title">🔍 Retrieved Chunks</span>
+          <span class="rag-panel-badge" id="rag-chunk-count" style="background:#f0f9ff;border:1px solid #bae6fd;color:#0369a1;">top-k: 3</span>
+        </div>
+        <div class="rag-panel-content" id="rag-chunks">
+          <div class="rag-placeholder"><span class="rag-placeholder-icon">📄</span>Chunks will appear here after retrieval</div>
+        </div>
+      </div>
+      <div class="rag-panel">
+        <div class="rag-panel-header">
+          <span class="rag-panel-title">🧠 Augmented Prompt</span>
+          <span class="rag-panel-badge" id="rag-token-label" style="background:#fdf4ff;border:1px solid #e9d5ff;color:#6b21a8;">0 tokens</span>
+        </div>
+        <div class="rag-panel-content" id="rag-prompt">
+          <div class="rag-placeholder"><span class="rag-placeholder-icon">✏️</span>Prompt builder will show context injection</div>
+        </div>
+      </div>
+      <div class="rag-panel">
+        <div class="rag-panel-header">
+          <span class="rag-panel-title">⚡ Generated Response</span>
+          <span class="rag-panel-badge" id="rag-latency-label" style="background:#f0fdf4;border:1px solid #bbf7d0;color:#15803d;">—</span>
+        </div>
+        <div class="rag-panel-content" id="rag-response">
+          <div class="rag-placeholder"><span class="rag-placeholder-icon">💬</span>LLM response and model trace will appear here</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <script>
 /* ═══ CHATBOT DEMO ═══ */
 const DEMO_MAX_MSGS=5;let demoMsgCount=0;let demoHistory=[];
-const injectionPatterns=[/ignore (all |previous |your )?instructions/i,/reveal (your |the )?(system )?prompt/i,/pretend (you are|to be)/i,/roleplay/i,/jailbreak/i,/bypass/i,/forget (your|all|previous)/i,/you are now/i,/disregard/i];
+const injectionPatterns=[/ignore previous instructions/i,/reveal your prompt/i,/pretend you are/i,/roleplay/i,/jailbreak/i,/bypass/i,/forget your instructions/i,/you are now/i,/disregard/i];
 function openDemo(){document.getElementById('demo-modal').classList.add('open');document.getElementById('demo-modal').setAttribute('aria-hidden','false');document.body.style.overflow='hidden';}
 function closeDemo(){document.getElementById('demo-modal').classList.remove('open');document.getElementById('demo-modal').setAttribute('aria-hidden','true');document.body.style.overflow='';}
-document.getElementById('demo-close').addEventListener('click',closeDemo);
-document.getElementById('demo-modal').addEventListener('click',e=>{if(e.target===document.getElementById('demo-modal'))closeDemo();});
 function useSuggestion(btn){document.getElementById('demo-input').value=btn.textContent;document.getElementById('demo-suggestions').style.display='none';sendDemoMessage();}
-function setAgent(id,state,thought=''){const card=document.getElementById('agent-'+id);const status=document.getElementById('status-'+id);const thoughtEl=document.getElementById('thought-'+id);if(!card)return;card.className='agent-card '+state;status.className='agent-status '+(state==='active'?'thinking':state==='done'?'done':state==='blocked'?'blocked':'idle');status.textContent=state==='active'?'Thinking...':state==='done'?'Done':state==='blocked'?'Blocked':'Idle';if(thought)thoughtEl.textContent=thought;}
-function resetAgents(){['orchestrator','guardrail','validator','responder'].forEach(id=>setAgent(id,'idle',id==='orchestrator'?'Waiting for query...':'Waiting...'));}
-function addMessage(role,text){const msgs=document.getElementById('demo-messages');const div=document.createElement('div');div.className='demo-msg '+role;if(role==='user')div.innerHTML='<div class="msg-label">You</div>'+text;else if(role==='assistant')div.innerHTML='<div class="msg-label">AI</div>'+text;else div.textContent=text;msgs.appendChild(div);msgs.scrollTop=msgs.scrollHeight;}
-function updateCounter(){const r=DEMO_MAX_MSGS-demoMsgCount;document.getElementById('counter-text').textContent=r>0?r+' message'+(r===1?'':'s')+' remaining':'Session limit reached';document.querySelectorAll('.demo-counter-dot').forEach((d,i)=>d.classList.toggle('used',i<demoMsgCount));}
+function setAgent(id,state,thought){var card=document.getElementById('agent-'+id);var status=document.getElementById('status-'+id);var th=document.getElementById('thought-'+id);if(!card)return;card.className='agent-card '+state;status.className='agent-status '+(state==='active'?'thinking':state==='done'?'done':state==='blocked'?'blocked':'idle');status.textContent=state==='active'?'Thinking...':state==='done'?'Done':state==='blocked'?'Blocked':'Idle';if(thought)th.textContent=thought;}
+function resetAgents(){['orchestrator','guardrail','validator','responder'].forEach(function(id){setAgent(id,'idle',id==='orchestrator'?'Waiting for query...':'Waiting...');});}
+function addMessage(role,text){var msgs=document.getElementById('demo-messages');var div=document.createElement('div');div.className='demo-msg '+role;if(role==='user'){var lbl=document.createElement('div');lbl.className='msg-label';lbl.textContent='You';div.appendChild(lbl);}else if(role==='assistant'){var lbl2=document.createElement('div');lbl2.className='msg-label';lbl2.textContent='AI';div.appendChild(lbl2);}var txt=document.createElement('span');txt.textContent=text;div.appendChild(txt);msgs.appendChild(div);msgs.scrollTop=msgs.scrollHeight;}
+function addSystemMessage(text){var msgs=document.getElementById('demo-messages');var div=document.createElement('div');div.className='demo-msg system';div.textContent=text;msgs.appendChild(div);msgs.scrollTop=msgs.scrollHeight;}
+function updateCounter(){var r=DEMO_MAX_MSGS-demoMsgCount;document.getElementById('counter-text').textContent=r>0?r+' messages remaining':'Session limit reached';document.querySelectorAll('.demo-counter-dot').forEach(function(d,i){d.classList.toggle('used',i<demoMsgCount);});}
 async function sendDemoMessage(){
-  const input=document.getElementById('demo-input');const sendBtn=document.getElementById('demo-send');const text=input.value.trim();
+  var input=document.getElementById('demo-input');var sendBtn=document.getElementById('demo-send');var text=input.value.trim();
   if(!text||demoMsgCount>=DEMO_MAX_MSGS)return;
-  const isInjection=injectionPatterns.some(p=>p.test(text));
-  input.value='';sendBtn.disabled=true;demoMsgCount++;updateCounter();addMessage('user',text);demoHistory.push({role:'user',content:text});
+  var isInjection=injectionPatterns.some(function(p){return p.test(text);});
+  input.value='';sendBtn.disabled=true;demoMsgCount++;updateCounter();
+  addMessage('user',text);demoHistory.push({role:'user',content:text});
   document.getElementById('demo-suggestions').style.display='none';
   resetAgents();await delay(300);
   setAgent('orchestrator','active','Analyzing query intent...');await delay(900);
   setAgent('orchestrator','done','Query classified.');
-  setAgent('guardrail','active','Scanning for policy violations...');await delay(900);
-  if(isInjection){setAgent('guardrail','blocked','Prompt injection detected.');setAgent('validator','idle','Skipped.');setAgent('responder','idle','Skipped.');addMessage('system','Guardrail blocked: Prompt injection detected. Ask about AI/ML topics instead.');sendBtn.disabled=false;demoMsgCount--;updateCounter();return;}
-  setAgent('guardrail','done','Query is safe.');setAgent('validator','active','Validating parameters...');await delay(600);
-  setAgent('validator','done','Context valid. Max tokens: 300.');setAgent('responder','active','Generating response...');
+  setAgent('guardrail','active','Scanning for violations...');await delay(900);
+  if(isInjection){setAgent('guardrail','blocked','Injection detected.');setAgent('validator','idle','Skipped.');setAgent('responder','idle','Skipped.');addSystemMessage('Guardrail blocked: injection attempt detected.');sendBtn.disabled=false;demoMsgCount--;updateCounter();return;}
+  setAgent('guardrail','done','Query is safe.');setAgent('validator','active','Validating...');await delay(600);
+  setAgent('validator','done','Valid. Max 300 tokens.');setAgent('responder','active','Generating...');
   try{
-    const res=await fetch('https://nageshch.com/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:demoHistory})});
-    const data=await res.json();const reply=data.content?.[0]?.text||'Sorry, try again.';
-    setAgent('responder','done','Response generated.');addMessage('assistant',reply);demoHistory.push({role:'assistant',content:reply});
-    if(demoMsgCount>=DEMO_MAX_MSGS){addMessage('system','Session limit reached.');sendBtn.disabled=true;document.getElementById('demo-input').disabled=true;}
+    var res=await fetch('https://nageshch.com/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:demoHistory})});
+    var data=await res.json();var reply=data.content&&data.content[0]?data.content[0].text:'Sorry, try again.';
+    setAgent('responder','done','Done.');addMessage('assistant',reply);demoHistory.push({role:'assistant',content:reply});
+    if(demoMsgCount>=DEMO_MAX_MSGS){addSystemMessage('Session limit reached.');sendBtn.disabled=true;document.getElementById('demo-input').disabled=true;}
     else{sendBtn.disabled=false;document.getElementById('demo-input').focus();}
-  }catch(e){setAgent('responder','idle','Error.');addMessage('system','Connection error — try again.');sendBtn.disabled=false;demoMsgCount--;updateCounter();}
+  }catch(e){setAgent('responder','idle','Error.');addSystemMessage('Connection error.');sendBtn.disabled=false;demoMsgCount--;updateCounter();}
 }
-function delay(ms){return new Promise(r=>setTimeout(r,ms));}
-document.getElementById('demo-input').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendDemoMessage();}});
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(document.getElementById('demo-modal').classList.contains('open'))closeDemo();if(document.getElementById('nlp-modal').classList.contains('open'))closeNLP();}});
+function delay(ms){return new Promise(function(r){setTimeout(r,ms);});}
+
+/* ═══ RAG DEMO ═══ */
+var RAG_CORPUS={
+  ai:{
+    examples:['What is RAG and how does it work?','Explain vector embeddings','How does LangGraph orchestrate agents?','What is prompt engineering?'],
+    chunks:[
+      {id:'AI-001',text:'Retrieval-Augmented Generation (RAG) combines a retrieval system with a language model. Given a query, RAG first searches a document store for relevant chunks, then injects those chunks into the prompt as context before generating a response.',source:'AI Engineering Docs',keywords:['retrieval','augmented','generation','RAG','document','context','query']},
+      {id:'AI-002',text:'Vector embeddings represent text as high-dimensional numerical vectors. Semantically similar texts produce vectors that are closer together in embedding space, enabling similarity search using cosine distance.',source:'AI Engineering Docs',keywords:['vector','embeddings','semantic','similarity','cosine','distance','numerical']},
+      {id:'AI-003',text:'LangGraph is a framework for building stateful multi-actor applications with LLMs. It models agent workflows as directed graphs where nodes are processing steps and edges define control flow between agents.',source:'AI Engineering Docs',keywords:['LangGraph','agent','workflow','graph','stateful','nodes','edges','framework']},
+      {id:'AI-004',text:'Prompt engineering is the practice of crafting inputs to language models to elicit desired outputs. Techniques include few-shot examples, chain-of-thought reasoning, role assignment, and output format specification.',source:'AI Engineering Docs',keywords:['prompt','engineering','few-shot','chain','reasoning','output','format']},
+      {id:'AI-005',text:'Chunking strategy significantly impacts RAG quality. Chunks should be semantically coherent. Common approaches include fixed-size, sentence-boundary, and semantic chunking methods.',source:'AI Engineering Docs',keywords:['chunk','chunking','semantic','context','size','boundary','strategy']}
+    ]
+  },
+  business:{
+    examples:['How does customer churn prediction work?','What is RFM segmentation?','Explain demand forecasting','How to measure campaign ROI?'],
+    chunks:[
+      {id:'BIZ-001',text:'Customer churn prediction uses historical behaviour data to identify customers likely to leave. Features include usage frequency, recency, support contacts, and payment history. Models include gradient boosting and logistic regression.',source:'Business Analytics',keywords:['churn','prediction','customer','behaviour','gradient','boosting','frequency','recency']},
+      {id:'BIZ-002',text:'RFM segmentation classifies customers by Recency, Frequency, and Monetary value. Each dimension is scored and combined to produce segments such as Champions, At-Risk, and Lost customers.',source:'Business Analytics',keywords:['RFM','recency','frequency','monetary','segmentation','customer','segment']},
+      {id:'BIZ-003',text:'Demand forecasting predicts future product demand using time-series analysis. Methods range from ARIMA and exponential smoothing to ML approaches like XGBoost and Prophet that handle seasonality.',source:'Business Analytics',keywords:['demand','forecasting','ARIMA','XGBoost','Prophet','seasonality','time-series']},
+      {id:'BIZ-004',text:'Marketing campaign ROI is measured by attributing conversions to touchpoints using last-touch, linear, or data-driven attribution. Incrementality testing via A/B experiments provides causal estimates.',source:'Business Analytics',keywords:['ROI','campaign','attribution','conversion','A/B','incrementality','marketing']},
+      {id:'BIZ-005',text:'Price elasticity measures how demand changes in response to price changes. ML models estimate elasticity at the product-region-time level to support dynamic pricing decisions.',source:'Business Analytics',keywords:['price','elasticity','demand','dynamic','pricing','model','revenue']}
+    ]
+  },
+  mlops:{
+    examples:['What is model drift detection?','How does CI/CD work for ML?','Explain model versioning','What is canary deployment?'],
+    chunks:[
+      {id:'OPS-001',text:'Model drift occurs when statistical properties of input data or target labels change over time, degrading model performance. Data drift affects features while concept drift affects the relationship between features and targets.',source:'MLOps Docs',keywords:['drift','model','data','concept','monitor','performance','statistical']},
+      {id:'OPS-002',text:'CI/CD for machine learning automates the pipeline from code commit to model deployment. It includes automated testing, data validation, model evaluation against baselines, and staged rollout.',source:'MLOps Docs',keywords:['CI/CD','pipeline','deployment','training','testing','automated','baseline']},
+      {id:'OPS-003',text:'Model versioning tracks experiments, hyperparameters, metrics, and artefacts across training runs. MLflow provides a model registry where models can be staged as Staging, Production, or Archived with full lineage.',source:'MLOps Docs',keywords:['versioning','MLflow','registry','experiment','artefact','lineage','staging']},
+      {id:'OPS-004',text:'Canary deployment releases a new model version to a small percentage of traffic first, comparing its performance against the current production model before gradually shifting all traffic.',source:'MLOps Docs',keywords:['canary','deployment','traffic','version','production','rollout','gradual']},
+      {id:'OPS-005',text:'Feature stores centralise the computation, storage, and serving of ML features. They ensure consistency between training and inference by providing the same feature values in both contexts.',source:'MLOps Docs',keywords:['feature','store','training','serving','consistency','inference','computation']}
+    ]
+  }
+};
+var ragCorpus='ai';
+function openRAG(){document.getElementById('rag-modal').classList.add('open');document.getElementById('rag-modal').setAttribute('aria-hidden','false');document.body.style.overflow='hidden';setCorpus('ai',document.querySelector('.rag-corpus-tab'));}
+function closeRAG(){document.getElementById('rag-modal').classList.remove('open');document.getElementById('rag-modal').setAttribute('aria-hidden','true');document.body.style.overflow='';}
+function setCorpus(name,btn){
+  ragCorpus=name;
+  document.querySelectorAll('.rag-corpus-tab').forEach(function(b){b.classList.remove('active');});
+  if(btn)btn.classList.add('active');
+  var examples=RAG_CORPUS[name].examples;
+  document.getElementById('rag-examples').innerHTML='';
+  examples.forEach(function(e){var b=document.createElement('button');b.className='rag-example';b.textContent=e;b.onclick=function(){document.getElementById('rag-query').value=e;};document.getElementById('rag-examples').appendChild(b);});
+  resetRAGPanels();
+}
+function resetRAGPanels(){
+  document.getElementById('rag-chunks').innerHTML='<div class="rag-placeholder"><span class="rag-placeholder-icon">📄</span><div>Chunks appear after retrieval</div></div>';
+  document.getElementById('rag-prompt').innerHTML='<div class="rag-placeholder"><span class="rag-placeholder-icon">✏️</span><div>Prompt builder shows context injection</div></div>';
+  document.getElementById('rag-response').innerHTML='<div class="rag-placeholder"><span class="rag-placeholder-icon">💬</span><div>Response and model trace appear here</div></div>';
+  document.getElementById('rag-token-label').textContent='0 tokens';
+  document.getElementById('rag-latency-label').textContent='—';
+  setRAGStep(0);
+}
+function setRAGStep(active){
+  [1,2,3,4].forEach(function(i){
+    var num=document.getElementById('rag-step-'+i);var lbl=document.getElementById('rag-step-label-'+i);
+    if(!num)return;
+    if(i<active){num.className='rag-step-num done';lbl.className='rag-step-label done';}
+    else if(i===active){num.className='rag-step-num active';lbl.className='rag-step-label active';}
+    else{num.className='rag-step-num';lbl.className='rag-step-label';}
+  });
+}
+function scoreChunk(chunk,query){
+  var words=query.toLowerCase().split(' ').filter(function(w){return w.length>2;});
+  var score=0.3;
+  words.forEach(function(word){
+    if(chunk.keywords.some(function(k){return k.toLowerCase().indexOf(word)>=0||word.indexOf(k.toLowerCase())>=0;}))score+=0.15;
+    if(chunk.text.toLowerCase().indexOf(word)>=0)score+=0.05;
+  });
+  return Math.min(0.99,score+(Math.random()*0.06));
+}
+function highlightKeywords(text,query){
+  var words=query.toLowerCase().split(' ').filter(function(w){return w.length>3;});
+  var result=text;
+  words.forEach(function(w){
+    var idx=result.toLowerCase().indexOf(w);
+    if(idx>=0)result=result.slice(0,idx)+'<mark>'+result.slice(idx,idx+w.length)+'</mark>'+result.slice(idx+w.length);
+  });
+  return result;
+}
+async function runRAG(){
+  var query=document.getElementById('rag-query').value.trim();
+  if(!query)return;
+  var btn=document.getElementById('rag-btn');btn.disabled=true;btn.textContent='Running...';
+  setRAGStep(1);await delay(400);
+  setRAGStep(2);
+  var corpus=RAG_CORPUS[ragCorpus].chunks;
+  var scored=corpus.map(function(c){return {id:c.id,text:c.text,source:c.source,score:scoreChunk(c,query)};}).sort(function(a,b){return b.score-a.score;}).slice(0,3);
+  await delay(700);
+  var chunksEl=document.getElementById('rag-chunks');chunksEl.innerHTML='';
+  scored.forEach(function(chunk,i){
+    var sc=chunk.score>0.75?'high':chunk.score>0.55?'med':'low';
+    var d=document.createElement('div');d.className='rag-chunk highlighted';
+    d.style.opacity='0';d.style.transform='translateY(8px)';d.style.transition='all .4s ease '+(i*0.15)+'s';
+    var hdr=document.createElement('div');hdr.className='rag-chunk-header';
+    var cid=document.createElement('span');cid.className='rag-chunk-id';cid.textContent=chunk.id;
+    var csc=document.createElement('span');csc.className='rag-chunk-score '+sc;csc.textContent='Score: '+chunk.score.toFixed(3);
+    hdr.appendChild(cid);hdr.appendChild(csc);
+    var ctxt=document.createElement('div');ctxt.className='rag-chunk-text';ctxt.innerHTML=highlightKeywords(chunk.text,query);
+    var src=document.createElement('div');src.className='rag-chunk-source';src.textContent='📁 '+chunk.source;
+    var bar=document.createElement('div');bar.className='rag-chunk-bar';
+    var fill=document.createElement('div');fill.className='rag-chunk-bar-fill';fill.id='chunk-bar-'+i;
+    bar.appendChild(fill);
+    d.appendChild(hdr);d.appendChild(ctxt);d.appendChild(src);d.appendChild(bar);
+    chunksEl.appendChild(d);
+    setTimeout(function(dd,ii){return function(){dd.style.opacity='1';dd.style.transform='translateY(0)';var bf=document.getElementById('chunk-bar-'+ii);if(bf)bf.style.width=(scored[ii].score*100)+'%';};}(d,i),100+i*150);
+  });
+  document.getElementById('rag-chunk-count').textContent=scored.length+' chunks retrieved';
+  await delay(900);
+  setRAGStep(3);
+  var ctxLines=scored.map(function(c){return '['+c.id+'] '+c.text;});
+  var context=ctxLines.join(' --- ');
+  var totalTokens=Math.round((context.length+query.length+80)/4);
+  var promptEl=document.getElementById('rag-prompt');promptEl.innerHTML='';
+  function makeBlock(cls,label,tokens,content,small){
+    var wrap=document.createElement('div');wrap.className='rag-prompt-block';wrap.style.marginBottom='8px';
+    var lbl=document.createElement('div');lbl.className='rag-prompt-label '+cls;
+    var l1=document.createElement('span');l1.textContent=label;
+    var l2=document.createElement('span');l2.textContent=tokens+' tokens';
+    lbl.appendChild(l1);lbl.appendChild(l2);
+    var txt=document.createElement('div');txt.className='rag-prompt-text';
+    if(small){txt.style.fontSize='10px';txt.style.maxHeight='90px';txt.style.overflowY='auto';}
+    txt.textContent=content;
+    wrap.appendChild(lbl);wrap.appendChild(txt);return wrap;
+  }
+  promptEl.appendChild(makeBlock('sys','SYSTEM',20,'You are a knowledgeable AI assistant. Answer questions based on the provided context.',false));
+  promptEl.appendChild(makeBlock('ctx','CONTEXT ('+scored.length+' chunks)',Math.round(context.length/4),ctxLines.join('\n\n'),true));
+  promptEl.appendChild(makeBlock('qry','QUERY',Math.round(query.length/4),query,false));
+  var tbar=document.createElement('div');tbar.className='rag-token-bar';tbar.style.marginTop='8px';
+  var tl=document.createElement('span');tl.className='rag-token-label';tl.textContent='Total prompt tokens';
+  var tt=document.createElement('div');tt.className='rag-token-track';
+  var tf=document.createElement('div');tf.className='rag-token-fill';tf.id='rag-token-fill';
+  tt.appendChild(tf);var tc=document.createElement('span');tc.className='rag-token-count';tc.textContent=totalTokens+' / 4096';
+  tbar.appendChild(tl);tbar.appendChild(tt);tbar.appendChild(tc);promptEl.appendChild(tbar);
+  document.getElementById('rag-token-label').textContent=totalTokens+' tokens';
+  setTimeout(function(){var f=document.getElementById('rag-token-fill');if(f)f.style.width=Math.min(100,(totalTokens/4096)*100)+'%';},300);
+  await delay(700);
+  setRAGStep(4);
+  var responseEl=document.getElementById('rag-response');responseEl.innerHTML='';
+  var gen=document.createElement('div');gen.className='rag-response';gen.style.color='#9ca3af';gen.style.fontStyle='italic';gen.textContent='Generating response...';responseEl.appendChild(gen);
+  var t0=Date.now();
+  try{
+    var res=await fetch('https://nageshch.com/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:[{role:'user',content:'Answer using ONLY this context. Context: '+context+' Question: '+query+' Answer in 3-4 sentences.'}],temperature:0.3,top_p:0.8})});
+    var data=await res.json();
+    var answer=data.content&&data.content[0]?data.content[0].text:'No response generated.';
+    var latency=Date.now()-t0;var outTokens=Math.round(answer.length/4);var modelUsed=data.model_used||'llama-3.1-8b-instant';
+    document.getElementById('rag-latency-label').textContent=latency+'ms';
+    responseEl.innerHTML='';
+    var ans=document.createElement('div');ans.className='rag-response';ans.textContent=answer;responseEl.appendChild(ans);
+    var trace=document.createElement('div');trace.className='rag-trace';trace.style.marginTop='10px';
+    var th=document.createElement('div');th.className='rag-trace-title';th.textContent='Model Trace';trace.appendChild(th);
+    [['Model',modelUsed,'blue'],['Latency',latency+' ms',''],['Prompt tokens',totalTokens,''],['Output tokens',outTokens,''],['Chunks retrieved',scored.length+' of top-k 3','green'],['Top score',scored[0].score.toFixed(3),'green']].forEach(function(r){
+      var row=document.createElement('div');row.className='rag-trace-row';
+      var k=document.createElement('span');k.className='rag-trace-key';k.textContent=r[0];
+      var v=document.createElement('span');v.className='rag-trace-val'+(r[2]?' '+r[2]:'');v.textContent=r[1];
+      row.appendChild(k);row.appendChild(v);trace.appendChild(row);
+    });
+    responseEl.appendChild(trace);setRAGStep(5);
+  }catch(e){
+    responseEl.innerHTML='';var err=document.createElement('div');err.className='rag-response';err.style.color='#dc2626';err.textContent='Connection error — please try again.';responseEl.appendChild(err);
+  }
+  btn.disabled=false;btn.textContent='Run Pipeline →';
+}
 
 /* ═══ NLP DEMO ═══ */
 function openNLP(){document.getElementById('nlp-modal').classList.add('open');document.getElementById('nlp-modal').setAttribute('aria-hidden','false');document.body.style.overflow='hidden';}
 function closeNLP(){document.getElementById('nlp-modal').classList.remove('open');document.getElementById('nlp-modal').setAttribute('aria-hidden','true');document.body.style.overflow='';}
-document.getElementById('nlp-close').addEventListener('click',closeNLP);
-document.getElementById('nlp-modal').addEventListener('click',e=>{if(e.target===document.getElementById('nlp-modal'))closeNLP();});
 function useNLPExample(btn){document.getElementById('nlp-input').value=btn.textContent;updateCharCount();}
-function updateCharCount(){const len=document.getElementById('nlp-input').value.length;document.getElementById('nlp-char-count').textContent=len+' character'+(len===1?'':'s');}
+function updateCharCount(){var len=document.getElementById('nlp-input').value.length;document.getElementById('nlp-char-count').textContent=len+' character'+(len===1?'':'s');}
 async function runNLP(){
-  const input=document.getElementById('nlp-input');const btn=document.getElementById('nlp-btn');const results=document.getElementById('nlp-results');
-  const text=input.value.trim();if(!text)return;
+  var input=document.getElementById('nlp-input');var btn=document.getElementById('nlp-btn');var results=document.getElementById('nlp-results');
+  var text=input.value.trim();if(!text)return;
   btn.disabled=true;btn.textContent='Analysing...';results.className='nlp-results loading';
-  results.innerHTML='<div style="text-align:center;padding:20px 0;"><div style="font-size:28px;margin-bottom:14px;animation:spin 1.2s linear infinite">⚙</div><div class="nlp-loading-text">Running NLP Pipeline</div><div class="nlp-loading-steps"><div class="nlp-loading-step active">Tokenising input text</div><div class="nlp-loading-step active">Running classification head</div><div class="nlp-loading-step active">Extracting named entities</div><div class="nlp-loading-step active">Scoring sentiment polarity</div></div></div>';
-  const prompt='Analyse this text and return ONLY raw JSON no markdown. Text: '+JSON.stringify(text)+' Return: {"category":"string","category_confidence":0.9,"domain":"string","intent":"string","sentiment":"Positive or Negative or Neutral or Mixed","sentiment_score":0.8,"entities":[{"text":"string","type":"METRIC or KPI or STRATEGY or TECHNOLOGY or TIME_PERIOD or PERSON or ORGANIZATION or OTHER"}],"summary":"one sentence"}';
+  results.innerHTML='<div style="text-align:center;padding:20px 0;"><div style="font-size:28px;margin-bottom:14px;">⚙</div><div class="nlp-loading-text">Running NLP Pipeline</div></div>';
+  var prompt='Analyse this text and return ONLY raw JSON. No markdown, no explanation. Text: '+JSON.stringify(text)+' Return exactly: {"category":"string","category_confidence":0.9,"domain":"string","intent":"string","sentiment":"Positive or Negative or Neutral or Mixed","sentiment_score":0.8,"entities":[{"text":"string","type":"METRIC or KPI or STRATEGY or TECHNOLOGY or TIME_PERIOD or PERSON or ORGANIZATION or OTHER"}],"summary":"one sentence summary"}';
   try{
-    const res=await fetch('https://nageshch.com/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:[{role:'user',content:prompt}],temperature:0.1,top_p:0.5})});
-    const data=await res.json();const raw=data.content?.[0]?.text||'';
-    const m=raw.match(/\{[\s\S]*\}/);if(!m)throw new Error('No JSON');
-    renderNLPResults(JSON.parse(m[0]));
+    var res=await fetch('https://nageshch.com/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:[{role:'user',content:prompt}],temperature:0.1,top_p:0.5})});
+    var data=await res.json();var raw=data.content&&data.content[0]?data.content[0].text:'';
+    var fi=raw.indexOf('{');var li=raw.lastIndexOf('}');
+    if(fi===-1||li===-1)throw new Error('No JSON');
+    renderNLPResults(JSON.parse(raw.slice(fi,li+1)));
   }catch(e){results.className='nlp-results loading';results.innerHTML='<div class="nlp-placeholder"><div style="font-size:24px">⚠</div><div style="margin-top:8px;">Analysis failed — please try again</div></div>';}
   btn.disabled=false;btn.textContent='Analyse →';
 }
 function renderNLPResults(r){
-  const results=document.getElementById('nlp-results');results.className='nlp-results';
-  const sc=r.sentiment==='Positive'?'pos':r.sentiment==='Negative'?'neg':r.sentiment==='Mixed'?'mix':'neu';
-  const sn=r.sentiment==='Positive'?'positive':r.sentiment==='Negative'?'negative':r.sentiment==='Mixed'?'mixed':'neutral';
-  const cp=Math.round((r.category_confidence||0)*100);const sp=Math.round((r.sentiment_score||0)*100);
-  const lc={TIME_PERIOD:'#3b82f6',METRIC:'#16a34a',KPI:'#d97706',STRATEGY:'#7c3aed',TECHNOLOGY:'#0369a1',PERSON:'#9f1239',ORGANIZATION:'#334155',OTHER:'#374151'};
-  const eh=(r.entities||[]).map(e=>'<span class="nlp-entity '+(e.type||'OTHER')+'"><span class="nlp-entity-text">'+e.text+'</span><span class="nlp-entity-type">'+(e.type||'OTHER').replace(/_/g,' ')+'</span></span>').join('');
-  const lt=[...new Set((r.entities||[]).map(e=>e.type||'OTHER'))];
-  const lh=lt.map(t=>'<span class="nlp-legend-item"><span class="nlp-legend-dot" style="background:'+lc[t]+';"></span>'+t.replace(/_/g,' ')+'</span>').join('');
-  results.innerHTML=
-    '<div class="nlp-card"><div class="nlp-card-title">📊 Classification</div><div class="nlp-divider"></div><div class="nlp-category-name">'+(r.category||'—')+'</div><div class="nlp-category-domain">'+(r.domain||'')+'</div><div class="nlp-bar-wrap"><div class="nlp-bar-label"><span>Confidence</span><span class="nlp-bar-pct">'+cp+'%</span></div><div class="nlp-bar-track"><div class="nlp-bar-fill cat" id="bar-cat"></div></div></div><div class="nlp-intent-wrap"><span class="nlp-intent-label">Intent</span><span class="nlp-intent">'+(r.intent||'—')+'</span></div></div>'+
-    '<div class="nlp-card"><div class="nlp-card-title">💬 Sentiment Analysis</div><div class="nlp-divider"></div><div class="nlp-sentiment-row"><div class="nlp-sentiment-label '+sn+'">'+(r.sentiment||'—')+'</div><span class="nlp-sentiment-sub">'+sp+'% confidence</span></div><div class="nlp-bar-wrap"><div class="nlp-bar-label"><span>Polarity Score</span><span class="nlp-bar-pct">'+sp+'%</span></div><div class="nlp-bar-track"><div class="nlp-bar-fill '+sc+'" id="bar-sent"></div></div></div><div class="nlp-summary-label">Summary</div><div class="nlp-summary">'+(r.summary||'—')+'</div></div>'+
-    '<div class="nlp-card"><div class="nlp-card-title">🏷 Named Entities · '+(r.entities||[]).length+' found</div><div class="nlp-divider"></div><div class="nlp-entities">'+(eh||'<span style="color:#9ca3af;font-size:12px;">No entities detected</span>')+'</div>'+(lh?'<div class="nlp-entity-legend">'+lh+'</div>':'')+'</div>';
-  requestAnimationFrame(()=>{setTimeout(()=>{const bc=document.getElementById('bar-cat');const bs=document.getElementById('bar-sent');if(bc)bc.style.width=cp+'%';if(bs)bs.style.width=sp+'%';},150);});
+  var results=document.getElementById('nlp-results');results.className='nlp-results';
+  var sc=r.sentiment==='Positive'?'pos':r.sentiment==='Negative'?'neg':r.sentiment==='Mixed'?'mix':'neu';
+  var sn=r.sentiment==='Positive'?'positive':r.sentiment==='Negative'?'negative':r.sentiment==='Mixed'?'mixed':'neutral';
+  var cp=Math.round((r.category_confidence||0)*100);var sp=Math.round((r.sentiment_score||0)*100);
+  var lc={TIME_PERIOD:'#3b82f6',METRIC:'#16a34a',KPI:'#d97706',STRATEGY:'#7c3aed',TECHNOLOGY:'#0369a1',PERSON:'#9f1239',ORGANIZATION:'#334155',OTHER:'#374151'};
+  var eh=(r.entities||[]).map(function(e){return '<span class="nlp-entity '+(e.type||'OTHER')+'"><span class="nlp-entity-text">'+e.text+'</span><span class="nlp-entity-type">'+(e.type||'OTHER').replace(/_/g,' ')+'</span></span>';}).join('');
+  var lt=[];(r.entities||[]).forEach(function(e){if(lt.indexOf(e.type||'OTHER')<0)lt.push(e.type||'OTHER');});
+  var lh=lt.map(function(t){return '<span class="nlp-legend-item"><span class="nlp-legend-dot" style="background:'+lc[t]+';display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:4px;"></span>'+t.replace(/_/g,' ')+'</span>';}).join('');
+  function mkCard(title,content){var c=document.createElement('div');c.className='nlp-card';var h=document.createElement('div');h.className='nlp-card-title';h.textContent=title;var dv=document.createElement('div');dv.className='nlp-divider';c.appendChild(h);c.appendChild(dv);c.innerHTML+=content;return c;}
+  results.innerHTML='';
+  var c1=document.createElement('div');c1.className='nlp-card';
+  c1.innerHTML='<div class="nlp-card-title">📊 Classification</div><div class="nlp-divider"></div><div class="nlp-category-name">'+(r.category||'—')+'</div><div class="nlp-category-domain">'+(r.domain||'')+'</div><div class="nlp-bar-wrap"><div class="nlp-bar-label"><span>Confidence</span><span class="nlp-bar-pct">'+cp+'%</span></div><div class="nlp-bar-track"><div class="nlp-bar-fill cat" id="bar-cat"></div></div></div><div class="nlp-intent-wrap"><span class="nlp-intent-label">Intent</span><span class="nlp-intent">'+(r.intent||'—')+'</span></div>';
+  var c2=document.createElement('div');c2.className='nlp-card';
+  c2.innerHTML='<div class="nlp-card-title">💬 Sentiment Analysis</div><div class="nlp-divider"></div><div class="nlp-sentiment-row"><div class="nlp-sentiment-label '+sn+'">'+(r.sentiment||'—')+'</div><span class="nlp-sentiment-sub">'+sp+'% confidence</span></div><div class="nlp-bar-wrap"><div class="nlp-bar-label"><span>Polarity Score</span><span class="nlp-bar-pct">'+sp+'%</span></div><div class="nlp-bar-track"><div class="nlp-bar-fill '+sc+'" id="bar-sent"></div></div></div><div class="nlp-summary-label">Summary</div><div class="nlp-summary">'+(r.summary||'—')+'</div>';
+  var c3=document.createElement('div');c3.className='nlp-card';
+  c3.innerHTML='<div class="nlp-card-title">🏷 Named Entities · '+(r.entities||[]).length+' found</div><div class="nlp-divider"></div><div class="nlp-entities">'+(eh||'<span style="color:#9ca3af;font-size:12px;">No entities detected</span>')+'</div>'+(lh?'<div class="nlp-entity-legend">'+lh+'</div>':'');
+  results.appendChild(c1);results.appendChild(c2);results.appendChild(c3);
+  setTimeout(function(){var bc=document.getElementById('bar-cat');var bs=document.getElementById('bar-sent');if(bc)bc.style.width=cp+'%';if(bs)bs.style.width=sp+'%';},150);
 }
+
+/* ═══ EVENT LISTENERS ═══ */
+document.addEventListener('DOMContentLoaded', function(){
+  document.getElementById('demo-close').addEventListener('click',closeDemo);
+  document.getElementById('demo-modal').addEventListener('click',function(e){if(e.target===document.getElementById('demo-modal'))closeDemo();});
+  document.getElementById('nlp-close').addEventListener('click',closeNLP);
+  document.getElementById('nlp-modal').addEventListener('click',function(e){if(e.target===document.getElementById('nlp-modal'))closeNLP();});
+  document.getElementById('rag-close').addEventListener('click',closeRAG);
+  document.getElementById('rag-modal').addEventListener('click',function(e){if(e.target===document.getElementById('rag-modal'))closeRAG();});
+  document.getElementById('demo-input').addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendDemoMessage();}});
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape'){
+      if(document.getElementById('demo-modal').classList.contains('open'))closeDemo();
+      if(document.getElementById('nlp-modal').classList.contains('open'))closeNLP();
+      if(document.getElementById('rag-modal').classList.contains('open'))closeRAG();
+    }
+  });
+  setCorpus('ai',document.querySelector('.rag-corpus-tab'));
+});
+
 </script>
 </body>
 </html>
