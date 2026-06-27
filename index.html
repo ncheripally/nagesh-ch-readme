@@ -494,69 +494,84 @@ footer:hover{border-top-color:rgba(255,107,53,.3);}
 
 
 /* ══════════════════════════════════
-   MULTI-AGENT DEMO MODAL
+   MULTI-AGENT DEMO MODAL — Clean White
 ══════════════════════════════════ */
-.demo-overlay{position:fixed;inset:0;z-index:1700;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(4,6,18,.96);backdrop-filter:blur(12px);opacity:0;visibility:hidden;transition:opacity .3s ease,visibility .3s ease;}
+.demo-overlay{position:fixed;inset:0;z-index:1700;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.6);backdrop-filter:blur(8px);opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s;}
 .demo-overlay.open{opacity:1;visibility:visible;}
-.demo-modal{width:100%;max-width:1000px;height:90vh;background:linear-gradient(145deg,#0d1130,#111827);border:1px solid rgba(255,0,110,.2);border-radius:24px;display:flex;flex-direction:column;overflow:hidden;position:relative;box-shadow:0 48px 120px rgba(0,0,0,.7),0 0 80px rgba(255,0,110,.08);}
-.demo-modal-header{padding:20px 28px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
-.demo-modal-title{display:flex;align-items:center;gap:12px;}
-.demo-modal-title h3{font-family:var(--serif);font-size:18px;font-weight:700;color:var(--bone);}
-.demo-live-badge{font-family:var(--mono);font-size:9px;letter-spacing:.18em;padding:4px 10px;background:rgba(255,0,110,.12);border:1px solid rgba(255,0,110,.3);color:#ff6b9d;border-radius:4px;display:flex;align-items:center;gap:6px;}
-.demo-live-badge::before{content:'';width:6px;height:6px;border-radius:50%;background:#ff006e;animation:livePulse 1.5s infinite;}
+.demo-modal{width:100%;max-width:1040px;height:88vh;background:#fff;border-radius:16px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.18),0 4px 16px rgba(0,0,0,.08);}
+.demo-modal-header{padding:18px 24px;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;background:#fff;}
+.demo-modal-title{display:flex;align-items:center;gap:10px;}
+.demo-modal-title h3{font-family:var(--body);font-size:15px;font-weight:600;color:#111827;letter-spacing:-.01em;}
+.demo-live-badge{font-family:var(--mono);font-size:8px;letter-spacing:.18em;padding:3px 9px;background:#fef2f2;border:1px solid #fecaca;color:#dc2626;border-radius:4px;display:flex;align-items:center;gap:5px;text-transform:uppercase;}
+.demo-live-badge::before{content:'';width:5px;height:5px;border-radius:50%;background:#dc2626;animation:livePulse 1.5s infinite;}
 @keyframes livePulse{0%,100%{opacity:1;}50%{opacity:.3;}}
-.demo-close{width:36px;height:36px;border:none;border-radius:50%;background:rgba(255,255,255,.07);color:var(--bone);font-size:20px;cursor:pointer;transition:background .2s;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.demo-close:hover{background:rgba(255,0,110,.2);}
-.demo-body{display:grid;grid-template-columns:1fr 320px;flex:1;overflow:hidden;}
-/* Agent pipeline panel */
-.demo-pipeline{padding:24px;border-right:1px solid rgba(255,255,255,.05);overflow-y:auto;display:flex;flex-direction:column;gap:16px;}
-.demo-pipeline-title{font-family:var(--mono);font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--ash);margin-bottom:4px;}
-.agent-card{border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:14px 16px;background:rgba(255,255,255,.02);transition:all .4s;}
-.agent-card.active{border-color:rgba(255,0,110,.4);background:rgba(255,0,110,.06);box-shadow:0 0 20px rgba(255,0,110,.08);}
-.agent-card.done{border-color:rgba(0,247,255,.25);background:rgba(0,247,255,.04);}
-.agent-card.idle{opacity:.45;}
-.agent-header{display:flex;align-items:center;gap:10px;margin-bottom:6px;}
-.agent-icon{font-size:16px;}
-.agent-name{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--bone);font-weight:600;}
-.agent-status{font-family:var(--mono);font-size:8px;letter-spacing:.1em;margin-left:auto;padding:2px 8px;border-radius:3px;}
-.agent-status.thinking{background:rgba(255,215,0,.12);color:#ffd700;border:1px solid rgba(255,215,0,.2);}
-.agent-status.done{background:rgba(0,247,255,.1);color:#00f7ff;border:1px solid rgba(0,247,255,.2);}
-.agent-status.idle{background:rgba(255,255,255,.04);color:var(--ash);border:1px solid rgba(255,255,255,.08);}
-.agent-thought{font-size:11.5px;color:rgba(242,237,230,.55);line-height:1.65;font-style:italic;min-height:16px;}
-.agent-arrow{text-align:center;color:rgba(255,0,110,.3);font-size:14px;margin:-6px 0;}
-/* Chat panel */
-.demo-chat{display:flex;flex-direction:column;overflow:hidden;}
-.demo-messages{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:12px;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.1) transparent;}
-.demo-msg{max-width:85%;padding:12px 16px;border-radius:14px;font-size:13.5px;line-height:1.65;}
-.demo-msg.user{align-self:flex-end;background:linear-gradient(135deg,rgba(255,0,110,.2),rgba(167,139,250,.15));border:1px solid rgba(255,0,110,.25);color:var(--bone);border-bottom-right-radius:4px;}
-.demo-msg.assistant{align-self:flex-start;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:rgba(242,237,230,.85);border-bottom-left-radius:4px;}
-.demo-msg.system{align-self:center;background:rgba(255,215,0,.06);border:1px solid rgba(255,215,0,.15);color:#ffe066;font-family:var(--mono);font-size:10px;letter-spacing:.08em;border-radius:6px;text-align:center;}
-.demo-msg .msg-label{font-family:var(--mono);font-size:8px;letter-spacing:.18em;text-transform:uppercase;opacity:.5;margin-bottom:5px;}
-/* Input area */
-.demo-input-area{padding:16px 20px;border-top:1px solid rgba(255,255,255,.06);flex-shrink:0;}
-.demo-counter{font-family:var(--mono);font-size:9px;letter-spacing:.12em;color:var(--ash);margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;}
+.demo-close{width:32px;height:32px;border:1px solid #e5e7eb;border-radius:8px;background:#fff;color:#6b7280;font-size:18px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.demo-close:hover{background:#f9fafb;color:#111827;}
+.demo-body{display:grid;grid-template-columns:260px 1fr;flex:1;overflow:hidden;}
+.demo-pipeline{padding:20px;border-right:1px solid #f3f4f6;overflow-y:auto;display:flex;flex-direction:column;gap:10px;background:#fafafa;}
+.demo-pipeline-title{font-family:var(--mono);font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;color:#9ca3af;margin-bottom:2px;}
+.agent-card{border:1px solid #e5e7eb;border-radius:10px;padding:12px 14px;background:#fff;transition:all .35s;}
+.agent-card.active{border-color:#fb923c;background:#fff7ed;box-shadow:0 0 0 3px rgba(251,146,60,.1);}
+.agent-card.done{border-color:#86efac;background:#f0fdf4;}
+.agent-card.idle{opacity:.5;}
+.agent-header{display:flex;align-items:center;gap:8px;margin-bottom:5px;}
+.agent-icon{font-size:14px;}
+.agent-name{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:#374151;font-weight:600;flex:1;}
+.agent-status{font-family:var(--mono);font-size:7.5px;letter-spacing:.08em;padding:2px 7px;border-radius:3px;text-transform:uppercase;}
+.agent-status.thinking{background:#fff7ed;color:#ea580c;border:1px solid #fed7aa;}
+.agent-status.done{background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;}
+.agent-status.idle{background:#f9fafb;color:#9ca3af;border:1px solid #e5e7eb;}
+.agent-thought{font-size:11px;color:#6b7280;line-height:1.55;font-style:italic;min-height:14px;}
+.agent-arrow{text-align:center;color:#d1d5db;font-size:12px;margin:-2px 0;line-height:1;}
+.demo-chat{display:flex;flex-direction:column;overflow:hidden;background:#fff;}
+.demo-messages{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:10px;scrollbar-width:thin;scrollbar-color:#e5e7eb transparent;}
+.demo-msg{max-width:82%;padding:11px 15px;border-radius:12px;font-size:13.5px;line-height:1.65;font-family:var(--body);}
+.demo-msg.user{align-self:flex-end;background:#111827;color:#fff;border-bottom-right-radius:3px;}
+.demo-msg.assistant{align-self:flex-start;background:#f9fafb;border:1px solid #e5e7eb;color:#111827;border-bottom-left-radius:3px;}
+.demo-msg.system{align-self:center;background:#f0fdf4;border:1px solid #bbf7d0;color:#15803d;font-family:var(--mono);font-size:10px;letter-spacing:.06em;border-radius:6px;text-align:center;padding:8px 14px;}
+.demo-msg .msg-label{font-family:var(--mono);font-size:8px;letter-spacing:.15em;text-transform:uppercase;opacity:.45;margin-bottom:4px;color:inherit;}
+.demo-input-area{padding:14px 20px;border-top:1px solid #f3f4f6;flex-shrink:0;background:#fff;}
+.demo-counter{font-family:var(--mono);font-size:9px;letter-spacing:.1em;color:#9ca3af;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;}
 .demo-counter-dots{display:flex;gap:4px;}
-.demo-counter-dot{width:8px;height:8px;border-radius:50%;border:1px solid rgba(255,255,255,.15);transition:all .3s;}
-.demo-counter-dot.used{background:#ff006e;border-color:#ff006e;box-shadow:0 0 8px rgba(255,0,110,.5);}
-.demo-input-row{display:flex;gap:10px;}
-.demo-input{flex:1;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:11px 16px;color:var(--bone);font-family:var(--body);font-size:13px;outline:none;transition:border-color .2s;resize:none;}
-.demo-input:focus{border-color:rgba(255,0,110,.4);}
-.demo-input::placeholder{color:var(--ash);}
-.demo-send{background:linear-gradient(135deg,#ff006e,#a78bfa);border:none;border-radius:10px;padding:11px 20px;color:#fff;font-family:var(--mono);font-size:11px;letter-spacing:.1em;cursor:pointer;transition:transform .2s,box-shadow .2s;white-space:nowrap;}
-.demo-send:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 8px 20px rgba(255,0,110,.4);}
-.demo-send:disabled{opacity:.4;cursor:not-allowed;}
+.demo-counter-dot{width:7px;height:7px;border-radius:50%;border:1.5px solid #d1d5db;transition:all .3s;}
+.demo-counter-dot.used{background:#111827;border-color:#111827;}
 .demo-suggestions{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;}
-.demo-suggestion{font-family:var(--mono);font-size:9px;padding:5px 12px;border:1px solid rgba(255,255,255,.08);border-radius:20px;color:rgba(242,237,230,.5);cursor:pointer;transition:all .2s;background:none;}
-.demo-suggestion:hover{border-color:rgba(255,0,110,.3);color:var(--bone);background:rgba(255,0,110,.06);}
-/* Launch button on demo card */
-.dm-launch{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:10px;letter-spacing:.12em;padding:8px 18px;border:1px solid rgba(255,0,110,.4);color:#ff6b9d;background:rgba(255,0,110,.08);border-radius:6px;cursor:pointer;transition:all .3s;text-decoration:none;}
-.dm-launch:hover{background:rgba(255,0,110,.18);border-color:#ff006e;color:#fff;transform:translateY(-1px);}
+.demo-suggestion{font-family:var(--mono);font-size:9px;padding:5px 11px;border:1px solid #e5e7eb;border-radius:20px;color:#6b7280;cursor:pointer;transition:all .2s;background:#fff;letter-spacing:.04em;}
+.demo-suggestion:hover{border-color:#111827;color:#111827;background:#f9fafb;}
+.demo-input-row{display:flex;gap:8px;}
+.demo-input{flex:1;background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;padding:10px 14px;color:#111827;font-family:var(--body);font-size:13px;outline:none;transition:border-color .2s;resize:none;}
+.demo-input:focus{border-color:#111827;background:#fff;}
+.demo-input::placeholder{color:#9ca3af;}
+.demo-send{background:#111827;border:none;border-radius:10px;padding:10px 20px;color:#fff;font-family:var(--mono);font-size:10px;letter-spacing:.1em;cursor:pointer;transition:all .2s;white-space:nowrap;}
+.demo-send:hover:not(:disabled){background:#1f2937;box-shadow:0 4px 12px rgba(0,0,0,.15);}
+.demo-send:disabled{opacity:.35;cursor:not-allowed;}
+.dm-launch{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:10px;letter-spacing:.12em;padding:9px 20px;border:1.5px solid #111827;color:#111827;background:#fff;border-radius:7px;cursor:pointer;transition:all .25s;text-decoration:none;text-transform:uppercase;}
+.dm-launch:hover{background:#111827;color:#fff;box-shadow:0 4px 14px rgba(0,0,0,.15);}
 .dm-launch::before{content:'▶';font-size:8px;}
 @media(max-width:800px){
   .demo-body{grid-template-columns:1fr;}
   .demo-pipeline{display:none;}
   .demo-modal{height:95vh;}
 }
+
+
+.demo-model-info{font-family:var(--mono);font-size:9px;color:#6b7280;letter-spacing:.04em;margin-top:2px;}
+.demo-model-info strong{color:#374151;}
+.demo-desc-bar{padding:10px 24px;background:#f8fafc;border-bottom:1px solid #e5e7eb;flex-shrink:0;}
+.demo-desc-text{font-size:12px;color:#4b5563;line-height:1.6;}
+.demo-desc-text strong{color:#111827;font-weight:600;}
+.agent-role-desc{font-family:var(--mono);font-size:8px;color:#9ca3af;letter-spacing:.03em;margin-bottom:4px;}
+.demo-model-card{margin-top:12px;border:1px solid #e5e7eb;border-radius:10px;padding:12px;background:#fff;}
+.demo-model-card-title{font-family:var(--mono);font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:#9ca3af;margin-bottom:8px;}
+.demo-model-row{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #f3f4f6;font-size:11px;}
+.demo-model-row:last-child{border-bottom:none;}
+.demo-model-row span{color:#6b7280;font-family:var(--mono);font-size:9px;}
+.demo-model-row strong{color:#111827;font-size:9px;font-family:var(--mono);}
+.demo-body{display:grid;grid-template-columns:300px 1fr;flex:1;overflow:hidden;}
+
+.demo-objective{padding:10px 24px;background:#fff;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;gap:14px;flex-shrink:0;}
+.demo-objective-label{font-family:var(--mono);font-size:8px;letter-spacing:.18em;text-transform:uppercase;color:#6b7280;white-space:nowrap;}
+.demo-objective-text{font-family:var(--body);font-size:12.5px;font-weight:600;color:#111827;letter-spacing:-.01em;}
 </style>
 </head>
 <body>
@@ -1150,66 +1165,74 @@ document.addEventListener('keydown',e=>{
   <div class="demo-modal">
     <div class="demo-modal-header">
       <div class="demo-modal-title">
-        <span style="font-size:20px;">🧠</span>
-        <h3>Multi-Agent Orchestration</h3>
+        <span style="font-size:18px;">🧠</span>
+        <div>
+          <h3>Multi-Agent Orchestration Demo</h3>
+          <div class="demo-model-info">Powered by <strong>LLaMA 3.3 70B</strong> via Groq LPU · ~400 tok/s · AI/ML domain only</div>
+        </div>
         <div class="demo-live-badge">LIVE</div>
       </div>
       <button class="demo-close" id="demo-close" aria-label="Close">×</button>
     </div>
+    <div class="demo-desc-bar">
+      <div class="demo-desc-text">
+        Watch how a production multi-agent system processes your query in real time. Each agent has a distinct role — the <strong>Orchestrator</strong> routes and plans, the <strong>Guardrail</strong> enforces scope and safety policies, the <strong>Validator</strong> checks context integrity, and the <strong>Responder</strong> generates the final output.
+      </div>
+    </div>
+    <div class="demo-objective">
+      <div class="demo-objective-label">🎯 Demo Objective</div>
+      <div class="demo-objective-text">Explore the orchestrator-guardrail-validator pattern that powers production AI systems</div>
+    </div>
     <div class="demo-body">
-      <!-- Agent Pipeline Visualization -->
       <div class="demo-pipeline">
         <div class="demo-pipeline-title">Agent Pipeline</div>
         <div class="agent-card idle" id="agent-orchestrator">
-          <div class="agent-header">
-            <span class="agent-icon">🎯</span>
-            <span class="agent-name">Orchestrator</span>
-            <span class="agent-status idle" id="status-orchestrator">Idle</span>
-          </div>
+          <div class="agent-header"><span class="agent-icon">🎯</span><span class="agent-name">Orchestrator</span><span class="agent-status idle" id="status-orchestrator">Idle</span></div>
+          <div class="agent-role-desc">Routes query · Plans execution · Assigns sub-agents</div>
           <div class="agent-thought" id="thought-orchestrator">Waiting for query...</div>
         </div>
         <div class="agent-arrow">↓</div>
         <div class="agent-card idle" id="agent-guardrail">
-          <div class="agent-header">
-            <span class="agent-icon">🛡️</span>
-            <span class="agent-name">Guardrail</span>
-            <span class="agent-status idle" id="status-guardrail">Idle</span>
-          </div>
+          <div class="agent-header"><span class="agent-icon">🛡️</span><span class="agent-name">Guardrail</span><span class="agent-status idle" id="status-guardrail">Idle</span></div>
+          <div class="agent-role-desc">Scope enforcement · Safety policy · Jailbreak prevention</div>
           <div class="agent-thought" id="thought-guardrail">Waiting...</div>
         </div>
         <div class="agent-arrow">↓</div>
         <div class="agent-card idle" id="agent-validator">
-          <div class="agent-header">
-            <span class="agent-icon">✅</span>
-            <span class="agent-name">Validator</span>
-            <span class="agent-status idle" id="status-validator">Idle</span>
-          </div>
+          <div class="agent-header"><span class="agent-icon">✅</span><span class="agent-name">Validator</span><span class="agent-status idle" id="status-validator">Idle</span></div>
+          <div class="agent-role-desc">Context integrity · Token budget · Output constraints</div>
           <div class="agent-thought" id="thought-validator">Waiting...</div>
         </div>
         <div class="agent-arrow">↓</div>
         <div class="agent-card idle" id="agent-responder">
-          <div class="agent-header">
-            <span class="agent-icon">⚡</span>
-            <span class="agent-name">Responder</span>
-            <span class="agent-status idle" id="status-responder">Idle</span>
-          </div>
+          <div class="agent-header"><span class="agent-icon">⚡</span><span class="agent-name">Responder</span><span class="agent-status idle" id="status-responder">Idle</span></div>
+          <div class="agent-role-desc">LLM generation · Response synthesis · Quality check</div>
           <div class="agent-thought" id="thought-responder">Waiting...</div>
         </div>
+        <div class="demo-model-card">
+          <div class="demo-model-card-title">Model Details</div>
+          <div class="demo-model-row"><span>Model</span><strong>LLaMA 3.3 70B Versatile</strong></div>
+          <div class="demo-model-row"><span>Provider</span><strong>Groq LPU</strong></div>
+          <div class="demo-model-row"><span>Speed</span><strong>~400 tok/s</strong></div>
+          <div class="demo-model-row"><span>Max output</span><strong>300 tokens</strong></div>
+          <div class="demo-model-row"><span>Scope</span><strong>AI/ML domain only</strong></div>
+          <div class="demo-model-row"><span>Pattern</span><strong>Orchestrator-Guardrail-Validator</strong></div>
+        </div>
       </div>
-      <!-- Chat Panel -->
       <div class="demo-chat">
         <div class="demo-messages" id="demo-messages">
-          <div class="demo-msg system">Ask me anything about Agentic AI, LLMs, or enterprise AI strategy</div>
+          <div class="demo-msg system">This demo runs a 4-agent pipeline on every query. Ask anything about Agentic AI, LLMs, RAG, MLOps, or enterprise AI strategy.</div>
         </div>
+
         <div class="demo-input-area">
           <div class="demo-suggestions" id="demo-suggestions">
             <button class="demo-suggestion" onclick="useSuggestion(this)">How does multi-agent AI work?</button>
             <button class="demo-suggestion" onclick="useSuggestion(this)">What is RAG?</button>
             <button class="demo-suggestion" onclick="useSuggestion(this)">How to prevent LLM hallucinations?</button>
-            <button class="demo-suggestion" onclick="useSuggestion(this)">Explain LangGraph</button>
+            <button class="demo-suggestion" onclick="useSuggestion(this)">Explain LangGraph vs CrewAI</button>
           </div>
           <div class="demo-counter">
-            <span id="counter-text">5 messages remaining</span>
+            <span id="counter-text">5 messages remaining this session</span>
             <div class="demo-counter-dots" id="counter-dots">
               <div class="demo-counter-dot"></div>
               <div class="demo-counter-dot"></div>
@@ -1219,7 +1242,7 @@ document.addEventListener('keydown',e=>{
             </div>
           </div>
           <div class="demo-input-row">
-            <textarea class="demo-input" id="demo-input" rows="2" placeholder="Ask about Agentic AI, LLMs, MLOps..."></textarea>
+            <textarea class="demo-input" id="demo-input" rows="2" placeholder="Ask about Agentic AI, LLMs, MLOps, RAG..."></textarea>
             <button class="demo-send" id="demo-send" onclick="sendDemoMessage()">Send →</button>
           </div>
         </div>
@@ -1227,7 +1250,6 @@ document.addEventListener('keydown',e=>{
     </div>
   </div>
 </div>
-
 
 <script>
 /* ═══════════ MULTI-AGENT DEMO ═══════════ */
@@ -1362,5 +1384,125 @@ document.getElementById('demo-input').addEventListener('keydown', e=>{
 });
 </script>
 
-</body>
-</html>
+
+<script>
+const DEMO_MAX_MSGS = 5;
+let demoMsgCount = 0;
+let demoHistory = [];
+
+function openDemo(){
+  document.getElementById('demo-modal').classList.add('open');
+  document.getElementById('demo-modal').setAttribute('aria-hidden','false');
+  document.body.style.overflow='hidden';
+}
+function closeDemo(){
+  document.getElementById('demo-modal').classList.remove('open');
+  document.getElementById('demo-modal').setAttribute('aria-hidden','true');
+  document.body.style.overflow='';
+}
+document.getElementById('demo-close').addEventListener('click', closeDemo);
+document.getElementById('demo-modal').addEventListener('click', e=>{
+  if(e.target===document.getElementById('demo-modal')) closeDemo();
+});
+document.addEventListener('keydown', e=>{
+  if(e.key==='Escape' && document.getElementById('demo-modal').classList.contains('open')) closeDemo();
+});
+
+function useSuggestion(btn){
+  document.getElementById('demo-input').value = btn.textContent;
+  document.getElementById('demo-suggestions').style.display='none';
+  sendDemoMessage();
+}
+
+function setAgent(id, state, thought=''){
+  const card=document.getElementById('agent-'+id);
+  const status=document.getElementById('status-'+id);
+  const thoughtEl=document.getElementById('thought-'+id);
+  card.className='agent-card '+state;
+  status.className='agent-status '+(state==='active'?'thinking':state==='done'?'done':'idle');
+  status.textContent=state==='active'?'Thinking...':state==='done'?'Done':'Idle';
+  if(thought) thoughtEl.textContent=thought;
+}
+
+function resetAgents(){
+  ['orchestrator','guardrail','validator','responder'].forEach(id=>{
+    setAgent(id,'idle',id==='orchestrator'?'Waiting for query...':'Waiting...');
+  });
+}
+
+function addMessage(role, text){
+  const msgs=document.getElementById('demo-messages');
+  const div=document.createElement('div');
+  div.className='demo-msg '+role;
+  if(role==='user') div.innerHTML='<div class="msg-label">You</div>'+text;
+  else if(role==='assistant') div.innerHTML='<div class="msg-label">AI · Nagesh CH Portfolio</div>'+text;
+  else div.textContent=text;
+  msgs.appendChild(div);
+  msgs.scrollTop=msgs.scrollHeight;
+}
+
+function updateCounter(){
+  const remaining=DEMO_MAX_MSGS-demoMsgCount;
+  document.getElementById('counter-text').textContent=
+    remaining>0?remaining+' message'+(remaining===1?'':'s')+' remaining this session':'Session limit reached';
+  document.querySelectorAll('.demo-counter-dot').forEach((d,i)=>d.classList.toggle('used',i<demoMsgCount));
+}
+
+async function sendDemoMessage(){
+  const input=document.getElementById('demo-input');
+  const sendBtn=document.getElementById('demo-send');
+  const text=input.value.trim();
+  if(!text||demoMsgCount>=DEMO_MAX_MSGS) return;
+  input.value='';
+  sendBtn.disabled=true;
+  demoMsgCount++;
+  updateCounter();
+  addMessage('user',text);
+  demoHistory.push({role:'user',content:text});
+  document.getElementById('demo-suggestions').style.display='none';
+  resetAgents();
+  await delay(300);
+  setAgent('orchestrator','active','Analyzing query intent and routing to appropriate agents...');
+  await delay(900);
+  setAgent('orchestrator','done','Query classified. Routing to guardrail check.');
+  setAgent('guardrail','active','Checking query against safety and scope policies...');
+  await delay(700);
+  setAgent('guardrail','done','✓ Query is safe and within scope.');
+  setAgent('validator','active','Validating context and preparing response parameters...');
+  await delay(600);
+  setAgent('validator','done','✓ Context valid. Max tokens: 300.');
+  setAgent('responder','active','Generating response via LLaMA 3.3 70B...');
+  try {
+    const response=await fetch('https://nageshch.com/api/chat',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({messages:demoHistory})
+    });
+    const data=await response.json();
+    const reply=data.content?.[0]?.text||'Sorry, something went wrong.';
+    setAgent('responder','done','✓ Response generated and validated.');
+    addMessage('assistant',reply);
+    demoHistory.push({role:'assistant',content:reply});
+    if(demoMsgCount>=DEMO_MAX_MSGS){
+      addMessage('system','Session limit reached — refresh page to start a new session.');
+      sendBtn.disabled=true;
+      input.disabled=true;
+    } else {
+      sendBtn.disabled=false;
+      input.focus();
+    }
+  } catch(err){
+    setAgent('responder','idle','Connection error.');
+    addMessage('system','Connection error — please try again.');
+    sendBtn.disabled=false;
+    demoMsgCount--;
+    updateCounter();
+  }
+}
+
+function delay(ms){return new Promise(r=>setTimeout(r,ms));}
+
+document.getElementById('demo-input').addEventListener('keydown',e=>{
+  if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendDemoMessage();}
+});
+
