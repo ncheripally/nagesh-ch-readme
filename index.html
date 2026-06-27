@@ -564,6 +564,11 @@ footer:hover{border-top-color:rgba(255,107,53,.3);}
 .agent-card.blocked{border-color:#f87171;background:#fef2f2;box-shadow:0 0 0 3px rgba(248,113,113,.15);}
 .brands-impact{text-align:center;margin-bottom:44px;padding:0 24px;}
 
+
+.n-link-live{position:relative;}
+.n-link-live .live-pill{font-family:var(--mono);font-size:7px;letter-spacing:.12em;padding:2px 5px;background:#dc2626;color:#fff;border-radius:3px;position:absolute;top:-8px;right:-22px;display:flex;align-items:center;gap:3px;line-height:1;}
+.n-link-live .live-pill::before{content:'';width:4px;height:4px;border-radius:50%;background:#fff;animation:livePulse 1.5s infinite;}
+@keyframes livePulse{0%,100%{opacity:1;}50%{opacity:.3;}}
 </style>
 </head>
 <body>
@@ -609,7 +614,7 @@ footer:hover{border-top-color:rgba(255,107,53,.3);}
     <li><a href="#expertise">Expertise</a></li>
     <li><a href="#experience">Experience</a></li>
     <li><a href="#projects">Projects</a></li>
-    <li><a href="#demos">Demos</a></li>
+    <li><a href="#demos" class="n-link-live">Demos<span class="live-pill">LIVE</span></a></li>
     <li><a href="#resume">Resume</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
@@ -934,10 +939,10 @@ footer:hover{border-top-color:rgba(255,107,53,.3);}
   <div class="sec-bg-num">05</div>
   <div class="sec-hd rv"><span class="sec-n">05</span><h2 class="sec-title">AI <em>Demos</em></h2><div class="sec-line"></div></div>
   <div class="dm-grid">
-    <div class="dm rv d1"><div class="dm-n">DEMO / 01</div><div class="dm-title">Multi-Agent Orchestration</div><div class="dm-desc">Live demo of agentic AI systems with orchestrator, guardrail, and validator agents working in harmony. Watch each agent think in real-time.</div><div class="dm-tags"><span class="dm-tag">LangGraph</span><span class="dm-tag">Claude API</span><span class="dm-tag">Agents</span><span class="dm-tag">Live</span></div><button class="dm-launch" onclick="openDemo()">Launch Live Demo</button></div>
+    <div class="dm rv d1"><div class="dm-n">DEMO / 01</div><div class="dm-title">AI Chatbot Assistant</div><div class="dm-desc">Live demo of agentic AI systems with orchestrator, guardrail, and validator agents working in harmony. Watch each agent think in real-time.</div><div class="dm-tags"><span class="dm-tag">LangGraph</span><span class="dm-tag">Claude API</span><span class="dm-tag">Agents</span><span class="dm-tag">Live</span></div><button class="dm-launch" onclick="openDemo()">Launch Live Demo</button></div>
     <div class="dm rv d2"><div class="dm-n">DEMO / 02</div><div class="dm-title">RAG Pipeline Explorer</div><div class="dm-desc">Interactive RAG system showing document retrieval, embedding, and LLM generation with model tracing, evaluation dashboards, and drift detection.</div><div class="dm-tags"><span class="dm-tag">RAG</span><span class="dm-tag">Embeddings</span><span class="dm-tag">LLM</span><span class="dm-tag">Model Tracing</span><span class="dm-tag">Evaluation</span></div><a href="#contact" class="dm-cta">Request Demo →</a></div>
     <div class="dm rv d3"><div class="dm-n">DEMO / 03</div><div class="dm-title">NLP Classification Engine</div><div class="dm-desc">BERT-based text classification and entity recognition with performance monitoring, explainability analytics, and live model validation.</div><div class="dm-tags"><span class="dm-tag">BERT</span><span class="dm-tag">NLP</span><span class="dm-tag">Classification</span><span class="dm-tag">Monitoring</span><span class="dm-tag">Explainability</span></div><a href="#contact" class="dm-cta">Request Demo →</a></div>
-    <div class="dm rv d4"><div class="dm-n">DEMO / 04</div><div class="dm-title">AI Chatbot Assistant</div><div class="dm-desc">Conversational AI powered by GPT-4.1 and custom fine-tuning for domain-specific queries with memory, tool-use, and model evaluation workflows.</div><div class="dm-tags"><span class="dm-tag">GPT-4.1</span><span class="dm-tag">Chat</span><span class="dm-tag">Fine-tuning</span><span class="dm-tag">Observation</span><span class="dm-tag">Model Evaluation</span></div><a href="#contact" class="dm-cta">Request Demo →</a></div>
+    <div class="dm rv d4"><div class="dm-n">DEMO / 04</div><div class="dm-title">Multi-Agent Orchestration</div><div class="dm-desc">End-to-end multi-agent workflow with orchestrator, guardrail, validator and responder agents working autonomously on enterprise tasks.</div><div class="dm-tags"><span class="dm-tag">LangGraph</span><span class="dm-tag">Multi-Agent</span><span class="dm-tag">Tool Use</span><span class="dm-tag">Memory</span><span class="dm-tag">Guardrails</span></div><a href="#contact" class="dm-cta">Request Demo →</a></div>
     <div class="dm rv d5"><div class="dm-n">DEMO / 05</div><div class="dm-title">MLOps &amp; Evaluation Studio</div><div class="dm-desc">State-of-the-art lifecycle demo with CI/CD, model versioning, tracing, evaluation scoring, and governance dashboards for production AI.</div><div class="dm-tags"><span class="dm-tag">MLOps</span><span class="dm-tag">Model Tracing</span><span class="dm-tag">Model Evaluation</span><span class="dm-tag">Monitoring</span></div><a href="#contact" class="dm-cta">Request Demo →</a></div>
     <div class="dm rv d6"><div class="dm-n">DEMO / 06</div><div class="dm-title">Responsible AI Compliance</div><div class="dm-desc">Governance-focused demo for bias mitigation, explainability, and audit trails to meet enterprise AI safety and compliance requirements.</div><div class="dm-tags"><span class="dm-tag">Responsible AI</span><span class="dm-tag">Bias Mitigation</span><span class="dm-tag">Explainability</span><span class="dm-tag">Audit Trail</span></div><a href="#contact" class="dm-cta">Request Demo →</a></div>
     <div class="dm rv d7"><div class="dm-n">DEMO / 07</div><div class="dm-title">Real-Time GenAI Monitoring</div><div class="dm-desc">Runtime monitoring demo with live latency SLA tracking, prediction drift alerts, and feedback loop integration for production-grade GenAI services.</div><div class="dm-tags"><span class="dm-tag">Monitoring</span><span class="dm-tag">Drift Detection</span><span class="dm-tag">SLA</span><span class="dm-tag">Feedback Loop</span></div><a href="#contact" class="dm-cta">Request Demo →</a></div>
@@ -1122,8 +1127,8 @@ document.addEventListener('keydown',e=>{
       <div class="demo-modal-title">
         <span style="font-size:18px;">🧠</span>
         <div>
-          <h3>Multi-Agent Orchestration Demo</h3>
-          <div class="demo-model-info">Powered by <strong>LLaMA 3.1 8B Instant</strong> via Groq LPU · ~750 tok/s · AI/ML domain only</div>
+          <h3>AI Chatbot Assistant</h3>
+          <div class="demo-model-info">Powered by <strong>LLaMA 3.1 8B Instant</strong> via Groq LPU · ~750 tok/s · Specialised AI/ML assistant</div>
         </div>
         <div class="demo-live-badge">LIVE</div>
       </div>
@@ -1131,16 +1136,16 @@ document.addEventListener('keydown',e=>{
     </div>
     <div class="demo-desc-bar">
       <div class="demo-desc-text">
-        Watch how a production multi-agent system processes your query in real time. Watch how a production multi-agent system processes your query in real time. Each agent has a distinct role — the <strong>Orchestrator</strong> routes and plans, the <strong>Guardrail</strong> enforces scope and safety policies, the <strong>Validator</strong> checks context integrity, and the <strong>Responder</strong> generates the final output.
+        Watch how a production multi-agent system processes your query in real time. A domain-specialised AI assistant with built-in safety guardrails. Each query passes through an <strong>Orchestrator</strong>, <strong>Guardrail</strong>, <strong>Validator</strong>, and <strong>Responder</strong> — ensuring safe, accurate, on-topic responses every time.
       </div>
     </div>
     <div class="demo-objective">
       <div class="demo-objective-label">🎯 Demo Objective</div>
-      <div class="demo-objective-text">Explore the orchestrator-guardrail-validator pattern that powers production AI systems</div>
+      <div class="demo-objective-text">An AI assistant specialised in Agentic AI, LLMs, RAG, MLOps, and enterprise AI systems</div>
     </div>
     <div class="demo-body">
       <div class="demo-pipeline">
-        <div class="demo-pipeline-title">Agent Pipeline</div>
+        <div class="demo-pipeline-title">Request Pipeline</div>
         <div class="agent-card idle" id="agent-orchestrator">
           <div class="agent-header"><span class="agent-icon">🎯</span><span class="agent-name">Orchestrator</span><span class="agent-status idle" id="status-orchestrator">Idle</span></div>
           <div class="agent-role-desc">Routes query · Plans execution · Assigns sub-agents</div>
@@ -1176,7 +1181,7 @@ document.addEventListener('keydown',e=>{
       </div>
       <div class="demo-chat">
         <div class="demo-messages" id="demo-messages">
-          <div class="demo-msg system">This demo runs a 4-agent pipeline on every query. Ask anything about Agentic AI, LLMs, RAG, MLOps, or enterprise AI strategy.</div>
+          <div class="demo-msg system">Ask me anything about Agentic AI, LLMs, RAG, MLOps, NLP, or enterprise AI strategy.</div>
         </div>
 
         <div class="demo-input-area">
