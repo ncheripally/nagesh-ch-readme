@@ -1,0 +1,10 @@
+name = "nageshch-claude-proxy"
+main = "worker.js"
+compatibility_date = "2024-01-01"
+
+# Do NOT put your API key here — add via CLI:
+# wrangler secret put GROQ_API_KEY
+
+[[routes]]
+pattern = "nageshch.com/api/chat"
+zone_name = "nageshch.com"
