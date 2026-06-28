@@ -1690,6 +1690,28 @@ const injectionPatterns=[/ignore previous instructions/i,/reveal your prompt/i,/
 function openDemo(){document.getElementById('demo-modal').classList.add('open');document.getElementById('demo-modal').setAttribute('aria-hidden','false');document.body.style.overflow='hidden';}
 function closeDemo(){document.getElementById('demo-modal').classList.remove('open');document.getElementById('demo-modal').setAttribute('aria-hidden','true');document.body.style.overflow='';}
 function useSuggestion(btn){document.getElementById('demo-input').value=btn.textContent;document.getElementById('demo-suggestions').style.display='none';sendDemoMessage();}
+
+function updateCounter(){
+  var r=DEMO_MAX_MSGS-demoMsgCount;
+  document.getElementById('counter-text').textContent=r>0?r+' message'+(r===1?'':'s')+' remaining':'Session limit reached';
+  document.querySelectorAll('.demo-counter-dot').forEach(function(d,i){d.classList.toggle('used',i<demoMsgCount);});
+}
+
+function addMessage(role,text){
+  var msgs=document.getElementById('demo-messages');
+  var div=document.createElement('div');div.className='demo-msg '+role;
+  if(role==='user'){var l=document.createElement('div');l.className='msg-label';l.textContent='You';div.appendChild(l);}
+  else if(role==='assistant'){var l2=document.createElement('div');l2.className='msg-label';l2.textContent='AI';div.appendChild(l2);}
+  var t=document.createElement('span');t.textContent=text;div.appendChild(t);
+  msgs.appendChild(div);msgs.scrollTop=msgs.scrollHeight;
+}
+
+function addSystemMessage(text){
+  var msgs=document.getElementById('demo-messages');
+  var div=document.createElement('div');div.className='demo-msg system';div.textContent=text;
+  msgs.appendChild(div);msgs.scrollTop=msgs.scrollHeight;
+}
+
 function setAgent(id,state,thought){var card=document.getElementById('agent-'+id);var status=document.getElementById('status-'+id);var th=document.getElementById('thought-'+id);if(!card)return;card.className='agent-card '+state;status.className='agent-status '+(state==='active'?'thinking':state==='done'?'done':state==='blocked'?'blocked':'idle');status.textContent=state==='active'?'Thinking...':state==='done'?'Done':state==='blocked'?'Blocked':'Idle';if(thought)th.textContent=thought;}
 function resetAgents(){['orchestrator','guardrail','validator','responder'].forEach(function(id){setAgent(id,'idle',id==='orchestrator'?'Waiting for query...':'Waiting...');});}
 
