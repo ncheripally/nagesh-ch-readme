@@ -868,6 +868,31 @@ footer:hover{border-top-color:rgba(255,107,53,.3);}
 .rag-trace-val.blue{color:#0369a1;}
 
 @media(max-width:900px){.rag-body{grid-template-columns:1fr;}.rag-panel:not(:first-child){display:none;}.rag-modal{height:95vh;}}
+
+/* ── RAG COMPARISON ── */
+.rag-comparison{display:none;border-top:1px solid #e5e7eb;flex-shrink:0;background:#fff;}
+.rag-comparison.visible{display:block;}
+.rag-comparison-header{padding:10px 22px;background:#f8fafc;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;gap:10px;}
+.rag-comparison-title{font-family:var(--mono);font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:#6b7280;}
+.rag-comparison-sub{font-family:var(--mono);font-size:8px;color:#9ca3af;}
+.rag-comparison-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;}
+.rag-col{padding:16px 20px;}
+.rag-col.without{border-right:1px solid #f3f4f6;background:#fffbeb;}
+.rag-col.with{background:#f0fdf4;}
+.rag-col-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.rag-col-badge{font-family:var(--mono);font-size:8px;letter-spacing:.1em;padding:3px 9px;border-radius:4px;text-transform:uppercase;font-weight:600;}
+.rag-col-badge.without{background:#fef3c7;border:1px solid #fde68a;color:#92400e;}
+.rag-col-badge.with{background:#dcfce7;border:1px solid #86efac;color:#15803d;}
+.rag-col-label{font-family:var(--mono);font-size:9px;color:#6b7280;}
+.rag-col-text{font-size:12px;line-height:1.65;color:#374151;padding:10px 12px;border-radius:8px;min-height:60px;}
+.rag-col-text.without{background:#fff;border:1px solid #fde68a;}
+.rag-col-text.with{background:#fff;border:1px solid #86efac;}
+.rag-col-footer{display:flex;align-items:center;gap:6px;margin-top:8px;font-family:var(--mono);font-size:8px;}
+.rag-col-footer.without{color:#d97706;}
+.rag-col-footer.with{color:#15803d;}
+.rag-diff-badge{display:inline-flex;align-items:center;gap:4px;font-family:var(--mono);font-size:8px;padding:2px 8px;border-radius:3px;margin-top:6px;}
+.rag-diff-badge.hallucinated{background:#fff1f2;border:1px solid #fecdd3;color:#be123c;}
+.rag-diff-badge.grounded{background:#f0fdf4;border:1px solid #bbf7d0;color:#15803d;}
 </style>
 </head>
 <body>
@@ -1679,6 +1704,31 @@ document.addEventListener('keydown',e=>{
         </div>
       </div>
     </div>
+
+    <div class="rag-comparison" id="rag-comparison">
+      <div class="rag-comparison-header">
+        <span class="rag-comparison-title">⚡ RAG Impact Analysis</span>
+        <span class="rag-comparison-sub">Same question · Same model · With context vs without</span>
+      </div>
+      <div class="rag-comparison-grid">
+        <div class="rag-col without">
+          <div class="rag-col-header">
+            <span class="rag-col-badge without">❌ Without RAG</span>
+            <span class="rag-col-label">LLM from memory only</span>
+          </div>
+          <div class="rag-col-text without" id="rag-without-text">Waiting...</div>
+          <div class="rag-col-footer without" id="rag-without-footer"></div>
+        </div>
+        <div class="rag-col with">
+          <div class="rag-col-header">
+            <span class="rag-col-badge with">✅ With RAG</span>
+            <span class="rag-col-label">LLM grounded in retrieved context</span>
+          </div>
+          <div class="rag-col-text with" id="rag-with-text">Waiting...</div>
+          <div class="rag-col-footer with" id="rag-with-footer"></div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -1885,6 +1935,8 @@ function resetRAGPanels(){
   document.getElementById('rag-response').innerHTML='<div class="rag-placeholder"><span class="rag-placeholder-icon">💬</span><div>Response and model trace appear here</div></div>';
   document.getElementById('rag-token-label').textContent='0 tokens';
   document.getElementById('rag-latency-label').textContent='—';
+  var comp=document.getElementById('rag-comparison');
+  if(comp)comp.classList.remove('visible');
   setRAGStep(0);
 }
 function setRAGStep(active){
@@ -1980,6 +2032,8 @@ async function runRAG(){
     var data=await res.json();
     var answer=data.content&&data.content[0]?data.content[0].text:'No response generated.';
     var latency=Date.now()-t0;var outTokens=Math.round(answer.length/4);var modelUsed=data.model_used||'llama-3.1-8b-instant';
+    // Store for comparison
+    var ragAnswerForComp=answer;var contextForComp=context;var scoredForComp=scored;
     document.getElementById('rag-latency-label').textContent=latency+'ms';
     responseEl.innerHTML='';
     var ans=document.createElement('div');ans.className='rag-response';ans.textContent=answer;responseEl.appendChild(ans);
@@ -1992,10 +2046,52 @@ async function runRAG(){
       row.appendChild(k);row.appendChild(v);trace.appendChild(row);
     });
     responseEl.appendChild(trace);setRAGStep(5);
+    // Run comparison in parallel
+    runRAGComparison(query, answer, context, scored);
   }catch(e){
     responseEl.innerHTML='';var err=document.createElement('div');err.className='rag-response';err.style.color='#dc2626';err.textContent='Connection error — please try again.';responseEl.appendChild(err);
   }
   btn.disabled=false;btn.textContent='Run Pipeline →';
+}
+
+async function runRAGComparison(query, ragAnswer, context, scored){
+  var comp=document.getElementById('rag-comparison');
+  var withoutEl=document.getElementById('rag-without-text');
+  var withEl=document.getElementById('rag-with-text');
+  var withoutFooter=document.getElementById('rag-without-footer');
+  var withFooter=document.getElementById('rag-with-footer');
+  if(!comp)return;
+
+  // Show comparison panel
+  comp.classList.add('visible');
+  withoutEl.textContent='Calling LLM without context...';
+  withEl.textContent=ragAnswer;
+
+  // With RAG footer — show source chunk
+  withFooter.innerHTML='📄 Source: '+scored[0].source+' (score: '+scored[0].score.toFixed(3)+')';
+  var gb=document.createElement('span');gb.className='rag-diff-badge grounded';gb.textContent='✅ Grounded in retrieved evidence';
+  withFooter.appendChild(gb);
+
+  // Without RAG — call LLM with no context
+  try{
+    var res=await fetch('https://nageshch.com/api/chat',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        messages:[{role:'user',content:'Answer this question from your general knowledge only, in 2-3 sentences: '+query}],
+        temperature:0.7,top_p:0.9
+      })
+    });
+    var data=await res.json();
+    var rawAnswer=data.content&&data.content[0]?data.content[0].text:'Could not generate response.';
+    withoutEl.textContent=rawAnswer;
+    withoutFooter.innerHTML='⚠ No source documents — answer from model memory only';
+    var hb=document.createElement('span');hb.className='rag-diff-badge hallucinated';hb.textContent='⚠ May contain hallucinations';
+    withoutFooter.appendChild(hb);
+  }catch(e){
+    withoutEl.textContent='Could not generate comparison — connection error.';
+    withoutFooter.textContent='';
+  }
 }
 
 /* ═══ NLP DEMO ═══ */
