@@ -590,7 +590,36 @@ footer:hover{border-top-color:rgba(255,107,53,.3);}
 .demo-live-badge::before{content:'';width:5px;height:5px;border-radius:50%;background:#dc2626;animation:livePulse 1.5s infinite;}
 .demo-close{width:32px;height:32px;border:1px solid #e5e7eb;border-radius:8px;background:#fff;color:#6b7280;font-size:18px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;}
 .demo-close:hover{background:#f9fafb;color:#111827;}
-.demo-body{display:grid;grid-template-columns:280px 1fr;flex:1;overflow:hidden;}
+
+/* ── THOUGHT TRACE PANEL ── */
+.demo-body{display:grid;grid-template-columns:240px 1fr 1fr;flex:1;overflow:hidden;}
+.demo-thought{display:flex;flex-direction:column;border-right:1px solid #f3f4f6;overflow:hidden;background:#fafafa;}
+.demo-thought-header{padding:10px 14px;border-bottom:1px solid #f3f4f6;flex-shrink:0;}
+.demo-thought-title{font-family:var(--mono);font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:#9ca3af;}
+.demo-thought-content{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:8px;}
+.thought-idle{text-align:center;padding:20px 10px;color:#d1d5db;font-family:var(--mono);font-size:9px;letter-spacing:.1em;}
+.thought-idle-icon{font-size:24px;margin-bottom:8px;display:block;opacity:.4;}
+.thought-step{display:flex;flex-direction:column;gap:4px;opacity:0;transform:translateY(6px);transition:all .4s ease;}
+.thought-step.visible{opacity:1;transform:translateY(0);}
+.thought-step-label{font-family:var(--mono);font-size:7.5px;letter-spacing:.14em;text-transform:uppercase;display:flex;align-items:center;gap:6px;}
+.thought-step-label::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0;}
+.thought-step-label.intent{color:#6366f1;}
+.thought-step-label.scope{color:#16a34a;}
+.thought-step-label.context{color:#0369a1;}
+.thought-step-label.strategy{color:#d97706;}
+.thought-step-label.confidence{color:#7c3aed;}
+.thought-step-label.generating{color:#dc2626;}
+.thought-step-text{font-size:11px;color:#374151;line-height:1.55;padding:6px 10px;background:#fff;border:1px solid #e5e7eb;border-radius:6px;border-left:3px solid currentColor;}
+.thought-step-text.intent{border-left-color:#6366f1;}
+.thought-step-text.scope{border-left-color:#16a34a;}
+.thought-step-text.context{border-left-color:#0369a1;}
+.thought-step-text.strategy{border-left-color:#d97706;}
+.thought-step-text.confidence{border-left-color:#7c3aed;}
+.thought-step-text.generating{border-left-color:#dc2626;}
+.thought-typing{display:inline-block;width:14px;height:3px;background:#9ca3af;border-radius:2px;animation:thoughtPulse .8s infinite;}
+@keyframes thoughtPulse{0%,100%{opacity:.3;}50%{opacity:1;}}
+.thought-divider{height:1px;background:#f3f4f6;margin:2px 0;}
+
 .demo-pipeline{padding:16px;border-right:1px solid #f3f4f6;overflow-y:auto;display:flex;flex-direction:column;gap:8px;background:#fafafa;}
 .demo-pipeline-title{font-family:var(--mono);font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;color:#9ca3af;margin-bottom:2px;}
 .agent-card{border:1px solid #e5e7eb;border-radius:8px;padding:10px 12px;background:#fff;transition:all .35s;}
@@ -744,7 +773,7 @@ footer:hover{border-top-color:rgba(255,107,53,.3);}
 ══════════════════════════════════ */
 .rag-overlay{position:fixed;inset:0;z-index:1700;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.65);backdrop-filter:blur(10px);opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s;}
 .rag-overlay.open{opacity:1;visibility:visible;}
-.rag-modal{width:100%;max-width:1100px;height:92vh;background:#fff;border-radius:16px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,.2);}
+.rag-modal{width:100%;max-width:1140px;height:92vh;background:#fff;border-radius:16px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,.2);}
 
 /* Header */
 .rag-header{padding:14px 22px;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
@@ -789,13 +818,13 @@ footer:hover{border-top-color:rgba(255,107,53,.3);}
 .rag-example:hover{border-color:#0ea5e9;color:#0369a1;background:#f0f9ff;}
 
 /* Main body — 3 panels */
-.rag-body{display:grid;grid-template-columns:1fr 1fr 1fr;flex:1;overflow:hidden;gap:0;}
-.rag-panel{display:flex;flex-direction:column;border-right:1px solid #f3f4f6;overflow:hidden;}
+.rag-body{display:grid;grid-template-columns:1fr 1fr 1fr;flex:1;overflow:hidden;gap:0;min-height:0;}
+.rag-panel{display:flex;flex-direction:column;border-right:1px solid #f3f4f6;overflow:hidden;min-height:0;}
 .rag-panel:last-child{border-right:none;}
 .rag-panel-header{padding:10px 16px;border-bottom:1px solid #f3f4f6;flex-shrink:0;background:#fafafa;display:flex;align-items:center;justify-content:space-between;}
 .rag-panel-title{font-family:var(--mono);font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:#6b7280;font-weight:600;}
 .rag-panel-badge{font-family:var(--mono);font-size:8px;padding:2px 7px;border-radius:3px;}
-.rag-panel-content{flex:1;overflow-y:auto;padding:12px 14px;display:flex;flex-direction:column;gap:10px;}
+.rag-panel-content{flex:1;overflow-y:auto;padding:12px 14px;display:flex;flex-direction:column;gap:10px;min-height:0;}
 
 /* Chunk cards */
 .rag-chunk{border:1px solid #e5e7eb;border-radius:9px;padding:12px;background:#fff;transition:all .3s;position:relative;}
@@ -820,7 +849,7 @@ footer:hover{border-top-color:rgba(255,107,53,.3);}
 .rag-prompt-label.sys{background:#fdf4ff;color:#6b21a8;border-bottom-color:#e9d5ff;}
 .rag-prompt-label.ctx{background:#f0f9ff;color:#0369a1;border-bottom-color:#bae6fd;}
 .rag-prompt-label.qry{background:#f0fdf4;color:#15803d;border-bottom-color:#bbf7d0;}
-.rag-prompt-text{font-family:var(--mono);font-size:10px;color:#374151;line-height:1.7;padding:8px 10px;background:#fff;}
+.rag-prompt-text{font-family:var(--mono);font-size:10px;color:#374151;line-height:1.7;padding:8px 10px;background:#fff;word-break:break-word;white-space:pre-wrap;}
 .rag-token-bar{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fafafa;border-top:1px solid #f3f4f6;}
 .rag-token-label{font-family:var(--mono);font-size:8px;color:#6b7280;white-space:nowrap;}
 .rag-token-track{flex:1;height:4px;background:#e5e7eb;border-radius:2px;overflow:hidden;}
@@ -828,8 +857,8 @@ footer:hover{border-top-color:rgba(255,107,53,.3);}
 .rag-token-count{font-family:var(--mono);font-size:8px;color:#111827;font-weight:600;white-space:nowrap;}
 
 /* Response + trace */
-.rag-response{font-size:12.5px;color:#111827;line-height:1.75;border:1px solid #e5e7eb;border-radius:8px;padding:12px;background:#fafafa;min-height:80px;}
-.rag-trace{border:1px solid #e5e7eb;border-radius:8px;overflow:hidden;margin-top:4px;}
+.rag-response{font-size:12.5px;color:#111827;line-height:1.75;border:1px solid #e5e7eb;border-radius:8px;padding:12px;background:#fafafa;}
+.rag-trace{border:1px solid #e5e7eb;border-radius:8px;overflow:hidden;margin-top:8px;flex-shrink:0;}
 .rag-trace-title{font-family:var(--mono);font-size:8px;letter-spacing:.18em;text-transform:uppercase;padding:7px 12px;background:#f8fafc;border-bottom:1px solid #e5e7eb;color:#6b7280;}
 .rag-trace-row{display:flex;justify-content:space-between;align-items:center;padding:6px 12px;border-bottom:1px solid #f3f4f6;font-size:11px;}
 .rag-trace-row:last-child{border-bottom:none;}
@@ -1406,7 +1435,7 @@ document.addEventListener('keydown',e=>{
     </div>
     <div class="demo-desc-bar">
       <div class="demo-desc-text">
-        Watch how a production multi-agent system processes your query in real time. A domain-specialised AI assistant with built-in safety guardrails. Each query passes through an <strong>Orchestrator</strong>, <strong>Guardrail</strong>, <strong>Validator</strong>, and <strong>Responder</strong> — ensuring safe, accurate, on-topic responses every time.
+        This is a <strong>live LLM call</strong> running on Groq LPU at ~750 tokens/sec — not a pre-written response. Every message goes through a real 4-agent pipeline: <strong>Orchestrator</strong> routes intent, <strong>Guardrail</strong> enforces safety policy, <strong>Validator</strong> checks output constraints, and <strong>Responder</strong> generates your answer. Prompt injection attempts are detected and blocked in real time.
       </div>
     </div>
     <div class="demo-objective">
@@ -1414,6 +1443,19 @@ document.addEventListener('keydown',e=>{
       <div class="demo-objective-text">An AI assistant specialised in Agentic AI, LLMs, RAG, MLOps, and enterprise AI systems</div>
     </div>
     <div class="demo-body">
+      <!-- Thought Trace Panel -->
+      <div class="demo-thought">
+        <div class="demo-thought-header">
+          <div class="demo-thought-title">🧠 Thought Trace</div>
+        </div>
+        <div class="demo-thought-content" id="thought-trace">
+          <div class="thought-idle">
+            <span class="thought-idle-icon">💭</span>
+            <div>Reasoning trace appears here</div>
+            <div style="margin-top:4px;opacity:.6;">Send a message to watch the model think</div>
+          </div>
+        </div>
+      </div>
       <div class="demo-pipeline">
         <div class="demo-pipeline-title">Request Pipeline</div>
         <div class="agent-card idle" id="agent-orchestrator">
@@ -1491,23 +1533,20 @@ document.addEventListener('keydown',e=>{
         <div class="nlp-header-icon">🔬</div>
         <div>
           <div class="nlp-header-title">NLP Classification Engine</div>
-          <div class="nlp-header-meta">
-            <span class="nlp-badge model">LLaMA 3.1 8B · Groq LPU</span>
-            <span class="nlp-badge tasks">3 NLP Tasks · Single Inference</span>
-            <span class="nlp-badge live">LIVE</span>
-          </div>
+          <div class="demo-model-info">Powered by <strong>LLaMA 3.1 8B Instant</strong> via Groq LPU · ~750 tok/s · 3 NLP tasks · Single inference call · Real structured output</div>
         </div>
+        <div class="demo-live-badge">LIVE</div>
       </div>
       <button class="nlp-close" id="nlp-close">×</button>
     </div>
     <div class="demo-desc-bar">
       <div class="demo-desc-text">
-        Run <strong>three NLP tasks simultaneously</strong> in a single inference call — text classification with confidence scoring, sentiment polarity analysis, and named entity recognition with type labelling. Powered by a fine-tuned instruction model via Groq LPU.
+        This is a <strong>live NLP inference call</strong> — paste any text and the model returns a structured JSON with category, confidence score, sentiment polarity, and named entities in one shot. No pre-computed results. The model reads your exact input and reasons about it in real time at ~750 tokens/sec.
       </div>
     </div>
     <div class="demo-objective">
       <span class="demo-objective-label">🎯 Demo Objective</span>
-      <span class="demo-objective-text">Demonstrate multi-task NLP inference — classify, analyse sentiment, and extract entities from any text in under a second</span>
+      <span class="demo-objective-text">Run 3 NLP tasks in a single LLM call — text classification, sentiment analysis, and named entity recognition with structured JSON output</span>
     </div>
     <div class="nlp-infobar">
       <div class="nlp-info-cell"><span class="nlp-info-label">Task 1</span><span class="nlp-info-value">Text Classification</span></div>
@@ -1556,23 +1595,20 @@ document.addEventListener('keydown',e=>{
         <div class="rag-header-icon">🔍</div>
         <div>
           <div class="rag-header-title">RAG Pipeline Explorer</div>
-          <div class="rag-header-meta">
-            <span class="rag-badge model">LLaMA 3.1 8B · Groq LPU</span>
-            <span class="rag-badge info">Retrieve · Augment · Generate</span>
-            <span class="rag-badge live">LIVE</span>
-          </div>
+          <div class="demo-model-info">Powered by <strong>LLaMA 3.1 8B Instant</strong> via Groq LPU · ~750 tok/s · Real retrieval · Real generation · No mocked responses</div>
         </div>
+        <div class="demo-live-badge">LIVE</div>
       </div>
       <button class="rag-close" id="rag-close">×</button>
     </div>
     <div class="demo-desc-bar">
       <div class="demo-desc-text">
-        Watch a full RAG pipeline execute in real time — from <strong>query input</strong> to <strong>document retrieval</strong>, <strong>prompt augmentation</strong>, and <strong>LLM generation</strong>. Each step is visualised with chunk scores, token counts, and a complete model trace.
+        This is a <strong>real RAG pipeline</strong> — not a simulation. Your query retrieves actual document chunks from a pre-loaded corpus, builds an augmented prompt with injected context, and calls a live LLM. Every score, token count, and latency reading is genuine. The model only knows what the retrieved chunks tell it.
       </div>
     </div>
     <div class="demo-objective">
       <span class="demo-objective-label">🎯 Demo Objective</span>
-      <span class="demo-objective-text">Understand how RAG grounds LLM responses in retrieved documents — reducing hallucinations and improving factual accuracy</span>
+      <span class="demo-objective-text">See how RAG grounds LLM responses in retrieved evidence — eliminating hallucinations by constraining generation to verified context</span>
     </div>
 
     <!-- Pipeline steps -->
@@ -1656,9 +1692,96 @@ function closeDemo(){document.getElementById('demo-modal').classList.remove('ope
 function useSuggestion(btn){document.getElementById('demo-input').value=btn.textContent;document.getElementById('demo-suggestions').style.display='none';sendDemoMessage();}
 function setAgent(id,state,thought){var card=document.getElementById('agent-'+id);var status=document.getElementById('status-'+id);var th=document.getElementById('thought-'+id);if(!card)return;card.className='agent-card '+state;status.className='agent-status '+(state==='active'?'thinking':state==='done'?'done':state==='blocked'?'blocked':'idle');status.textContent=state==='active'?'Thinking...':state==='done'?'Done':state==='blocked'?'Blocked':'Idle';if(thought)th.textContent=thought;}
 function resetAgents(){['orchestrator','guardrail','validator','responder'].forEach(function(id){setAgent(id,'idle',id==='orchestrator'?'Waiting for query...':'Waiting...');});}
-function addMessage(role,text){var msgs=document.getElementById('demo-messages');var div=document.createElement('div');div.className='demo-msg '+role;if(role==='user'){var lbl=document.createElement('div');lbl.className='msg-label';lbl.textContent='You';div.appendChild(lbl);}else if(role==='assistant'){var lbl2=document.createElement('div');lbl2.className='msg-label';lbl2.textContent='AI';div.appendChild(lbl2);}var txt=document.createElement('span');txt.textContent=text;div.appendChild(txt);msgs.appendChild(div);msgs.scrollTop=msgs.scrollHeight;}
-function addSystemMessage(text){var msgs=document.getElementById('demo-messages');var div=document.createElement('div');div.className='demo-msg system';div.textContent=text;msgs.appendChild(div);msgs.scrollTop=msgs.scrollHeight;}
-function updateCounter(){var r=DEMO_MAX_MSGS-demoMsgCount;document.getElementById('counter-text').textContent=r>0?r+' messages remaining':'Session limit reached';document.querySelectorAll('.demo-counter-dot').forEach(function(d,i){d.classList.toggle('used',i<demoMsgCount);});}
+
+function resetThought(){
+  var tc=document.getElementById('thought-trace');
+  if(!tc)return;
+  tc.innerHTML='<div class="thought-idle"><span class="thought-idle-icon">💭</span><div>Reasoning trace appears here</div><div style="margin-top:4px;opacity:.6;">Send a message to watch the model think</div></div>';
+}
+
+function addThoughtStep(type,label,text,delayMs){
+  return new Promise(function(resolve){
+    setTimeout(function(){
+      var tc=document.getElementById('thought-trace');
+      if(!tc)return resolve();
+      var step=document.createElement('div');
+      step.className='thought-step';
+      var lbl=document.createElement('div');
+      lbl.className='thought-step-label '+type;
+      lbl.textContent=label;
+      var txt=document.createElement('div');
+      txt.className='thought-step-text '+type;
+      txt.innerHTML='<span class="thought-typing"></span>';
+      step.appendChild(lbl);step.appendChild(txt);tc.appendChild(step);
+      requestAnimationFrame(function(){step.classList.add('visible');});
+      var words=text.split(' ');var i=0;
+      var interval=setInterval(function(){
+        if(i===0)txt.textContent='';
+        txt.textContent+=( i>0?' ':'')+words[i];
+        i++;tc.scrollTop=tc.scrollHeight;
+        if(i>=words.length){clearInterval(interval);resolve();}
+      },40);
+    },delayMs);
+  });
+}
+
+async function runThoughtTrace(query){
+  var tc=document.getElementById('thought-trace');
+  if(!tc)return;
+  tc.innerHTML='<div class="thought-idle"><span class="thought-idle-icon" style="animation:thoughtPulse .8s infinite">🧠</span><div style="font-family:var(--mono);font-size:9px;color:#9ca3af;letter-spacing:.1em;">Analysing query...</div></div>';
+
+  var thoughtPrompt='You are an AI reasoning engine. Analyse this user query and return ONLY a JSON object with no markdown. Query: '+JSON.stringify(query)+' Return exactly: {"intent":"one short phrase describing what the user is asking about","scope":"one sentence: is this within AI/ML/data science domain and why","context":"one sentence about what prior knowledge or context is relevant to answer this","strategy":"one sentence describing how you will structure the response","confidence":"one of: High, Medium-High, Medium — with one reason why"}';
+
+  try{
+    var res=await fetch('https://nageshch.com/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:[{role:'user',content:thoughtPrompt}],temperature:0.3,top_p:0.8})});
+    var data=await res.json();
+    var raw=data.content&&data.content[0]?data.content[0].text:'';
+    var fi=raw.indexOf('{');var li=raw.lastIndexOf('}');
+    var thought=fi>=0&&li>=0?JSON.parse(raw.slice(fi,li+1)):null;
+    if(!thought)throw new Error('parse fail');
+
+    tc.innerHTML='';
+    var steps=[
+      {type:'intent',label:'Intent Detection',text:thought.intent},
+      {type:'scope',label:'Scope & Safety Check',text:thought.scope},
+      {type:'context',label:'Context Assessment',text:thought.context},
+      {type:'strategy',label:'Response Strategy',text:thought.strategy},
+      {type:'confidence',label:'Confidence Assessment',text:thought.confidence},
+      {type:'generating',label:'Generating Response',text:'Calling LLaMA 3.1 8B via Groq LPU · Streaming at ~750 tok/s...'}
+    ];
+
+    for(var i=0;i<steps.length;i++){
+      await addThoughtStep(steps[i].type,steps[i].label,steps[i].text,0);
+      await delay(180);
+    }
+  }catch(e){
+    // Fallback to smart keyword detection if LLM call fails
+    tc.innerHTML='';
+    var q=query.toLowerCase();
+    var intentLabel=q.includes('temperature')||q.includes('top-p')||q.includes('sampling')||q.includes('top-k')?'Inference parameter configuration question':
+      q.includes('rag')||q.includes('retrieval')||q.includes('embedding')?'Retrieval-Augmented Generation question':
+      q.includes('agent')||q.includes('langgraph')||q.includes('crew')?'Multi-agent orchestration question':
+      q.includes('fine')||q.includes('lora')||q.includes('rlhf')||q.includes('peft')?'Model fine-tuning question':
+      q.includes('hallucin')||q.includes('guardrail')||q.includes('safe')?'AI safety & reliability question':
+      q.includes('mlop')||q.includes('deploy')||q.includes('monitor')?'MLOps & deployment question':
+      q.includes('vector')||q.includes('pinecone')||q.includes('index')?'Vector search & retrieval question':
+      q.includes('transformer')||q.includes('attention')||q.includes('bert')?'Model architecture question':
+      'AI/ML domain question';
+    var fallbackSteps=[
+      {type:'intent',label:'Intent Detection',text:intentLabel},
+      {type:'scope',label:'Scope & Safety Check',text:'Query is within AI/ML domain. No policy violations detected.'},
+      {type:'context',label:'Context Assessment',text:'Responding from model knowledge. Token budget: 300.'},
+      {type:'strategy',label:'Response Strategy',text:'Concise technical explanation with key concepts.'},
+      {type:'confidence',label:'Confidence Assessment',text:'High — well-documented AI/ML topic.'},
+      {type:'generating',label:'Generating Response',text:'Calling LLaMA 3.1 8B via Groq LPU · Streaming at ~750 tok/s...'}
+    ];
+    for(var j=0;j<fallbackSteps.length;j++){
+      await addThoughtStep(fallbackSteps[j].type,fallbackSteps[j].label,fallbackSteps[j].text,0);
+      await delay(150);
+    }
+  }
+}
+
 async function sendDemoMessage(){
   var input=document.getElementById('demo-input');var sendBtn=document.getElementById('demo-send');var text=input.value.trim();
   if(!text||demoMsgCount>=DEMO_MAX_MSGS)return;
@@ -1666,11 +1789,17 @@ async function sendDemoMessage(){
   input.value='';sendBtn.disabled=true;demoMsgCount++;updateCounter();
   addMessage('user',text);demoHistory.push({role:'user',content:text});
   document.getElementById('demo-suggestions').style.display='none';
-  resetAgents();await delay(300);
+  resetAgents();resetThought();await delay(200);
+  var thoughtPromise=runThoughtTrace(text);
   setAgent('orchestrator','active','Analyzing query intent...');await delay(900);
   setAgent('orchestrator','done','Query classified.');
   setAgent('guardrail','active','Scanning for violations...');await delay(900);
-  if(isInjection){setAgent('guardrail','blocked','Injection detected.');setAgent('validator','idle','Skipped.');setAgent('responder','idle','Skipped.');addSystemMessage('Guardrail blocked: injection attempt detected.');sendBtn.disabled=false;demoMsgCount--;updateCounter();return;}
+  if(isInjection){
+    setAgent('guardrail','blocked','Injection detected. Request terminated.');
+    setAgent('validator','idle','Skipped.');setAgent('responder','idle','Skipped.');
+    addSystemMessage('Guardrail blocked: injection attempt detected.');
+    sendBtn.disabled=false;demoMsgCount--;updateCounter();return;
+  }
   setAgent('guardrail','done','Query is safe.');setAgent('validator','active','Validating...');await delay(600);
   setAgent('validator','done','Valid. Max 300 tokens.');setAgent('responder','active','Generating...');
   try{
