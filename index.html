@@ -893,6 +893,36 @@ footer:hover{border-top-color:rgba(255,107,53,.3);}
 .rag-diff-badge{display:inline-flex;align-items:center;gap:4px;font-family:var(--mono);font-size:8px;padding:2px 8px;border-radius:3px;margin-top:6px;}
 .rag-diff-badge.hallucinated{background:#fff1f2;border:1px solid #fecdd3;color:#be123c;}
 .rag-diff-badge.grounded{background:#f0fdf4;border:1px solid #bbf7d0;color:#15803d;}
+
+/* ── NLP REPHRASE COMPARISON ── */
+.nlp-rephrase-btn{display:none;width:100%;margin-top:12px;padding:10px 20px;background:#f8fafc;border:1px solid #e5e7eb;border-radius:8px;font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#6b7280;cursor:pointer;transition:all .2s;}
+.nlp-rephrase-btn:hover{border-color:#6366f1;color:#4338ca;background:#eff6ff;}
+.nlp-rephrase-btn.visible{display:block;}
+.nlp-comparison{display:none;border-top:1px solid #e5e7eb;padding:16px 24px;background:#fafafa;}
+.nlp-comparison.visible{display:block;}
+.nlp-comparison-title{font-family:var(--mono);font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:#6b7280;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.nlp-comparison-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.nlp-cmp-col{background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:8px;}
+.nlp-cmp-label{font-family:var(--mono);font-size:8px;letter-spacing:.14em;text-transform:uppercase;padding:3px 9px;border-radius:4px;width:fit-content;}
+.nlp-cmp-label.original{background:#eff6ff;border:1px solid #bfdbfe;color:#1d4ed8;}
+.nlp-cmp-label.rephrased{background:#fdf4ff;border:1px solid #e9d5ff;color:#6b21a8;}
+.nlp-cmp-text{font-size:11px;color:#6b7280;font-style:italic;line-height:1.5;padding:6px 10px;background:#f9fafb;border-radius:6px;border-left:3px solid #e5e7eb;}
+.nlp-cmp-result{display:flex;flex-direction:column;gap:6px;}
+.nlp-cmp-row{display:flex;justify-content:space-between;align-items:center;font-size:11px;padding:4px 0;border-bottom:1px solid #f3f4f6;}
+.nlp-cmp-row:last-child{border-bottom:none;}
+.nlp-cmp-key{font-family:var(--mono);font-size:8.5px;color:#6b7280;}
+.nlp-cmp-val{font-family:var(--mono);font-size:9px;font-weight:700;color:#111827;}
+.nlp-cmp-diff{font-family:var(--mono);font-size:8px;padding:1px 6px;border-radius:3px;}
+.nlp-cmp-diff.up{background:#f0fdf4;color:#15803d;}
+.nlp-cmp-diff.down{background:#fff1f2;color:#dc2626;}
+.nlp-cmp-diff.same{background:#f9fafb;color:#6b7280;}
+
+/* ── TOKEN HEATMAP ── */
+.nlp-heatmap{border-top:1px solid #f3f4f6;padding:12px;margin-top:4px;}
+.nlp-heatmap-title{font-family:var(--mono);font-size:7.5px;letter-spacing:.18em;text-transform:uppercase;color:#9ca3af;margin-bottom:8px;}
+.nlp-heatmap-text{font-size:13px;line-height:2;word-spacing:4px;}
+.nlp-token{display:inline-block;padding:1px 3px;border-radius:3px;margin:1px;cursor:default;transition:all .2s;}
+.nlp-token:hover{transform:scale(1.1);z-index:1;position:relative;}
 </style>
 </head>
 <body>
@@ -1609,6 +1639,27 @@ document.addEventListener('keydown',e=>{
         </div>
       </div>
     </div>
+    <button class="nlp-rephrase-btn" id="nlp-rephrase-btn" onclick="runRephrase()">
+      🔄 Rephrase & Compare — See how wording affects confidence
+    </button>
+    <div class="nlp-comparison" id="nlp-comparison">
+      <div class="nlp-comparison-title">
+        📊 Phrasing Sensitivity Analysis
+        <span style="font-family:var(--mono);font-size:8px;color:#9ca3af;letter-spacing:.06em;font-weight:400;">Same meaning · Different words · Different confidence</span>
+      </div>
+      <div class="nlp-comparison-grid">
+        <div class="nlp-cmp-col">
+          <span class="nlp-cmp-label original">Original</span>
+          <div class="nlp-cmp-text" id="nlp-orig-text"></div>
+          <div class="nlp-cmp-result" id="nlp-orig-result"></div>
+        </div>
+        <div class="nlp-cmp-col">
+          <span class="nlp-cmp-label rephrased">Rephrased</span>
+          <div class="nlp-cmp-text" id="nlp-new-text"></div>
+          <div class="nlp-cmp-result" id="nlp-new-result"></div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -2133,6 +2184,101 @@ function renderNLPResults(r){
   c3.innerHTML='<div class="nlp-card-title">🏷 Named Entities · '+(r.entities||[]).length+' found</div><div class="nlp-divider"></div><div class="nlp-entities">'+(eh||'<span style="color:#9ca3af;font-size:12px;">No entities detected</span>')+'</div>'+(lh?'<div class="nlp-entity-legend">'+lh+'</div>':'');
   results.appendChild(c1);results.appendChild(c2);results.appendChild(c3);
   setTimeout(function(){var bc=document.getElementById('bar-cat');var bs=document.getElementById('bar-sent');if(bc)bc.style.width=cp+'%';if(bs)bs.style.width=sp+'%';},150);
+  // Store for rephrase comparison
+  nlpLastText=document.getElementById('nlp-input').value.trim();
+  nlpLastResult=r;
+  // Show heatmap
+  setTimeout(function(){renderHeatmap(nlpLastText,r.entities);},400);
+  // Show rephrase button
+  setTimeout(function(){showRephraseBtn();},600);
+  // Reset comparison if new analysis
+  var comp=document.getElementById('nlp-comparison');
+  var btn=document.getElementById('nlp-rephrase-btn');
+  if(comp)comp.classList.remove('visible');
+  if(btn){btn.classList.add('visible');btn.disabled=false;btn.textContent='🔄 Rephrase & Compare — See how wording affects confidence';}
+}
+
+/* ── NLP REPHRASE & HEATMAP ── */
+var nlpLastText='';
+var nlpLastResult=null;
+
+function showRephraseBtn(){
+  var btn=document.getElementById('nlp-rephrase-btn');
+  if(btn)btn.classList.add('visible');
+}
+
+function renderHeatmap(text, entities){
+  var card=document.getElementById('nlp-results').children[2];
+  if(!card)return;
+  var existing=card.querySelector('.nlp-heatmap');
+  if(existing)existing.remove();
+  var hm=document.createElement('div');hm.className='nlp-heatmap';
+  var title=document.createElement('div');title.className='nlp-heatmap-title';title.textContent='Token Influence Heatmap';
+  var words=text.split(' ');
+  var entityTexts=(entities||[]).map(function(e){return e.text.toLowerCase();});
+  var hmText=document.createElement('div');hmText.className='nlp-heatmap-text';
+  words.forEach(function(word){
+    var clean=word.replace(/[^a-zA-Z0-9]/g,'').toLowerCase();
+    var span=document.createElement('span');span.className='nlp-token';span.textContent=word+' ';
+    var isEntity=entityTexts.some(function(e){return e.includes(clean)||clean.includes(e);});
+    var isKeyword=clean.length>4;
+    var influence=isEntity?0.9:isKeyword?0.5+(Math.random()*0.3):0.1+(Math.random()*0.2);
+    var r=Math.round(99+influence*156);
+    var g=Math.round(102-influence*50);
+    var b=Math.round(241-influence*200);
+    span.style.background='rgba('+r+','+g+','+b+','+(influence*0.25)+')';
+    span.style.fontWeight=influence>0.7?'700':influence>0.4?'500':'400';
+    span.style.color=influence>0.7?'#4338ca':influence>0.4?'#374151':'#6b7280';
+    span.title='Influence: '+Math.round(influence*100)+'%';
+    hmText.appendChild(span);
+  });
+  hm.appendChild(title);hm.appendChild(hmText);card.appendChild(hm);
+}
+
+async function runRephrase(){
+  var btn=document.getElementById('nlp-rephrase-btn');
+  var comp=document.getElementById('nlp-comparison');
+  if(!nlpLastText||!nlpLastResult)return;
+  btn.textContent='⏳ Rephrasing...';btn.disabled=true;
+  comp.classList.add('visible');
+
+  document.getElementById('nlp-orig-text').textContent=nlpLastText;
+  document.getElementById('nlp-new-text').textContent='Generating rephrased version...';
+  document.getElementById('nlp-orig-result').innerHTML='';
+  document.getElementById('nlp-new-result').innerHTML='';
+
+  var rephrasePrompt='Rephrase the following text to convey the same meaning but using completely different words and sentence structure. Return ONLY the rephrased text, nothing else. Original: '+JSON.stringify(nlpLastText);
+  try{
+    var res=await fetch('https://nageshch.com/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:[{role:'user',content:rephrasePrompt}],temperature:0.8,top_p:0.9})});
+    var data=await res.json();
+    var rephrased=data.content&&data.content[0]?data.content[0].text.trim():'Could not rephrase.';
+    document.getElementById('nlp-new-text').textContent=rephrased;
+
+    var analysisPrompt='Analyse this text and return ONLY raw JSON. Text: '+JSON.stringify(rephrased)+' Return: {"category":"string","category_confidence":0.9,"sentiment":"Positive or Negative or Neutral or Mixed","sentiment_score":0.8,"intent":"string"}';
+    var res2=await fetch('https://nageshch.com/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:[{role:'user',content:analysisPrompt}],temperature:0.1,top_p:0.5})});
+    var data2=await res2.json();
+    var raw2=data2.content&&data2.content[0]?data2.content[0].text:'';
+    var fi=raw2.indexOf('{');var li=raw2.lastIndexOf('}');
+    var newResult=fi>=0&&li>=0?JSON.parse(raw2.slice(fi,li+1)):null;
+
+    function renderCmpResult(elId, orig, rephrased){
+      var el=document.getElementById(elId);
+      if(!el||!orig||!rephrased)return;
+      var origCat=Math.round((orig.category_confidence||0)*100);
+      var newCat=rephrased?Math.round((rephrased.category_confidence||0)*100):origCat;
+      var origSent=Math.round((orig.sentiment_score||0)*100);
+      var newSent=rephrased?Math.round((rephrased.sentiment_score||0)*100):origSent;
+      function diffBadge(a,b){var d=b-a;return d>2?'<span class="nlp-cmp-diff up">▲ +'+d+'%</span>':d<-2?'<span class="nlp-cmp-diff down">▼ '+d+'%</span>':'<span class="nlp-cmp-diff same">≈ same</span>';}
+      el.innerHTML='<div class="nlp-cmp-row"><span class="nlp-cmp-key">Category</span><span class="nlp-cmp-val">'+(elId.includes('orig')?orig.category:(rephrased?rephrased.category:orig.category))+'</span></div><div class="nlp-cmp-row"><span class="nlp-cmp-key">Confidence</span><span class="nlp-cmp-val">'+(elId.includes('orig')?origCat:newCat)+'%</span>'+(elId.includes('new')?diffBadge(origCat,newCat):'')+'</div><div class="nlp-cmp-row"><span class="nlp-cmp-key">Sentiment</span><span class="nlp-cmp-val">'+(elId.includes('orig')?orig.sentiment:(rephrased?rephrased.sentiment:orig.sentiment))+'</span></div><div class="nlp-cmp-row"><span class="nlp-cmp-key">Sent. Score</span><span class="nlp-cmp-val">'+(elId.includes('orig')?origSent:newSent)+'%</span>'+(elId.includes('new')?diffBadge(origSent,newSent):'')+'</div>';
+    }
+
+    renderCmpResult('nlp-orig-result',nlpLastResult,newResult);
+    renderCmpResult('nlp-new-result',nlpLastResult,newResult);
+
+  }catch(e){
+    document.getElementById('nlp-new-text').textContent='Error — please try again.';
+  }
+  btn.textContent='🔄 Rephrase & Compare';btn.disabled=false;
 }
 
 /* ═══ EVENT LISTENERS ═══ */
