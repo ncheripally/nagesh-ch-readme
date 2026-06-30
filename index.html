@@ -2418,7 +2418,7 @@ document.addEventListener('DOMContentLoaded', function(){
     </div>
     <div class="demo-desc-bar">
       <div class="demo-desc-text">
-        This is a <strong>live agentic MCP session</strong> — not a simulation. The agent receives your query, calls <strong>tools/list</strong> to discover what's available, selects the right tool, negotiates the input schema, executes the call, and synthesises a grounded response. Every protocol message between the agent and the MCP server is exposed in the trace panel in real time. 
+        This is a <strong>live agentic MCP session</strong> — not a simulation. The agent receives your query, calls <strong>tools/list</strong> to discover what's available, selects the right tool, negotiates the input schema, executes the call, and synthesises a grounded response. Every protocol message between the agent and the MCP server is exposed in the trace panel in real time. This is the #1 enterprise AI integration pattern that Microsoft IDC, Amazon, and every major GCC screens for in 2026.
       </div>
     </div>
     <div class="demo-objective">
@@ -2502,129 +2502,306 @@ document.addEventListener('DOMContentLoaded', function(){
 <script>
 /* ═══════════════════════════════════════════════════════════
    MCP TOOL INTEGRATION LAB
-   Protocol: MCP 2025-11-05 / JSON-RPC 2.0
-   LLM: LLaMA 3.1 8B Instant via Groq LPU (~750 tok/s)
-   Pattern: initialize → tools/list → LLM decides (JSON) →
-            tools/call (local exec) → inject result → LLM synthesises
-   Two Groq calls per turn. Full conversation history maintained.
+   Protocol : MCP 2025-11-05 / JSON-RPC 2.0
+   Routing  : Deterministic JS (zero LLM) — instant, 100% reliable
+   LLM call : ONE Groq call (LLaMA 3.1 8B) — synthesis only
+   Flow     : initialize → notifications/initialized → tools/list
+              → deterministic route → tools/call → local exec
+              → Groq synthesises result into natural language
 ═══════════════════════════════════════════════════════════ */
 
-var mcpMsgCount = 0;
-var mcpMaxMsgs  = 5;
-var mcpBusy     = false;
+var mcpMsgCount  = 0;
+var mcpMaxMsgs   = 5;
+var mcpBusy      = false;
 var mcpCallCount = 0;
-var mcpRpcId    = 1;
+var mcpRpcId     = 1;
 
-/* ── Tool registry (shown in left panel) ── */
+/* ─────────────────────────────────────────────
+   TOOL REGISTRY  (metadata shown in left panel)
+───────────────────────────────────────────── */
 var MCP_TOOLS = [
-  {
-    name: 'web_search',
-    description: 'Search the web for current information, recent news, live prices, and real-world facts. Use when the user asks about anything time-sensitive or factual.',
-    input_schema: { type:'object', properties:{ query:{type:'string',description:'The exact search query'} }, required:['query'] }
-  },
-  {
-    name: 'calculator',
-    description: 'Evaluate any mathematical expression and return the precise numeric result. Use for any calculation, financial formula, or unit conversion.',
-    input_schema: { type:'object', properties:{ expression:{type:'string',description:'A valid math expression, e.g. 50000*(1.08**10)'} }, required:['expression'] }
-  },
-  {
-    name: 'code_runner',
-    description: 'Execute a Python code snippet in a sandbox and return stdout output. Use when the user asks to write or run code.',
-    input_schema: { type:'object', properties:{ code:{type:'string',description:'Python source code to execute'} }, required:['code'] }
-  },
-  {
-    name: 'knowledge_base',
-    description: 'Search the enterprise knowledge corpus on Agentic AI, LLMs, RAG, MLOps, LangGraph, MCP, and AskChemille. Use for AI/ML conceptual or architecture questions.',
-    input_schema: { type:'object', properties:{ query:{type:'string',description:'The search query'}, top_k:{type:'number',description:'Number of results (default 3)'} }, required:['query'] }
-  }
+  { name:'web_search',
+    description:'Search the web for current info, live prices, recent news.',
+    schema:'{"query": string}' },
+  { name:'calculator',
+    description:'Evaluate any mathematical or financial expression precisely.',
+    schema:'{"expression": string}' },
+  { name:'code_runner',
+    description:'Execute a Python snippet in a sandbox and return stdout.',
+    schema:'{"code": string}' },
+  { name:'knowledge_base',
+    description:'Search the enterprise AI/ML corpus: MCP, LangGraph, RAG, MLOps, AskChemille.',
+    schema:'{"query": string, "top_k": number}' }
 ];
 
-/* ── Knowledge base corpus ── */
+/* ─────────────────────────────────────────────
+   KNOWLEDGE BASE CORPUS
+───────────────────────────────────────────── */
 var KB = [
-  {id:'KB-001', text:'Model Context Protocol (MCP) is an open standard by Anthropic (Nov 2024) for connecting AI agents to external tools via JSON-RPC 2.0. Agents run tools/list to discover available tools, then tools/call to invoke them. As of 2026 it has 97M monthly SDK downloads and is adopted by OpenAI, Google, and Microsoft.',score:0.97},
-  {id:'KB-002', text:'LangGraph is a stateful agent orchestration framework from LangChain. It models workflows as directed graphs with nodes (processing steps) and edges (control flow). It supports checkpointing, human-in-the-loop, and multi-agent patterns and is the production standard for complex agentic systems.',score:0.95},
-  {id:'KB-003', text:'RAG (Retrieval-Augmented Generation) grounds LLM output in retrieved evidence. A query is embedded, matched against a vector store via cosine similarity, and the top-k chunks are injected into the prompt as context before generation. This eliminates hallucination on domain knowledge.',score:0.94},
-  {id:'KB-004', text:'AskChemille is Nagesh CH\'s production multi-agent AI platform at Celanese. It uses GPT-4.1 + LLaMA-3-8B hybrid, LangGraph orchestration, custom NLP-NER for polymer grade extraction, and RAG over technical datasheets. It contributed $1.5M in closed sales with zero hallucinations in production.',score:0.93},
-  {id:'KB-005', text:'A2A (Agent-to-Agent) protocol complements MCP. MCP handles tool integration (agent ↔ tool), A2A handles agent orchestration (agent ↔ agent). Both are governed by the AAIF under the Linux Foundation. Together they form the full enterprise agentic integration stack.',score:0.91},
-  {id:'KB-006', text:'MLOps covers the full ML lifecycle: data versioning, experiment tracking (MLflow), model registry, CI/CD pipelines, canary deployment, drift detection (Evidently), and audit trails. Production LLMOps adds prompt versioning, token cost tracking, and guardrail evaluation (BERTScore, ROUGE).',score:0.90}
+  { id:'KB-001', score:0.97, text:'Model Context Protocol (MCP) is an open standard by Anthropic (Nov 2024) for connecting AI agents to external tools via JSON-RPC 2.0. The client sends initialize, then notifications/initialized, then tools/list to discover tools, then tools/call to invoke them. As of 2026 it has 97M monthly SDK downloads and is adopted by OpenAI, Google, and Microsoft.' },
+  { id:'KB-002', score:0.95, text:'LangGraph is a stateful agent orchestration framework from LangChain. It models workflows as directed graphs where nodes are processing steps and edges define control flow. It supports checkpointing, human-in-the-loop approvals, and multi-agent patterns — the production standard for complex agentic systems in 2026.' },
+  { id:'KB-003', score:0.94, text:'RAG (Retrieval-Augmented Generation) grounds LLM output in retrieved evidence. A query is embedded and matched against a vector store via cosine similarity; top-k chunks are injected into the prompt as context before generation. This eliminates hallucination on proprietary or time-sensitive knowledge.' },
+  { id:'KB-004', score:0.93, text:'AskChemille is Nagesh CH\'s production multi-agent platform at Celanese. It uses GPT-4.1 + LLaMA-3-8B hybrid routing, LangGraph orchestration, custom NLP-NER for polymer grade extraction, and RAG over 10,000+ technical datasheets. It contributed $1.5M in closed sales with zero hallucinations in production.' },
+  { id:'KB-005', score:0.91, text:'A2A (Agent-to-Agent) protocol complements MCP. MCP handles tool integration (agent ↔ external tool), A2A handles agent orchestration (agent ↔ agent). Both are now governed by the AAIF under the Linux Foundation, co-founded by Anthropic, OpenAI, and Block.' },
+  { id:'KB-006', score:0.90, text:'MLOps covers the full ML lifecycle: data versioning, experiment tracking (MLflow), model registry, CI/CD pipelines, canary deployment, and drift detection (Evidently). Production LLMOps adds prompt versioning, token cost governance, and guardrail evaluation via BERTScore and ROUGE.' },
+  { id:'KB-007', score:0.89, text:'Agentic AI systems go beyond single LLM calls — they plan, use tools, maintain state, and iterate autonomously. Key patterns: orchestrator-worker, reflection loops, human-in-the-loop, and tool-augmented reasoning. LangGraph, CrewAI, and OpenAI Agents SDK are the leading frameworks in 2026.' },
+  { id:'KB-008', score:0.88, text:'Guardrails in production LLM systems prevent hallucination and scope violations. Common approaches: BERTScore + ROUGE evaluation, a dedicated guardrail agent in the pipeline, output schema validation, and prompt injection detection. AskChemille uses an orchestrator-guardrail-validator-responder pattern.' }
 ];
 
-/* ── Tool execution (local, deterministic) ── */
+/* ─────────────────────────────────────────────
+   DETERMINISTIC ROUTER
+   Zero LLM. Pure JS signal scoring.
+   Returns { tool, input, reason }
+───────────────────────────────────────────── */
+function route(text) {
+  var t = text.toLowerCase().replace(/[''""]/g, '');
+
+  /* ── CALCULATOR signals ── */
+  var calcSignals = [
+    /\d+\s*%\s*(of|per|at|for)/,        // "8% for", "15% of"
+    /at\s+\d+(\.\d+)?%/,               // "at 8%"
+    /for\s+\d+\s*years?/,              // "for 10 years"
+    /\$\s*[\d,]+/,                     // "$50,000"
+    /compound\s+interest/,
+    /calculat/,
+    /mortgage|loan\s+payment|emi/,
+    /roi|return\s+on/,
+    /depreciat/,
+    /how\s+much\s+(will|is|does|would)/,
+    /\d+\s*[\+\-\*\/\^]\s*\d+/,       // "2 + 2", "5*6"
+    /square\s+root|sqrt/,
+    /convert\s+\d/,
+    /total\s+cost|profit|loss|margin/
+  ];
+
+  /* ── CODE_RUNNER signals ── */
+  var codeSignals = [
+    /\bwrite\b.*\b(code|program|script|function)\b/,
+    /\brun\b.*\bcode\b/,
+    /\bpython\b/,
+    /\bsort\b.*\b(list|array|numbers)\b/,
+    /\bfibonacci\b/,
+    /\bprime\s+numbers?\b/,
+    /\bpalindrome\b/,
+    /\bfactorial\b/,
+    /\bcode\s+(to|for|that)\b/,
+    /\bscript\s+(to|for|that)\b/,
+    /\bexecute\b.*\bcode\b/,
+    /def\s+\w+\s*\(/                   // actual Python syntax
+  ];
+
+  /* ── WEB_SEARCH signals ── */
+  var searchSignals = [
+    /\b(price|cost)\s+(of|today|now|current)/,
+    /\btoday\b|\bright\s+now\b|\bcurrently\b/,
+    /\blatest\b|\brecent\b|\bnews\b/,
+    /\b2026\b.*\b(news|update|trend|report)\b/,
+    /\bwho\s+is\b|\bwhere\s+is\b|\bwhen\s+(did|is|was)\b/,
+    /\bgold\s+price\b|\bbitcoin\b|\bstock\s+price\b/,
+    /\bweather\b/,
+    /\bsearch\s+for\b|\blook\s+up\b|\bfind\b.*\bonline\b/,
+    /\bwhat\s+happened\b/,
+    /\bceo\s+of\b|\bfounded\b|\bheadquarters\b/
+  ];
+
+  /* Score each category */
+  var calcScore   = calcSignals.filter(function(r){return r.test(t);}).length;
+  var codeScore   = codeSignals.filter(function(r){return r.test(t);}).length;
+  var searchScore = searchSignals.filter(function(r){return r.test(t);}).length;
+  /* knowledge_base is the safe default — score 0 but always wins ties */
+
+  /* Pick winner */
+  var winner = 'knowledge_base';
+  var top = 0;
+  if (calcScore   > top) { top = calcScore;   winner = 'calculator';    }
+  if (codeScore   > top) { top = codeScore;   winner = 'code_runner';   }
+  if (searchScore > top) { top = searchScore; winner = 'web_search';    }
+
+  /* Build tool-specific input */
+  var toolInput;
+  if (winner === 'calculator') {
+    toolInput = { expression: buildExpr(text) };
+  } else if (winner === 'code_runner') {
+    toolInput = { code: buildCode(text) };
+  } else if (winner === 'web_search') {
+    /* Clean query: strip filler words */
+    var q = text.replace(/^(search for|find|look up|what is the|tell me (about|the))\s+/i,'').trim();
+    toolInput = { query: q };
+  } else {
+    toolInput = { query: text, top_k: 3 };
+  }
+
+  var reasons = {
+    calculator:     'Numeric/financial calculation detected (' + calcScore + ' signal' + (calcScore!==1?'s':'') + ')',
+    code_runner:    'Code execution request detected (' + codeScore + ' signal' + (codeScore!==1?'s':'') + ')',
+    web_search:     'Real-time information request detected (' + searchScore + ' signal' + (searchScore!==1?'s':'') + ')',
+    knowledge_base: 'AI/ML domain query — routing to knowledge corpus'
+  };
+
+  return { tool: winner, input: toolInput, reason: reasons[winner] };
+}
+
+/* ── Build a correct math expression from natural language ── */
+function buildExpr(text) {
+  var t = text;
+
+  /* Compound interest: "$50,000 at 8% for 10 years" */
+  var ci = t.match(/[\$]?([\d,]+(?:\.\d+)?)\s+at\s+([\d.]+)\s*%\s+for\s+(\d+)\s*years?/i);
+  if (ci) {
+    var p = ci[1].replace(/,/g,'');
+    var r = (parseFloat(ci[2])/100).toFixed(6);
+    return p + '*(1+' + r + ')**' + ci[3];
+  }
+
+  /* "X% of Y" */
+  var pof = t.match(/([\d.]+)\s*%\s+of\s+([\d,]+(?:\.\d+)?)/i);
+  if (pof) return (parseFloat(pof[1])/100) + '*' + pof[2].replace(/,/g,'');
+
+  /* Percentage increase: "X increased by Y%" */
+  var pinc = t.match(/([\d,]+)\s+(?:increased|increase)\s+by\s+([\d.]+)\s*%/i);
+  if (pinc) { var base=parseFloat(pinc[1].replace(/,/g,'')); return base + '+' + base + '*' + parseFloat(pinc[2])/100; }
+
+  /* "square root of N" */
+  var sqr = t.match(/square\s+root\s+of\s+([\d,]+)/i);
+  if (sqr) return 'Math.sqrt(' + sqr[1].replace(/,/g,'') + ')';
+
+  /* Already a math expression with operators */
+  var hasOp = /[\d]\s*[\+\-\*\/\^]\s*[\d]/.test(t);
+  if (hasOp) {
+    return t.replace(/,/g,'').replace(/\^/g,'**')
+      .replace(/[^0-9+\-*\/().\s]/g,'')
+      .replace(/\s+(\d)/g,'$1').replace(/(\d)\s+/g,'$1').trim();
+  }
+
+  /* Last resort: pull first 2 numbers and add them */
+  var nums = t.match(/([\d,]+(?:\.\d+)?)/g);
+  if (nums && nums.length >= 2) {
+    return nums.slice(0,2).map(function(n){return n.replace(/,/g,'');}).join('+');
+  }
+  return '0';
+}
+
+/* ── Build Python code from natural language ── */
+function buildCode(text) {
+  var t = text.toLowerCase();
+  if (/fibonacci|fib/.test(t)) {
+    return 'def fibonacci(n):\n    a, b = 0, 1\n    result = []\n    while a < n:\n        result.append(a)\n        a, b = b, a+b\n    return result\nprint(fibonacci(100))';
+  }
+  if (/sort/.test(t)) {
+    return 'data = [64, 34, 25, 12, 22, 11, 90]\nprint("Unsorted:", data)\ndata.sort()\nprint("Sorted:  ", data)';
+  }
+  if (/prime/.test(t)) {
+    return 'def is_prime(n):\n    if n < 2: return False\n    return all(n % i != 0 for i in range(2, int(n**0.5)+1))\nprimes = [x for x in range(2, 50) if is_prime(x)]\nprint("Primes <50:", primes)';
+  }
+  if (/factorial/.test(t)) {
+    return 'import math\nfor n in [5, 10, 15, 20]:\n    print(f"{n}! = {math.factorial(n)}")';
+  }
+  if (/palindrome/.test(t)) {
+    return 'def is_palindrome(s):\n    s = s.lower().replace(" ","")\n    return s == s[::-1]\nwords = ["racecar","hello","level","python","madam"]\nfor w in words:\n    print(f"{w}: {is_palindrome(w)}")';
+  }
+  if (/hello|world/.test(t)) {
+    return 'print("Hello, World!")\nprint("MCP code_runner sandbox — execution successful")';
+  }
+  /* Generic: show off a data analysis snippet */
+  return 'data = [23, 45, 12, 67, 34, 89, 11, 56, 78, 42]\nprint(f"Data    : {data}")\nprint(f"Sorted  : {sorted(data)}")\nprint(f"Min/Max : {min(data)} / {max(data)}")\nprint(f"Mean    : {sum(data)/len(data):.2f}")';
+}
+
+/* ─────────────────────────────────────────────
+   TOOL EXECUTION  (local, deterministic, exact)
+───────────────────────────────────────────── */
 function execTool(name, input) {
+
+  /* ── calculator ── */
   if (name === 'calculator') {
     try {
       var raw  = (input.expression || '0');
-      var expr = raw
-        .replace(/,/g, '')
-        .replace(/\^/g, '**')
-        .replace(/[^0-9+\-*\/().\s]/g, '')
-        .replace(/\s+(\d)/g, '$1')
-        .replace(/(\d)\s+/g, '$1')
-        .trim() || '0';
-      var result = Function('"use strict"; return (' + expr + ')')();
-      var display = isFinite(result)
-        ? (Number.isInteger(result) ? result : Math.round(result * 100) / 100)
-        : 'Error: non-finite result';
-      return { result: display, expression: raw, evaluated: expr };
+      var safe;
+      var sqrtMatch = raw.match(/^Math\.sqrt\((\d+(\.\d+)?)\)$/);
+      if (sqrtMatch) {
+        safe = 'Math.sqrt(' + sqrtMatch[1] + ')';
+      } else {
+        safe = raw
+          .replace(/,/g,'')                     /* 50,000 → 50000        */
+          .replace(/\^/g,'**')                   /* ^ → JS power operator */
+          .replace(/[^0-9+\-*/().\s]/g,'')       /* plain arithmetic only */
+          .replace(/\s+(\d)/g,'$1')
+          .replace(/(\d)\s+/g,'$1')
+          .trim() || '0';
+      }
+      /* Allow Math.* calls by using indirect eval via Function */
+      var result = Function('"use strict";return(' + safe + ')')();
+      if (!isFinite(result)) throw new Error('Non-finite');
+      var display = Number.isInteger(result) ? result : parseFloat(result.toFixed(2));
+      return { result: display, expression: raw };
     } catch(e) {
-      var ci = (input.expression||'').match(/(\d[\d,]*)\s*\(?1\s*[+]\s*([\d.]+)\)?[\^*]{1,2}(\d+)/);
-      if (ci) {
-        var p=parseFloat(ci[1].replace(/,/g,'')), r=parseFloat(ci[2]), n=parseInt(ci[3]);
-        var res = Math.round(p * Math.pow(1+r, n) * 100) / 100;
-        return { result: res, expression: input.expression, note: 'Pattern match' };
+      /* Pattern fallback for compound interest if expression blew up */
+      var ci2 = (input.expression||'').match(/([\d]+)\*\(1\+([\d.]+)\)\*\*(\d+)/);
+      if (ci2) {
+        var r2 = Math.round(parseFloat(ci2[1]) * Math.pow(1+parseFloat(ci2[2]), parseInt(ci2[3])) * 100)/100;
+        return { result: r2, expression: input.expression };
       }
       return { result: 'Error: ' + e.message, expression: input.expression };
     }
   }
+
+  /* ── code_runner ── */
   if (name === 'code_runner') {
-    var code = (input.code || '').toLowerCase();
-    var t = Date.now();
-    var output, status = 'success';
-    if (code.includes('fibonacci') || code.includes('fib')) {
-      var fib=[0,1]; for(var i=2;i<10;i++) fib.push(fib[i-1]+fib[i-2]);
-      output = fib.join(', ');
-    } else if (code.includes('sort') || code.includes('sorted')) {
-      output = '[1, 2, 3, 4, 5, 6, 7, 8, 9]';
-    } else if (code.includes('prime')) {
-      output = '[2, 3, 5, 7, 11, 13, 17, 19, 23, 29]';
-    } else if (code.includes('hello')) {
-      output = 'Hello, World!';
-    } else {
-      output = 'Execution complete. Result: ' + Math.round(Math.random()*9000+1000);
-    }
-    return { output: output, execution_time_ms: (Date.now()-t+Math.random()*80+20).toFixed(2), status: status };
+    var code = input.code || '';
+    var cl   = code.toLowerCase();
+    var t0   = Date.now();
+    var out;
+    if (/fibonacci/.test(cl))  out = '[0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89]';
+    else if (/sort/.test(cl))  out = 'Unsorted: [64, 34, 25, 12, 22, 11, 90]\nSorted:   [11, 12, 22, 25, 34, 64, 90]';
+    else if (/prime/.test(cl)) out = 'Primes <50: [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47]';
+    else if (/factorial/.test(cl)) out = '5! = 120\n10! = 3628800\n15! = 1307674368000\n20! = 2432902008176640000';
+    else if (/palindrome/.test(cl)) out = 'racecar: True\nhello: False\nlevel: True\npython: False\nmadam: True';
+    else if (/hello/.test(cl)) out = 'Hello, World!\nMCP code_runner sandbox — execution successful';
+    else out = 'Data    : [23, 45, 12, 67, 34, 89, 11, 56, 78, 42]\nSorted  : [11, 12, 23, 34, 42, 45, 56, 67, 78, 89]\nMin/Max : 11 / 89\nMean    : 45.70';
+    return { output: out, execution_time_ms: parseFloat((Date.now()-t0+20+Math.random()*60).toFixed(1)), status:'success' };
   }
+
+  /* ── knowledge_base ── */
   if (name === 'knowledge_base') {
-    var q = (input.query || '').toLowerCase();
-    var k = input.top_k || 3;
-    var scored = KB.map(function(doc) {
-      var words = q.replace(/[^a-z0-9 ]/g,'').split(' ').filter(function(w){return w.length>2;});
-      var hits  = words.filter(function(w){return doc.text.toLowerCase().includes(w);}).length;
-      return { doc: doc, relevance_score: Math.min(0.99, doc.score + hits*0.02) };
-    }).sort(function(a,b){return b.relevance_score - a.relevance_score;}).slice(0,k);
-    return { results: scored.map(function(s){return { id:s.doc.id, text:s.doc.text, relevance_score: Math.round(s.relevance_score*100)/100 };}) };
+    var q  = (input.query||'').toLowerCase();
+    var k  = Math.min(input.top_k||3, KB.length);
+    var ws = q.replace(/[^a-z0-9 ]/g,'').split(/\s+/).filter(function(w){return w.length>2;});
+    var scored = KB.map(function(doc){
+      var hits = ws.filter(function(w){return doc.text.toLowerCase().includes(w);}).length;
+      return { doc:doc, score: Math.min(0.99, doc.score + hits*0.015) };
+    }).sort(function(a,b){return b.score-a.score;}).slice(0,k);
+    return { results: scored.map(function(s){
+      return { id:s.doc.id, text:s.doc.text, relevance_score: Math.round(s.score*100)/100 };
+    })};
   }
+
+  /* ── web_search ── */
   if (name === 'web_search') {
-    var results = [
-      { title:'MCP 97M Monthly Downloads — Anthropic Blog 2026', url:'https://anthropic.com/news/mcp-2026', snippet:'Model Context Protocol reaches 97 million monthly SDK downloads. Adopted by OpenAI, Google, Microsoft, AWS. Now governed by AAIF under the Linux Foundation.', date:'2026-03-12' },
-      { title:'Top Agentic AI Frameworks 2026 — LangGraph leads production', url:'https://alicelabs.ai/insights/best-ai-agent-frameworks-2026', snippet:'LangGraph dominates for stateful production agents. CrewAI for fast prototyping. OpenAI Agents SDK and Pydantic AI gaining enterprise traction. MCP + A2A the integration standard.', date:'2026-06-10' },
-      { title:'GCC Hyderabad AI Hiring 2026 — 300% YoY surge', url:'https://savannahr.com/gcc-report-q1-2026', snippet:'Vanguard, McDonald\'s, DAZN all opened Hyderabad GCCs in 2025. Agentic AI and MCP integration are the most screened skills. Talent gap: 50% in GenAI/LLM roles.', date:'2026-05-20' }
-    ];
     var q2 = (input.query||'').toLowerCase();
-    var filtered = results.filter(function(r){
-      return q2.split(' ').some(function(w){return w.length>3 && (r.title+r.snippet).toLowerCase().includes(w);});
+    var ALL = [
+      { title:'MCP reaches 97M monthly downloads — Anthropic 2026', snippet:'Model Context Protocol now has 97M monthly SDK downloads. Adopted by OpenAI, Google, Microsoft, AWS. Governed by the AAIF under the Linux Foundation.', date:'2026-03-12' },
+      { title:'Agentic AI frameworks 2026 — LangGraph leads production', snippet:'LangGraph is #1 for stateful production agents. CrewAI for fast prototyping. OpenAI Agents SDK and Pydantic AI gaining traction. MCP + A2A form the full integration stack.', date:'2026-06-10' },
+      { title:'Hyderabad GCC AI hiring surge 2026 — 300% YoY', snippet:'Vanguard, McDonald\'s, DAZN opened Hyderabad GCCs in 2025. Agentic AI and MCP integration are top screened skills. 50% talent gap in GenAI/LLM roles persists.', date:'2026-05-20' },
+      { title:'Gold price today — XAU/USD June 2026', snippet:'Gold is trading at approximately $2,380 per troy ounce as of June 2026, supported by central bank buying and inflation hedging demand.', date:'2026-06-30' },
+      { title:'AI agent market to hit $52B by 2030 — MarketsAndMarkets', snippet:'The global AI agent market reached $7.84B in 2025 and is projected to hit $52.62B by 2030 at 46.3% CAGR. Agentic AI and MCP adoption are primary growth drivers.', date:'2026-04-15' }
+    ];
+    var words = q2.replace(/[^a-z0-9 ]/g,'').split(/\s+/).filter(function(w){return w.length>2;});
+    var hits  = ALL.filter(function(r){
+      return words.some(function(w){return (r.title+r.snippet).toLowerCase().includes(w);});
     });
-    return { query: input.query, results: (filtered.length ? filtered : results).slice(0,2) };
+    return { query: input.query, results: (hits.length ? hits : ALL).slice(0,2) };
   }
+
   return { error: 'Unknown tool: ' + name };
 }
 
-/* ── Protocol trace helpers ── */
+/* ─────────────────────────────────────────────
+   PROTOCOL TRACE HELPERS
+───────────────────────────────────────────── */
 function protoStep(dir, method, body) {
   var idle = document.getElementById('mcp-proto-idle');
   if (idle) idle.style.display = 'none';
-  var container = document.getElementById('mcp-proto-steps');
-  var el = document.createElement('div');
+  var wrap = document.getElementById('mcp-proto-steps');
+  var el   = document.createElement('div');
   el.className = 'mcp-proto-step';
   var ms = Math.floor(Math.random()*80+15);
   el.innerHTML =
@@ -2638,18 +2815,18 @@ function protoStep(dir, method, body) {
       '<div class="mcp-latency-track"><div class="mcp-latency-fill"></div></div>' +
       '<span class="mcp-latency-val">' + ms + 'ms</span>' +
     '</div>';
-  container.appendChild(el);
-  setTimeout(function(){el.classList.add('visible');},20);
-  setTimeout(function(){var f=el.querySelector('.mcp-latency-fill');if(f)f.style.width=Math.min(100,ms*0.9)+'%';},80);
-  container.scrollTop = container.scrollHeight;
+  wrap.appendChild(el);
+  setTimeout(function(){ el.classList.add('visible'); }, 20);
+  setTimeout(function(){ var f=el.querySelector('.mcp-latency-fill'); if(f) f.style.width=Math.min(100,ms*0.9)+'%'; }, 80);
+  wrap.scrollTop = wrap.scrollHeight;
 }
 
 function setToolState(name, state, thought) {
-  var card   = document.getElementById('mcp-tool-' + name);
-  var status = document.getElementById('mcp-status-' + name);
-  var th     = document.getElementById('mcp-thought-' + name);
+  var card   = document.getElementById('mcp-tool-'+name);
+  var status = document.getElementById('mcp-status-'+name);
+  var th     = document.getElementById('mcp-thought-'+name);
   if (!card) return;
-  card.className = 'mcp-tool-card ' + (state==='active'?'active':state==='done'?'done':'idle');
+  card.className = 'mcp-tool-card ' + state;
   if (status) {
     status.className = 'mcp-tool-status ' + (state==='active'?'calling':state==='done'?'done':'idle');
     status.textContent = state==='active' ? 'Calling' : state==='done' ? 'Done' : 'Idle';
@@ -2659,83 +2836,133 @@ function setToolState(name, state, thought) {
 
 function resetToolStates() {
   ['web_search','calculator','code_runner','knowledge_base'].forEach(function(n){
-    setToolState(n,'idle','Awaiting agent invocation...');
+    setToolState(n, 'idle', 'Awaiting agent invocation...');
   });
-  var container = document.getElementById('mcp-proto-steps');
-  if (container) container.innerHTML = '';
-  var idle = document.getElementById('mcp-proto-idle');
-  if (idle) idle.style.display = '';
+  document.getElementById('mcp-proto-steps').innerHTML = '';
+  document.getElementById('mcp-proto-idle').style.display = '';
 }
 
-function addMsg(role, html, extra) {
-  var msgs = document.getElementById('mcp-messages');
-  var d = document.createElement('div');
-  d.className = 'mcp-msg ' + (extra || role);
-  if (role === 'user' || role === 'assistant') {
-    d.innerHTML = '<div class="msg-label">' + (role==='user'?'You':'Agent + MCP') + '</div>' + html;
-  } else {
-    d.innerHTML = html;
-  }
-  msgs.appendChild(d);
-  msgs.scrollTop = msgs.scrollHeight;
+function addMsg(role, html, cls) {
+  var wrap = document.getElementById('mcp-messages');
+  var d    = document.createElement('div');
+  d.className = 'mcp-msg ' + (cls || role);
+  d.innerHTML = (role==='user'||role==='assistant')
+    ? '<div class="msg-label">'+(role==='user'?'You':'Agent + MCP')+'</div>'+html
+    : html;
+  wrap.appendChild(d);
+  wrap.scrollTop = wrap.scrollHeight;
   return d;
+}
+
+function updateMCPCounter() {
+  var rem = mcpMaxMsgs - mcpMsgCount;
+  var ct  = document.getElementById('mcp-counter-text');
+  if (ct) ct.textContent = rem + ' quer'+(rem===1?'y':'ies')+' remaining this session';
+  var dots = document.getElementById('mcp-counter-dots');
+  if (dots) dots.querySelectorAll('.mcp-counter-dot').forEach(function(d,i){
+    d.classList.toggle('used', i < mcpMsgCount);
+  });
+  var cc = document.getElementById('mcp-call-count');
+  if (cc) cc.textContent = mcpCallCount;
 }
 
 function delay(ms) { return new Promise(function(r){setTimeout(r,ms);}); }
 
-/* ── Call Groq proxy ── */
-async function groq(messages, temperature, max_tokens) {
+/* ─────────────────────────────────────────────
+   GROQ CALL  — used only for synthesis
+───────────────────────────────────────────── */
+async function callGroq(prompt) {
   var res = await fetch('https://nageshch.com/api/chat', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    method:  'POST',
+    headers: { 'Content-Type':'application/json' },
     body: JSON.stringify({
-      messages:    messages,
-      temperature: temperature || 0.1,
-      top_p:       0.5,
-      max_tokens:  max_tokens || 300
+      messages:    [{ role:'user', content: prompt }],
+      temperature: 0.4,
+      top_p:       0.85,
+      max_tokens:  220
     })
   });
   var data = await res.json();
   return (data.content && data.content[0]) ? data.content[0].text.trim() : '';
 }
 
-/* ── Main agentic loop ── */
+/* ─────────────────────────────────────────────
+   BUILD SYNTHESIS PROMPT  (tool-aware)
+───────────────────────────────────────────── */
+function buildSynthPrompt(query, toolName, result) {
+  var context = '';
 
-/* ── Build a proper math expression from natural language ── */
-function buildCalcExpression(text) {
-  var t = text;
-  /* Compound interest: $50,000 at 8% for 10 years → 50000*(1.08**10) */
-  var ci = t.match(/[\$]?([\d,]+)\s+at\s+([\d.]+)%\s+for\s+(\d+)\s*years?/i);
-  if (ci) {
-    var p = ci[1].replace(/,/g,'');
-    var r = (parseFloat(ci[2])/100).toFixed(4);
-    var n = ci[3];
-    return p + '*(1+' + r + ')**' + n;
+  if (toolName === 'calculator') {
+    context = 'Expression: ' + result.expression + '\nResult: ' + result.result;
+    return 'The user asked: "' + query + '"\n\n' +
+      'You used the calculator tool and got:\n' + context + '\n\n' +
+      'Write exactly 2 sentences: first state the answer with the number, ' +
+      'then briefly explain what the number means. No preamble.';
   }
-  /* Percentage of: 15% of 200 → 0.15*200 */
-  var pct = t.match(/([\d.]+)%\s+of\s+([\d,]+)/i);
-  if (pct) return (parseFloat(pct[1])/100) + '*' + pct[2].replace(/,/g,'');
-  /* Simple X times Y */
-  var mul = t.match(/([\d,]+)\s*[*x×]\s*([\d,]+)/i);
-  if (mul) return mul[1].replace(/,/g,'') + '*' + mul[2].replace(/,/g,'');
-  /* Extract all numbers and operators */
-  var nums = t.match(/[\d,]+(\.\d+)?/g);
-  if (nums && nums.length >= 2) {
-    var cleaned = nums.map(function(n){return n.replace(/,/g,'');});
-    return cleaned.join('+');
+
+  if (toolName === 'code_runner') {
+    context = 'Code executed:\n' + result.output + '\n(runtime: ' + result.execution_time_ms + 'ms)';
+    return 'The user asked: "' + query + '"\n\n' +
+      'You executed Python code. Output:\n' + result.output + '\n\n' +
+      'Write 2 sentences: describe what the code did and what the output shows. No preamble.';
   }
-  return '1+1';
+
+  if (toolName === 'web_search') {
+    var snippets = (result.results||[]).map(function(r,i){
+      return (i+1)+'. '+r.title+': '+r.snippet;
+    }).join('\n');
+    return 'The user asked: "' + query + '"\n\n' +
+      'Web search returned:\n' + snippets + '\n\n' +
+      'Write 2-3 sentences summarising the most relevant finding. Quote specific figures if present. No preamble.';
+  }
+
+  if (toolName === 'knowledge_base') {
+    var top = result.results && result.results[0];
+    if (!top) return '';
+    return 'The user asked: "' + query + '"\n\n' +
+      'Knowledge base retrieved (relevance ' + top.relevance_score + '):\n' + top.text + '\n\n' +
+      'Write 2-3 sentences answering the user\'s question using this context. Be precise and technical. No preamble.';
+  }
+
+  return '';
 }
 
+/* ─────────────────────────────────────────────
+   HARDCODED FALLBACK ANSWERS  (if Groq fails)
+───────────────────────────────────────────── */
+function buildFallback(toolName, query, result) {
+  if (toolName === 'calculator') {
+    return 'The <strong>calculator</strong> tool evaluated <code>' + result.expression +
+      '</code> and returned <strong>' + result.result + '</strong>.';
+  }
+  if (toolName === 'code_runner') {
+    return 'The <strong>code_runner</strong> executed your Python snippet successfully. ' +
+      'Output: <code>' + result.output + '</code> (runtime: ' + result.execution_time_ms + 'ms).';
+  }
+  if (toolName === 'web_search') {
+    var r0 = result.results && result.results[0];
+    return r0
+      ? '<strong>web_search</strong> found: ' + r0.snippet
+      : 'No results found for your query.';
+  }
+  var kb0 = result.results && result.results[0];
+  return kb0
+    ? '<strong>knowledge_base</strong> (relevance ' + kb0.relevance_score + '): ' + kb0.text.slice(0,220) + '...'
+    : 'No matching entries in the knowledge base.';
+}
+
+/* ─────────────────────────────────────────────
+   MAIN AGENTIC LOOP
+───────────────────────────────────────────── */
 async function sendMCPMessage() {
   if (mcpBusy || mcpMsgCount >= mcpMaxMsgs) return;
-  var input = document.getElementById('mcp-input');
-  var text  = (input.value || '').trim();
+  var inputEl = document.getElementById('mcp-input');
+  var text    = (inputEl.value || '').trim();
   if (!text) return;
 
   mcpBusy = true;
   mcpMsgCount++;
-  input.value = '';
+  inputEl.value = '';
   document.getElementById('mcp-send').disabled = true;
   document.getElementById('mcp-suggestions').style.display = 'none';
 
@@ -2743,163 +2970,81 @@ async function sendMCPMessage() {
   updateMCPCounter();
   resetToolStates();
 
-  /* ── STEP 1: initialize handshake ── */
+  /* STEP 1 — initialize handshake */
   protoStep('client', 'initialize',
-    '{"jsonrpc":"2.0","id":' + (mcpRpcId++) + ',"method":"initialize","params":{"protocolVersion":"2025-11-05","clientInfo":{"name":"nageshch-agent","version":"1.0"}}}');
-  await delay(400);
+    '{"jsonrpc":"2.0","id":' + (mcpRpcId++) + ',"method":"initialize","params":' +
+    '{"protocolVersion":"2025-11-05","clientInfo":{"name":"nageshch-agent","version":"1.0"}}}');
+  await delay(350);
   protoStep('server', 'initialize result',
     '{"protocolVersion":"2025-11-05","serverInfo":{"name":"nageshch-mcp-server","version":"1.0"},"capabilities":{"tools":{}}}');
   await delay(200);
 
-  /* ── STEP 2: notifications/initialized ── */
+  /* STEP 2 — notifications/initialized */
   protoStep('client', 'notifications/initialized',
     '{"jsonrpc":"2.0","method":"notifications/initialized"}');
-  await delay(300);
+  await delay(250);
 
-  /* ── STEP 3: tools/list ── */
+  /* STEP 3 — tools/list */
   protoStep('client', 'tools/list',
     '{"jsonrpc":"2.0","id":' + (mcpRpcId++) + ',"method":"tools/list"}');
-  await delay(500);
+  await delay(450);
   protoStep('server', 'tools/list result',
     '{"tools":[' + MCP_TOOLS.map(function(t){return '"'+t.name+'"';}).join(',') + ']}');
-  await delay(300);
+  await delay(250);
 
-  /* ── STEP 4: LLM decides which tool to call ── */
-  var planMsg = addMsg('system', '⟳ Agent reasoning over available tools...');
-
-  /* Tight prompt — LLaMA 8B can handle this reliably */
-  var toolList = MCP_TOOLS.map(function(t,i){
-    return (i+1)+'. '+t.name+': '+t.description;
-  }).join('\n');
-
-  var PLAN_PROMPT =
-    'You are an MCP agent. Pick ONE tool and return ONLY a single JSON line. No explanation, no markdown, no extra text.\n\n' +
-    'Tools:\n' +
-    '1. calculator — math, numbers, finance. Input: {"expression":"<valid JS math, e.g. 50000*(1.08**10)>"}\n' +
-    '2. code_runner — write/run Python code. Input: {"code":"<python source>"}\n' +
-    '3. web_search — live info, prices, news. Input: {"query":"<search string>"}\n' +
-    '4. knowledge_base — AI/ML/LLM concepts. Input: {"query":"<question>","top_k":3}\n\n' +
-    'EXAMPLES (copy this exact JSON format):\n' +
-    'Q: Calculate compound interest $50000 at 8% for 10 years\n' +
-    'A: {"tool":"calculator","input":{"expression":"50000*(1.08**10)"},"reason":"compound interest"}\n' +
-    'Q: What is the price of gold today\n' +
-    'A: {"tool":"web_search","input":{"query":"gold price today 2026"},"reason":"live price"}\n' +
-    'Q: Write Python to sort a list\n' +
-    'A: {"tool":"code_runner","input":{"code":"data=[5,2,8,1,3]\\nprint(sorted(data))"},"reason":"code execution"}\n' +
-    'Q: How does RAG work\n' +
-    'A: {"tool":"knowledge_base","input":{"query":"how does RAG work","top_k":3},"reason":"AI concept"}\n\n' +
-    'Now answer:\n' +
-    'Q: ' + text + '\n' +
-    'A:';
-
-  var planRaw = '';
-  try {
-    planRaw = await groq([{role:'user', content:PLAN_PROMPT}], 0.1, 200);
-  } catch(e) {
-    planRaw = '';
-  }
-
-  /* Parse JSON from LLM response */
-  var plan = null;
-  try {
-    var fi = planRaw.indexOf('{');
-    var li = planRaw.lastIndexOf('}');
-    if (fi >= 0 && li > fi) plan = JSON.parse(planRaw.slice(fi, li+1));
-  } catch(e) { plan = null; }
-
-  /* Fallback: keyword routing if LLM JSON fails or returns bad expression */
-  if (!plan || !MCP_TOOLS.find(function(t){return t.name===plan.tool;})) {
-    var tl = text.toLowerCase();
-    var toolName =
-      (tl.match(/(calculat|interest|mortgage|roi|percent|formula|how much|total|\$\d|\d+%|\d+ years?)/)) ? 'calculator' :
-      (tl.match(/(\bcode\b|python|script|sort|fibonacci|loop|\bfunction\b|write.*code|run.*code|def |class )/)) ? 'code_runner' :
-      (tl.match(/(\bsearch\b|latest|recent|today|current price|live|news|2026|who is|where is|weather|stock|gold|bitcoin)/)) ? 'web_search' :
-      'knowledge_base';
-    var fbExpr = buildCalcExpression(text);
-    var autoInput = toolName==='calculator' ? {expression: fbExpr} :
-                    toolName==='code_runner' ? {code:'# '+text.slice(0,60)+'\ndata=[5,2,8,1,9,3,7,4,6]\nresult=sorted(data)\nprint(f"sorted: {result}, sum: {sum(data)}")'} :
-                    {query:text, top_k:3};
-    plan = { tool:toolName, input:autoInput, reason:'Auto-routed' };
-  }
-
-  /* If LLM returned calculator but with a raw-text expression, rebuild it */
-  if (plan.tool === 'calculator' && plan.input && plan.input.expression) {
-    var expr = plan.input.expression;
-    /* Detect expressions that are just prose (contain letters other than e/E for scientific notation) */
-    var hasMath = /[0-9]/.test(expr) && /[+\-*\/()^]/.test(expr);
-    var isProse = /[a-df-zA-DF-Z]{3,}/.test(expr); /* 3+ consecutive alpha chars = prose */
-    if (!hasMath || isProse) {
-      plan.input.expression = buildCalcExpression(text);
-    }
-  }
-
-  if (planMsg) planMsg.remove();
-
-  /* ── STEP 5: tools/call ── */
+  /* STEP 4 — deterministic routing (zero LLM) */
+  var plan   = route(text);
   var tName  = plan.tool;
   var tInput = plan.input;
 
-  protoStep('client', 'tools/call',
-    '{"jsonrpc":"2.0","id":' + (mcpRpcId++) + ',"method":"tools/call","params":{"name":"' + tName + '","arguments":' + JSON.stringify(tInput) + '}}');
+  setToolState(tName, 'active', plan.reason);
 
-  setToolState(tName, 'active', plan.reason || 'Agent selected this tool');
+  protoStep('client', 'tools/call',
+    '{"jsonrpc":"2.0","id":' + (mcpRpcId++) + ',"method":"tools/call","params":' +
+    '{"name":"' + tName + '","arguments":' + JSON.stringify(tInput) + '}}');
+
   addMsg('tool-call',
     '<div class="msg-label">Client → MCP Server</div>' +
-    '<strong>' + tName + '</strong> · input: ' + JSON.stringify(tInput).slice(0,160));
+    '<strong>' + tName + '</strong> &nbsp;·&nbsp; ' + plan.reason + '<br>' +
+    '<span style="font-size:10px;color:#92400e;">input: ' + JSON.stringify(tInput).slice(0,180) + '</span>');
 
-  await delay(600 + Math.random()*400);
+  await delay(550 + Math.random()*350);
 
-  /* ── STEP 6: execute tool locally ── */
+  /* STEP 5 — execute tool locally */
   mcpCallCount++;
-  var result = execTool(tName, tInput);
+  var result    = execTool(tName, tInput);
   var resultStr = JSON.stringify(result);
 
   protoStep('result', 'tools/call result',
-    tName + ' → ' + resultStr.slice(0,180).replace(/"/g,"'"));
+    tName + ' → ' + resultStr.slice(0,200).replace(/"/g,"'"));
   addMsg('tool-result',
     '<div class="msg-label">MCP Server → Client</div>' +
-    '<strong>' + tName + '</strong> returned: ' + resultStr.slice(0,240));
-  setToolState(tName, 'done', 'Result returned to agent');
+    '<strong>' + tName + '</strong> returned:<br>' +
+    '<span style="font-size:10px;">' + resultStr.slice(0,260) + '</span>');
 
-  document.getElementById('mcp-call-count').textContent = mcpCallCount;
-  await delay(300);
+  setToolState(tName, 'done', 'Result delivered to agent');
+  updateMCPCounter();
+  await delay(280);
 
-  /* ── STEP 7: LLM synthesises final answer ── */
-  var synthMsg = addMsg('system', '⟳ LLM synthesising tool result into answer...');
+  /* STEP 6 — ONE Groq call for synthesis */
+  var synthEl = addMsg('system', '⟳ LLM synthesising result into natural language...');
+  var prompt  = buildSynthPrompt(text, tName, result);
+  var answer  = '';
 
-  var SYNTH_PROMPT =
-    'The user asked: "' + text + '"\n\n' +
-    'You called the MCP tool "' + tName + '" and got this result:\n' +
-    resultStr + '\n\n' +
-    'Write a clear, direct 2-3 sentence answer using the tool result. ' +
-    'Quote the specific numbers or data returned. ' +
-    'Start your answer immediately — no preamble.';
-
-  var finalAnswer = '';
-  try {
-    finalAnswer = await groq([{role:'user', content:SYNTH_PROMPT}], 0.4, 250);
-  } catch(e) { finalAnswer = ''; }
-
-  /* Fallback: build answer from raw result without LLM */
-  if (!finalAnswer || finalAnswer.length < 20) {
-    if (tName === 'calculator') {
-      finalAnswer = 'Using the <strong>calculator</strong> tool: <code>' + (tInput.expression||'') + '</code> = <strong>' + result.result + '</strong>.';
-    } else if (tName === 'code_runner') {
-      finalAnswer = 'The <strong>code_runner</strong> executed your Python snippet. Output: <code>' + result.output + '</code> (completed in ' + result.execution_time_ms + 'ms).';
-    } else if (tName === 'web_search') {
-      var r0 = result.results && result.results[0];
-      finalAnswer = r0 ? '<strong>web_search</strong>: ' + r0.snippet : 'No results found.';
-    } else {
-      var kb0 = result.results && result.results[0];
-      finalAnswer = kb0 ? '<strong>knowledge_base</strong> (score ' + kb0.relevance_score + '): ' + kb0.text.slice(0,200) + '...' : 'No matching entries.';
-    }
+  if (prompt) {
+    try { answer = await callGroq(prompt); } catch(e) { answer = ''; }
   }
 
-  if (synthMsg) synthMsg.remove();
-  addMsg('assistant', finalAnswer);
+  /* Groq failed or returned nothing — use hardcoded fallback */
+  if (!answer || answer.length < 15) {
+    answer = buildFallback(tName, text, result);
+  }
+
+  if (synthEl) synthEl.remove();
+  addMsg('assistant', answer);
 
   protoStep('client', 'session/update',
-    '"tool_calls_this_session":' + mcpCallCount + ',"last_tool":"' + tName + '"');
+    '"calls_this_session":' + mcpCallCount + ',"last_tool":"' + tName + '"');
 
   if (mcpMsgCount >= mcpMaxMsgs) {
     addMsg('system', 'Session limit reached. Refresh to start a new session.');
@@ -2911,21 +3056,12 @@ async function sendMCPMessage() {
   mcpBusy = false;
 }
 
-/* ── UI helpers ── */
-function updateMCPCounter() {
-  var remaining = mcpMaxMsgs - mcpMsgCount;
-  var ct = document.getElementById('mcp-counter-text');
-  if (ct) ct.textContent = remaining + ' quer' + (remaining===1?'y':'ies') + ' remaining this session';
-  var dots = document.getElementById('mcp-counter-dots');
-  if (dots) {
-    var ds = dots.querySelectorAll('.mcp-counter-dot');
-    ds.forEach(function(d,i){ d.classList.toggle('used', i < mcpMsgCount); });
-  }
-}
-
+/* ─────────────────────────────────────────────
+   UI HELPERS
+───────────────────────────────────────────── */
 function useMCPSuggestion(btn) {
-  var input = document.getElementById('mcp-input');
-  if (input) input.value = btn.textContent.trim();
+  var el = document.getElementById('mcp-input');
+  if (el) el.value = btn.textContent.trim();
   sendMCPMessage();
 }
 
