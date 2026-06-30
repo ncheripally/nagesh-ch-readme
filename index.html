@@ -381,18 +381,40 @@ to{transform:translateX(-50%);}}
 /* ── DEMOS ── */
 #demos{background:linear-gradient(135deg,#0a0e27 0%,#1a2255 50%,#0f1434 100%);background-attachment:fixed;position:relative;}
 .dm-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
-.dm{background:rgba(255,255,255,.04);padding:54px 46px;display:flex;flex-direction:column;gap:18px;position:relative;overflow:hidden;transition:transform .4s cubic-bezier(.34,.1,.64,1),box-shadow .4s ease,background .3s ease,border-color .3s ease;box-shadow:0 20px 70px rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.1);border-radius:16px;backdrop-filter:blur(8px);}
-.dm:hover{background:rgba(255,255,255,.10);transform:translateY(-8px);box-shadow:0 40px 100px rgba(0,0,0,.45),0 0 40px rgba(26,144,128,.15);border-color:rgba(26,144,128,.3);}
-.dm::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--gfire);transform:scaleX(0);transform-origin:left;transition:transform .45s;}
+.dm{position:relative;background:linear-gradient(160deg,rgba(255,255,255,.05) 0%,rgba(255,255,255,.02) 100%);padding:38px 36px;display:flex;flex-direction:column;gap:16px;overflow:hidden;border:1px solid rgba(255,255,255,.08);border-radius:18px;transition:transform .4s cubic-bezier(.34,.1,.64,1),box-shadow .4s ease,border-color .4s ease;}
+.dm::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent-grad,linear-gradient(90deg,#ff006e,#ffd700));transform:scaleX(0);transform-origin:left;transition:transform .5s cubic-bezier(.34,.1,.64,1);}
+.dm:hover{transform:translateY(-6px);border-color:var(--accent-border,rgba(255,0,110,.35));box-shadow:0 30px 80px rgba(0,0,0,.5),0 0 50px var(--accent-glow,rgba(255,0,110,.12));}
 .dm:hover::before{transform:scaleX(1);}
-.dm-n{font-family:var(--mono);font-size:10px;color:var(--orange);letter-spacing:.18em;}
-.dm-title{font-family:var(--serif);font-size:28px;font-weight:700;letter-spacing:-.01em;color:var(--bone);}
-.dm-desc{font-size:14px;color:rgba(242,237,230,.72);line-height:1.85;flex-grow:1;}
-.dm-tags{display:flex;flex-wrap:wrap;gap:8px;}
-.dm-tag{font-family:var(--mono);font-size:9px;padding:4px 10px;border:1px solid rgba(255,255,255,.08);color:var(--ash);transition:all .3s;border-radius:4px;}
-.dm-tag:hover{border-color:var(--orange);color:var(--bone);background:rgba(255,107,53,.1);transform:translateY(-1px);box-shadow:0 4px 8px rgba(255,107,53,.15);}
-.dm-cta{font-family:var(--mono);font-size:11px;color:var(--orange);text-decoration:none;letter-spacing:.1em;display:flex;align-items:center;gap:8px;transition:gap .2s;}
-.dm-cta:hover{gap:14px;}
+.dm.locked{opacity:.62;}
+.dm.locked:hover{transform:none;border-color:rgba(255,255,255,.08);box-shadow:none;}
+.dm.locked::before{display:none;}
+
+.dm.c-crimson{--accent-grad:linear-gradient(90deg,#ff006e,#ffd700);--accent-border:rgba(255,0,110,.35);--accent-glow:rgba(255,0,110,.12);--accent-solid:#ff006e;--accent-solid2:#ff1a7d;--icon-bg:rgba(255,0,110,.12);--icon-border:rgba(255,0,110,.3);}
+.dm.c-cyan{--accent-grad:linear-gradient(90deg,#00d9ff,#7c3aed);--accent-border:rgba(0,217,255,.35);--accent-glow:rgba(0,217,255,.14);--accent-solid:#00b8d9;--accent-solid2:#0891b2;--icon-bg:rgba(0,217,255,.12);--icon-border:rgba(0,217,255,.3);}
+.dm.c-violet{--accent-grad:linear-gradient(90deg,#7c3aed,#f472b6);--accent-border:rgba(124,58,237,.35);--accent-glow:rgba(124,58,237,.14);--accent-solid:#7c3aed;--accent-solid2:#8b5cf6;--icon-bg:rgba(124,58,237,.14);--icon-border:rgba(124,58,237,.32);}
+.dm.c-emerald{--accent-grad:linear-gradient(90deg,#06b6d4,#a7f3d0);--accent-border:rgba(6,182,212,.35);--accent-glow:rgba(6,182,212,.13);--accent-solid:#06b6d4;--accent-solid2:#0891b2;--icon-bg:rgba(6,182,212,.12);--icon-border:rgba(6,182,212,.3);}
+.dm.c-amber{--accent-grad:linear-gradient(90deg,#ffd700,#ff8a00);--accent-border:rgba(255,215,0,.32);--accent-glow:rgba(255,180,0,.13);--accent-solid:#e6a700;--accent-solid2:#d97706;--icon-bg:rgba(255,180,0,.13);--icon-border:rgba(255,180,0,.3);}
+.dm.c-rose{--accent-grad:linear-gradient(90deg,#f472b6,#ff006e);--accent-border:rgba(244,114,182,.32);--accent-glow:rgba(244,114,182,.13);--accent-solid:#ec4899;--accent-solid2:#db2777;--icon-bg:rgba(244,114,182,.13);--icon-border:rgba(244,114,182,.3);}
+
+.dm-top{display:flex;align-items:center;justify-content:space-between;}
+.dm-icon-num{display:flex;align-items:center;gap:13px;}
+.dm-icon{width:40px;height:40px;border-radius:11px;background:var(--icon-bg,rgba(255,255,255,.06));border:1px solid var(--icon-border,rgba(255,255,255,.12));display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
+.dm.locked .dm-icon{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.1);filter:grayscale(1);opacity:.6;}
+.dm-n{font-family:var(--mono);font-size:30px;font-weight:500;letter-spacing:-.02em;background:var(--accent-grad,linear-gradient(90deg,#ff006e,#ffd700));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;line-height:1;}
+.dm.locked .dm-n{background:none;-webkit-text-fill-color:var(--ash);opacity:.5;}
+.dm-status{font-family:var(--mono);font-size:8.5px;letter-spacing:.14em;padding:4px 11px;border-radius:20px;text-transform:uppercase;display:flex;align-items:center;gap:5px;flex-shrink:0;}
+.dm-status.live{background:var(--icon-bg,rgba(255,0,110,.12));border:1px solid var(--icon-border,rgba(255,0,110,.3));color:var(--accent-solid,#ff5fa3);}
+.dm-status.live::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--accent-solid,#ff0099);animation:dmPulse 1.5s infinite;}
+.dm-status.locked{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--ash);}
+@keyframes dmPulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+.dm-title{font-family:var(--serif);font-size:27px;font-weight:700;letter-spacing:-.01em;color:var(--bone);}
+.dm-desc{font-size:14px;color:rgba(242,237,230,.7);line-height:1.8;flex-grow:1;}
+.dm-tags{display:flex;flex-wrap:wrap;gap:7px;}
+.dm-tag{font-family:var(--mono);font-size:8.5px;padding:4px 10px;border:1px solid rgba(255,255,255,.1);color:rgba(242,237,230,.55);transition:all .3s;border-radius:5px;letter-spacing:.02em;}
+.dm-tag:hover{border-color:var(--accent-solid,var(--orange));color:var(--bone);background:var(--icon-bg,rgba(255,107,53,.1));transform:translateY(-1px);}
+.dm-cta{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:10.5px;color:var(--ash);text-decoration:none;letter-spacing:.1em;text-transform:uppercase;transition:gap .25s,color .25s;}
+.dm-cta::before{content:'○';font-size:8px;}
+.dm-cta:hover{gap:14px;color:var(--bone);}
 /* ── RESUME OVERLAY ── */
 .resume-overlay{position:fixed;inset:0;z-index:1600;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(8,8,15,.95);opacity:0;visibility:hidden;transition:opacity .25s ease,visibility .25s ease;}
 .resume-overlay.open{opacity:1;visibility:visible;}
@@ -529,8 +551,8 @@ footer:hover{border-top-color:rgba(255,107,53,.3);}
 .demo-send{background:#111827;border:none;border-radius:10px;padding:10px 20px;color:#fff;font-family:var(--mono);font-size:10px;letter-spacing:.1em;cursor:pointer;transition:all .2s;white-space:nowrap;}
 .demo-send:hover:not(:disabled){background:#1f2937;box-shadow:0 4px 12px rgba(0,0,0,.15);}
 .demo-send:disabled{opacity:.35;cursor:not-allowed;}
-.dm-launch{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:10px;letter-spacing:.12em;padding:9px 20px;border:1.5px solid #111827;color:#111827;background:#fff;border-radius:7px;cursor:pointer;transition:all .25s;text-decoration:none;text-transform:uppercase;}
-.dm-launch:hover{background:#111827;color:#fff;box-shadow:0 4px 14px rgba(0,0,0,.15);}
+.dm-launch{display:flex;align-items:center;justify-content:center;gap:8px;font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;padding:13px 20px;border:none;color:#fff;background:linear-gradient(135deg,var(--accent-solid,#ff006e),var(--accent-solid2,#ff1a7d));border-radius:9px;cursor:pointer;transition:all .25s;text-decoration:none;text-transform:uppercase;box-shadow:0 4px 18px var(--accent-glow,rgba(255,0,110,.25));}
+.dm-launch:hover{box-shadow:0 6px 26px var(--accent-glow,rgba(255,0,110,.4));transform:translateY(-1px);filter:brightness(1.08);}
 .dm-launch::before{content:'▶';font-size:8px;}
 @media(max-width:800px){
   .demo-body{grid-template-columns:1fr;}
@@ -672,9 +694,6 @@ footer:hover{border-top-color:rgba(255,107,53,.3);}
 .demo-send{background:#111827;border:none;border-radius:10px;padding:10px 20px;color:#fff;font-family:var(--mono);font-size:10px;letter-spacing:.1em;cursor:pointer;transition:all .2s;white-space:nowrap;}
 .demo-send:hover:not(:disabled){background:#1f2937;box-shadow:0 4px 12px rgba(0,0,0,.15);}
 .demo-send:disabled{opacity:.35;cursor:not-allowed;}
-.dm-launch{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:10px;letter-spacing:.12em;padding:9px 20px;border:1.5px solid #111827;color:#111827;background:#fff;border-radius:7px;cursor:pointer;transition:all .25s;text-decoration:none;text-transform:uppercase;}
-.dm-launch:hover{background:#111827;color:#fff;box-shadow:0 4px 14px rgba(0,0,0,.15);}
-.dm-launch::before{content:'▶';font-size:8px;}
 
 /* NLP Demo */
 .nlp-overlay{position:fixed;inset:0;z-index:1700;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.65);backdrop-filter:blur(10px);opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s;}
@@ -1450,16 +1469,76 @@ footer:hover{border-top-color:rgba(255,107,53,.3);}
   <div class="sec-bg-num">05</div>
   <div class="sec-hd rv"><span class="sec-n">05</span><h2 class="sec-title">AI <em>Demos</em></h2><div class="sec-line"></div></div>
   <div class="dm-grid">
-    <div class="dm rv d1"><div class="dm-n">DEMO / 01</div><div class="dm-title">AI Chatbot Assistant</div><div class="dm-desc">Live demo of agentic AI systems with orchestrator, guardrail, and validator agents working in harmony. Watch each agent think in real-time.</div><div class="dm-tags"><span class="dm-tag">LangGraph</span><span class="dm-tag">Claude API</span><span class="dm-tag">Agents</span><span class="dm-tag">Live</span></div><button class="dm-launch" onclick="openDemo()">Launch Live Demo</button></div>
-    <div class="dm rv d2"><div class="dm-n">DEMO / 02</div><div class="dm-title">RAG Pipeline Explorer</div><div class="dm-desc">Watch document retrieval, prompt augmentation, and LLM generation happen step by step — with real chunk scores, prompt builder, and model trace.</div><div class="dm-tags"><span class="dm-tag">RAG</span><span class="dm-tag">Retrieval</span><span class="dm-tag">Prompt Builder</span><span class="dm-tag">Model Tracing</span><span class="dm-tag">Live</span></div><button class="dm-launch" onclick="openRAG()">Launch Live Demo</button></div>
-    <div class="dm rv d3"><div class="dm-n">DEMO / 03</div><div class="dm-title">NLP Classification Engine</div><div class="dm-desc">Multi-task NLP in a single inference call — simultaneous text classification, sentiment analysis, and named entity recognition with confidence scores.</div><div class="dm-tags"><span class="dm-tag">NLP</span><span class="dm-tag">Classification</span><span class="dm-tag">Sentiment</span><span class="dm-tag">NER</span><span class="dm-tag">Live</span></div><button class="dm-launch" onclick="openNLP()">Launch Live Demo</button></div>
-    <div class="dm rv d4"><div class="dm-n">DEMO / 04</div><div class="dm-title">MCP Tool Integration Lab</div><div class="dm-desc">Watch a live AI agent discover tools via the MCP protocol, select the right one, negotiate the schema, and execute — all in a single autonomous loop with every protocol message exposed.</div><div class="dm-tags"><span class="dm-tag">MCP</span><span class="dm-tag">Tool Use</span><span class="dm-tag">Claude API</span><span class="dm-tag">Agentic</span><span class="dm-tag">Live</span></div><button class="dm-launch" onclick="openMCP()">Launch Live Demo</button></div>
-    <div class="dm rv d10"><div class="dm-n">DEMO / 10</div><div class="dm-title">Indic Voice Lab</div><div class="dm-desc">Speak in Hindi, Telugu, Tamil or 8 other Indic languages — watch live speech-to-text transcription, then hear a synthesized voice reply. Built on India's highest-accuracy speech models, not English-first APIs adapted for Indian audio.</div><div class="dm-tags"><span class="dm-tag">Sarvam AI</span><span class="dm-tag">Saaras v3</span><span class="dm-tag">Bulbul v3</span><span class="dm-tag">11 Indic Languages</span><span class="dm-tag">Live</span></div><button class="dm-launch" onclick="openSarvam()">Launch Live Demo</button></div>
-    <div class="dm rv d5"><div class="dm-n">DEMO / 05</div><div class="dm-title">Multi-Agent Orchestration</div><div class="dm-desc">End-to-end multi-agent workflow with orchestrator, guardrail, validator and responder agents working autonomously on enterprise tasks.</div><div class="dm-tags"><span class="dm-tag">LangGraph</span><span class="dm-tag">Multi-Agent</span><span class="dm-tag">Tool Use</span><span class="dm-tag">Memory</span><span class="dm-tag">Guardrails</span></div><a href="#contact" class="dm-cta">Request Demo →</a></div>
-    <div class="dm rv d6"><div class="dm-n">DEMO / 06</div><div class="dm-title">MLOps &amp; Evaluation Studio</div><div class="dm-desc">State-of-the-art lifecycle demo with CI/CD, model versioning, tracing, evaluation scoring, and governance dashboards for production AI.</div><div class="dm-tags"><span class="dm-tag">MLOps</span><span class="dm-tag">Model Tracing</span><span class="dm-tag">Model Evaluation</span><span class="dm-tag">Monitoring</span></div><a href="#contact" class="dm-cta">Request Demo →</a></div>
-    <div class="dm rv d7"><div class="dm-n">DEMO / 07</div><div class="dm-title">Responsible AI Compliance</div><div class="dm-desc">Governance-focused demo for bias mitigation, explainability, and audit trails to meet enterprise AI safety and compliance requirements.</div><div class="dm-tags"><span class="dm-tag">Responsible AI</span><span class="dm-tag">Bias Mitigation</span><span class="dm-tag">Explainability</span><span class="dm-tag">Audit Trail</span></div><a href="#contact" class="dm-cta">Request Demo →</a></div>
-    <div class="dm rv d8"><div class="dm-n">DEMO / 08</div><div class="dm-title">Real-Time GenAI Monitoring</div><div class="dm-desc">Runtime monitoring demo with live latency SLA tracking, prediction drift alerts, and feedback loop integration for production-grade GenAI services.</div><div class="dm-tags"><span class="dm-tag">Monitoring</span><span class="dm-tag">Drift Detection</span><span class="dm-tag">SLA</span><span class="dm-tag">Feedback Loop</span></div><a href="#contact" class="dm-cta">Request Demo →</a></div>
-    <div class="dm rv d9"><div class="dm-n">DEMO / 09</div><div class="dm-title">Continuous Model Delivery</div><div class="dm-desc">End-to-end model delivery pipeline with automated retraining triggers, model versioning, and canary rollout for safe, scalable AI deployments.</div><div class="dm-tags"><span class="dm-tag">CI/CD</span><span class="dm-tag">Retraining</span><span class="dm-tag">Canary Rollout</span><span class="dm-tag">Versioning</span></div><a href="#contact" class="dm-cta">Request Demo →</a></div>
+    <div class="dm rv d1 c-crimson">
+      <div class="dm-top"><div class="dm-icon-num"><div class="dm-icon">💬</div><span class="dm-n">01</span></div><span class="dm-status live">Live</span></div>
+      <div class="dm-title">AI Chatbot Assistant</div>
+      <div class="dm-desc">Live demo of agentic AI systems with orchestrator, guardrail, and validator agents working in harmony. Watch each agent think in real-time.</div>
+      <div class="dm-tags"><span class="dm-tag">LangGraph</span><span class="dm-tag">Claude API</span><span class="dm-tag">Agents</span></div>
+      <button class="dm-launch" onclick="openDemo()">Launch Live Demo</button>
+    </div>
+    <div class="dm rv d2 c-emerald">
+      <div class="dm-top"><div class="dm-icon-num"><div class="dm-icon">📊</div><span class="dm-n">02</span></div><span class="dm-status live">Live</span></div>
+      <div class="dm-title">RAG Pipeline Explorer</div>
+      <div class="dm-desc">Watch document retrieval, prompt augmentation, and LLM generation happen step by step — with real chunk scores, prompt builder, and model trace.</div>
+      <div class="dm-tags"><span class="dm-tag">RAG</span><span class="dm-tag">Retrieval</span><span class="dm-tag">Prompt Builder</span><span class="dm-tag">Model Tracing</span></div>
+      <button class="dm-launch" onclick="openRAG()">Launch Live Demo</button>
+    </div>
+    <div class="dm rv d3 c-violet">
+      <div class="dm-top"><div class="dm-icon-num"><div class="dm-icon">🔤</div><span class="dm-n">03</span></div><span class="dm-status live">Live</span></div>
+      <div class="dm-title">NLP Classification Engine</div>
+      <div class="dm-desc">Multi-task NLP in a single inference call — simultaneous text classification, sentiment analysis, and named entity recognition with confidence scores.</div>
+      <div class="dm-tags"><span class="dm-tag">NLP</span><span class="dm-tag">Classification</span><span class="dm-tag">Sentiment</span><span class="dm-tag">NER</span></div>
+      <button class="dm-launch" onclick="openNLP()">Launch Live Demo</button>
+    </div>
+    <div class="dm rv d4 c-cyan">
+      <div class="dm-top"><div class="dm-icon-num"><div class="dm-icon">🔌</div><span class="dm-n">04</span></div><span class="dm-status live">Live</span></div>
+      <div class="dm-title">MCP Tool Integration Lab</div>
+      <div class="dm-desc">Watch a live AI agent discover tools via the MCP protocol, select the right one, negotiate the schema, and execute — all in a single autonomous loop with every protocol message exposed.</div>
+      <div class="dm-tags"><span class="dm-tag">MCP</span><span class="dm-tag">Tool Use</span><span class="dm-tag">Claude API</span><span class="dm-tag">Agentic</span></div>
+      <button class="dm-launch" onclick="openMCP()">Launch Live Demo</button>
+    </div>
+    <div class="dm rv d10 c-amber">
+      <div class="dm-top"><div class="dm-icon-num"><div class="dm-icon">🎙️</div><span class="dm-n">10</span></div><span class="dm-status live">Live</span></div>
+      <div class="dm-title">Indic Voice Lab</div>
+      <div class="dm-desc">Speak in Hindi, Telugu, Tamil or 8 other Indic languages — watch live speech-to-text transcription, then hear a synthesized voice reply. Built on India's highest-accuracy speech models, not English-first APIs adapted for Indian audio.</div>
+      <div class="dm-tags"><span class="dm-tag">Sarvam AI</span><span class="dm-tag">Saaras v3</span><span class="dm-tag">Bulbul v3</span><span class="dm-tag">11 Indic Languages</span></div>
+      <button class="dm-launch" onclick="openSarvam()">Launch Live Demo</button>
+    </div>
+    <div class="dm rv d5 c-violet locked">
+      <div class="dm-top"><div class="dm-icon-num"><div class="dm-icon">⚙️</div><span class="dm-n">05</span></div><span class="dm-status locked">Coming soon</span></div>
+      <div class="dm-title">Multi-Agent Orchestration</div>
+      <div class="dm-desc">End-to-end multi-agent workflow with orchestrator, guardrail, validator and responder agents working autonomously on enterprise tasks.</div>
+      <div class="dm-tags"><span class="dm-tag">LangGraph</span><span class="dm-tag">Multi-Agent</span><span class="dm-tag">Tool Use</span><span class="dm-tag">Memory</span><span class="dm-tag">Guardrails</span></div>
+      <a href="#contact" class="dm-cta">Request Demo</a>
+    </div>
+    <div class="dm rv d6 c-cyan locked">
+      <div class="dm-top"><div class="dm-icon-num"><div class="dm-icon">🛡️</div><span class="dm-n">06</span></div><span class="dm-status locked">Coming soon</span></div>
+      <div class="dm-title">MLOps &amp; Evaluation Studio</div>
+      <div class="dm-desc">State-of-the-art lifecycle demo with CI/CD, model versioning, tracing, evaluation scoring, and governance dashboards for production AI.</div>
+      <div class="dm-tags"><span class="dm-tag">MLOps</span><span class="dm-tag">Model Tracing</span><span class="dm-tag">Model Evaluation</span><span class="dm-tag">Monitoring</span></div>
+      <a href="#contact" class="dm-cta">Request Demo</a>
+    </div>
+    <div class="dm rv d7 c-rose locked">
+      <div class="dm-top"><div class="dm-icon-num"><div class="dm-icon">⚖️</div><span class="dm-n">07</span></div><span class="dm-status locked">Coming soon</span></div>
+      <div class="dm-title">Responsible AI Compliance</div>
+      <div class="dm-desc">Governance-focused demo for bias mitigation, explainability, and audit trails to meet enterprise AI safety and compliance requirements.</div>
+      <div class="dm-tags"><span class="dm-tag">Responsible AI</span><span class="dm-tag">Bias Mitigation</span><span class="dm-tag">Explainability</span><span class="dm-tag">Audit Trail</span></div>
+      <a href="#contact" class="dm-cta">Request Demo</a>
+    </div>
+    <div class="dm rv d8 c-amber locked">
+      <div class="dm-top"><div class="dm-icon-num"><div class="dm-icon">📡</div><span class="dm-n">08</span></div><span class="dm-status locked">Coming soon</span></div>
+      <div class="dm-title">Real-Time GenAI Monitoring</div>
+      <div class="dm-desc">Runtime monitoring demo with live latency SLA tracking, prediction drift alerts, and feedback loop integration for production-grade GenAI services.</div>
+      <div class="dm-tags"><span class="dm-tag">Monitoring</span><span class="dm-tag">Drift Detection</span><span class="dm-tag">SLA</span><span class="dm-tag">Feedback Loop</span></div>
+      <a href="#contact" class="dm-cta">Request Demo</a>
+    </div>
+    <div class="dm rv d9 c-emerald locked">
+      <div class="dm-top"><div class="dm-icon-num"><div class="dm-icon">🚀</div><span class="dm-n">09</span></div><span class="dm-status locked">Coming soon</span></div>
+      <div class="dm-title">Continuous Model Delivery</div>
+      <div class="dm-desc">End-to-end model delivery pipeline with automated retraining triggers, model versioning, and canary rollout for safe, scalable AI deployments.</div>
+      <div class="dm-tags"><span class="dm-tag">CI/CD</span><span class="dm-tag">Retraining</span><span class="dm-tag">Canary Rollout</span><span class="dm-tag">Versioning</span></div>
+      <a href="#contact" class="dm-cta">Request Demo</a>
+    </div>
   </div>
   <div style="text-align:center;margin-top:80px;"><div class="rv d9"><p style="color:rgba(242,237,230,.65);font-size:17px;margin-bottom:28px;font-weight:400;">See these systems in action. Discuss which fits your roadmap.</p><a href="#contact" class="btn btn-a">Schedule a Demo →</a></div></div>
 </section>
