@@ -437,7 +437,7 @@ footer:hover{border-top-color:rgba(255,107,53,.3);}
 .rv-r.in{opacity:1;transform:translateX(0);}
 .d1{transition-delay:.06s;}.d2{transition-delay:.13s;}.d3{transition-delay:.20s;}
 .d4{transition-delay:.27s;}.d5{transition-delay:.34s;}.d6{transition-delay:.41s;}
-.d7{transition-delay:.48s;}.d8{transition-delay:.55s;}.d9{transition-delay:.62s;}
+.d7{transition-delay:.48s;}.d8{transition-delay:.55s;}.d9{transition-delay:.62s;}.d10{transition-delay:.69s;}
 .pj,.dm,.ch{will-change:transform,box-shadow;}
 @media(prefers-reduced-motion:reduce){.pj:hover,.dm:hover,.ch:hover{transform:none;}}
 /* ── RESPONSIVE ── */
@@ -1015,6 +1015,72 @@ footer:hover{border-top-color:rgba(255,107,53,.3);}
 .mcp-latency-fill{height:100%;background:linear-gradient(90deg,#0ea5e9,#6366f1);width:0;transition:width .8s;}
 .mcp-latency-val{font-family:var(--mono);font-size:7.5px;color:#0369a1;font-weight:600;white-space:nowrap;}
 @media(max-width:900px){.mcp-body{grid-template-columns:1fr;}.mcp-registry,.mcp-protocol{display:none;}.mcp-modal{height:95vh;}}
+
+/* ══════════════════════════════════
+   INDIC VOICE LAB — Demo 10 (Sarvam STT + TTS)
+══════════════════════════════════ */
+.sv-overlay{position:fixed;inset:0;z-index:1700;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.65);backdrop-filter:blur(10px);opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s;}
+.sv-overlay.open{opacity:1;visibility:visible;}
+.sv-modal{width:100%;max-width:920px;height:88vh;background:#fff;border-radius:16px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,.2),0 0 0 1px rgba(0,0,0,.06);}
+.sv-header{padding:16px 24px;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.sv-header-left{display:flex;align-items:center;gap:12px;}
+.sv-header-icon{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#f97316,#ec4899);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.sv-header-title{font-family:var(--body);font-size:15px;font-weight:600;color:#111827;}
+.sv-header-meta{display:flex;align-items:center;gap:8px;margin-top:5px;flex-wrap:wrap;}
+.sv-badge{font-family:var(--mono);font-size:8px;letter-spacing:.12em;padding:2px 8px;border-radius:4px;text-transform:uppercase;}
+.sv-badge.model{background:#f0fdf4;border:1px solid #bbf7d0;color:#15803d;}
+.sv-badge.proto{background:#fff7ed;border:1px solid #fed7aa;color:#c2410c;}
+.sv-badge.live{background:#fef2f2;border:1px solid #fecaca;color:#dc2626;display:flex;align-items:center;gap:4px;}
+.sv-badge.live::before{content:'';width:5px;height:5px;border-radius:50%;background:#dc2626;animation:livePulse 1.5s infinite;}
+.sv-close{width:30px;height:30px;border:1px solid #e5e7eb;border-radius:7px;background:#fff;color:#6b7280;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;}
+.sv-close:hover{background:#f9fafb;color:#111827;}
+.sv-body{flex:1;overflow-y:auto;padding:22px 24px;display:flex;flex-direction:column;gap:18px;}
+
+.sv-section{border:1px solid #e5e7eb;border-radius:12px;padding:18px 20px;background:#fafafa;}
+.sv-section-title{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:#9ca3af;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.sv-section-title .sv-step-num{width:18px;height:18px;border-radius:50%;background:#111827;color:#fff;font-size:9px;display:flex;align-items:center;justify-content:center;font-weight:600;}
+
+.sv-lang-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;}
+.sv-lang-pill{font-family:var(--mono);font-size:10px;padding:5px 11px;border:1px solid #e5e7eb;border-radius:16px;color:#374151;cursor:pointer;transition:all .2s;background:#fff;}
+.sv-lang-pill:hover{border-color:#f97316;color:#c2410c;}
+.sv-lang-pill.active{background:#111827;border-color:#111827;color:#fff;}
+
+.sv-record-row{display:flex;align-items:center;gap:14px;}
+.sv-mic-btn{width:56px;height:56px;border-radius:50%;border:none;background:linear-gradient(135deg,#f97316,#ec4899);color:#fff;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;box-shadow:0 4px 14px rgba(249,115,22,.3);}
+.sv-mic-btn:hover{transform:scale(1.05);}
+.sv-mic-btn.recording{background:linear-gradient(135deg,#dc2626,#b91c1c);animation:micPulse 1.2s infinite;}
+@keyframes micPulse{0%,100%{box-shadow:0 0 0 0 rgba(220,38,38,.4);}50%{box-shadow:0 0 0 14px rgba(220,38,38,0);}}
+.sv-record-status{font-family:var(--mono);font-size:11px;color:#6b7280;flex:1;}
+.sv-record-status.recording{color:#dc2626;font-weight:600;}
+.sv-upload-link{font-family:var(--mono);font-size:10px;color:#9ca3af;text-decoration:underline;cursor:pointer;}
+.sv-upload-link:hover{color:#374151;}
+
+.sv-mode-row{display:flex;gap:6px;margin-top:14px;flex-wrap:wrap;}
+.sv-mode-pill{font-family:var(--mono);font-size:9px;padding:4px 10px;border:1px solid #e5e7eb;border-radius:6px;color:#6b7280;cursor:pointer;transition:all .2s;background:#fff;}
+.sv-mode-pill:hover{border-color:#f97316;}
+.sv-mode-pill.active{background:#fff7ed;border-color:#f97316;color:#c2410c;}
+
+.sv-transcript-box{margin-top:14px;padding:14px 16px;background:#fff;border:1px solid #e5e7eb;border-radius:10px;min-height:60px;font-family:var(--body);font-size:14px;color:#111827;line-height:1.7;}
+.sv-transcript-box.empty{color:#9ca3af;font-style:italic;font-size:12px;}
+.sv-transcript-meta{display:flex;gap:14px;margin-top:8px;flex-wrap:wrap;}
+.sv-meta-chip{font-family:var(--mono);font-size:9px;color:#6b7280;background:#f3f4f6;padding:3px 9px;border-radius:5px;}
+.sv-meta-chip.confidence{background:#f0fdf4;color:#15803d;}
+
+.sv-tts-input-row{display:flex;gap:8px;margin-top:12px;}
+.sv-tts-textarea{flex:1;background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:10px 13px;color:#111827;font-family:var(--body);font-size:13px;outline:none;resize:none;min-height:60px;transition:border-color .2s;}
+.sv-tts-textarea:focus{border-color:#f97316;}
+.sv-speaker-select{font-family:var(--mono);font-size:10px;padding:6px 10px;border:1px solid #e5e7eb;border-radius:8px;background:#fff;color:#374151;}
+.sv-tts-btn{background:#f97316;border:none;border-radius:10px;padding:10px 18px;color:#fff;font-family:var(--mono);font-size:10px;letter-spacing:.1em;cursor:pointer;transition:all .2s;white-space:nowrap;align-self:flex-start;}
+.sv-tts-btn:hover:not(:disabled){background:#ea580c;box-shadow:0 4px 12px rgba(249,115,22,.3);}
+.sv-tts-btn:disabled{opacity:.35;cursor:not-allowed;}
+
+.sv-audio-player{margin-top:14px;width:100%;}
+.sv-pipeline-note{font-family:var(--mono);font-size:9.5px;color:#9ca3af;line-height:1.6;margin-top:6px;}
+.sv-status-line{font-family:var(--mono);font-size:10px;color:#9ca3af;margin-top:8px;min-height:14px;}
+.sv-status-line.error{color:#dc2626;}
+.sv-status-line.success{color:#15803d;}
+.sv-counter{font-family:var(--mono);font-size:9px;color:#9ca3af;padding:10px 24px;border-top:1px solid #f3f4f6;flex-shrink:0;display:flex;justify-content:space-between;align-items:center;}
+@media(max-width:680px){.sv-modal{height:95vh;}.sv-body{padding:16px;}}
 </style>
 </head>
 <body>
@@ -1388,6 +1454,7 @@ footer:hover{border-top-color:rgba(255,107,53,.3);}
     <div class="dm rv d2"><div class="dm-n">DEMO / 02</div><div class="dm-title">RAG Pipeline Explorer</div><div class="dm-desc">Watch document retrieval, prompt augmentation, and LLM generation happen step by step — with real chunk scores, prompt builder, and model trace.</div><div class="dm-tags"><span class="dm-tag">RAG</span><span class="dm-tag">Retrieval</span><span class="dm-tag">Prompt Builder</span><span class="dm-tag">Model Tracing</span><span class="dm-tag">Live</span></div><button class="dm-launch" onclick="openRAG()">Launch Live Demo</button></div>
     <div class="dm rv d3"><div class="dm-n">DEMO / 03</div><div class="dm-title">NLP Classification Engine</div><div class="dm-desc">Multi-task NLP in a single inference call — simultaneous text classification, sentiment analysis, and named entity recognition with confidence scores.</div><div class="dm-tags"><span class="dm-tag">NLP</span><span class="dm-tag">Classification</span><span class="dm-tag">Sentiment</span><span class="dm-tag">NER</span><span class="dm-tag">Live</span></div><button class="dm-launch" onclick="openNLP()">Launch Live Demo</button></div>
     <div class="dm rv d4"><div class="dm-n">DEMO / 04</div><div class="dm-title">MCP Tool Integration Lab</div><div class="dm-desc">Watch a live AI agent discover tools via the MCP protocol, select the right one, negotiate the schema, and execute — all in a single autonomous loop with every protocol message exposed.</div><div class="dm-tags"><span class="dm-tag">MCP</span><span class="dm-tag">Tool Use</span><span class="dm-tag">Claude API</span><span class="dm-tag">Agentic</span><span class="dm-tag">Live</span></div><button class="dm-launch" onclick="openMCP()">Launch Live Demo</button></div>
+    <div class="dm rv d10"><div class="dm-n">DEMO / 10</div><div class="dm-title">Indic Voice Lab</div><div class="dm-desc">Speak in Hindi, Telugu, Tamil or 8 other Indic languages — watch live speech-to-text transcription, then hear a synthesized voice reply. Built on India's highest-accuracy speech models, not English-first APIs adapted for Indian audio.</div><div class="dm-tags"><span class="dm-tag">Sarvam AI</span><span class="dm-tag">Saaras v3</span><span class="dm-tag">Bulbul v3</span><span class="dm-tag">11 Indic Languages</span><span class="dm-tag">Live</span></div><button class="dm-launch" onclick="openSarvam()">Launch Live Demo</button></div>
     <div class="dm rv d5"><div class="dm-n">DEMO / 05</div><div class="dm-title">Multi-Agent Orchestration</div><div class="dm-desc">End-to-end multi-agent workflow with orchestrator, guardrail, validator and responder agents working autonomously on enterprise tasks.</div><div class="dm-tags"><span class="dm-tag">LangGraph</span><span class="dm-tag">Multi-Agent</span><span class="dm-tag">Tool Use</span><span class="dm-tag">Memory</span><span class="dm-tag">Guardrails</span></div><a href="#contact" class="dm-cta">Request Demo →</a></div>
     <div class="dm rv d6"><div class="dm-n">DEMO / 06</div><div class="dm-title">MLOps &amp; Evaluation Studio</div><div class="dm-desc">State-of-the-art lifecycle demo with CI/CD, model versioning, tracing, evaluation scoring, and governance dashboards for production AI.</div><div class="dm-tags"><span class="dm-tag">MLOps</span><span class="dm-tag">Model Tracing</span><span class="dm-tag">Model Evaluation</span><span class="dm-tag">Monitoring</span></div><a href="#contact" class="dm-cta">Request Demo →</a></div>
     <div class="dm rv d7"><div class="dm-n">DEMO / 07</div><div class="dm-title">Responsible AI Compliance</div><div class="dm-desc">Governance-focused demo for bias mitigation, explainability, and audit trails to meet enterprise AI safety and compliance requirements.</div><div class="dm-tags"><span class="dm-tag">Responsible AI</span><span class="dm-tag">Bias Mitigation</span><span class="dm-tag">Explainability</span><span class="dm-tag">Audit Trail</span></div><a href="#contact" class="dm-cta">Request Demo →</a></div>
@@ -2499,6 +2566,104 @@ document.addEventListener('DOMContentLoaded', function(){
   </div>
 </div>
 
+<!-- ═══════════ INDIC VOICE LAB — Demo 10 ═══════════ -->
+<div id="sv-modal" class="sv-overlay" aria-hidden="true">
+  <div class="sv-modal">
+    <div class="sv-header">
+      <div class="sv-header-left">
+        <div class="sv-header-icon">🎙️</div>
+        <div>
+          <div class="sv-header-title">Indic Voice Lab</div>
+          <div class="demo-model-info">Powered by <strong>Sarvam AI Saaras v3</strong> (STT) + <strong>Bulbul v3</strong> (TTS) · Trained on 1M+ hours of Indian speech · 11 languages</div>
+          <div class="sv-header-meta">
+            <span class="sv-badge proto">Indic Speech AI</span>
+            <span class="sv-badge model">Code-Mix Aware</span>
+            <span class="sv-badge live">LIVE</span>
+          </div>
+        </div>
+      </div>
+      <button class="sv-close" id="sv-close">×</button>
+    </div>
+    <div class="demo-desc-bar">
+      <div class="demo-desc-text">
+        This is a <strong>live speech pipeline</strong> — not a simulation. Record or upload audio in any of 11 Indic languages and watch it transcribed by <strong>Saaras v3</strong>, the model trained from the ground up on Indian speech rather than an English model adapted for Indian accents. Then type a reply and hear it synthesized by <strong>Bulbul v3</strong> in a natural Indic voice. This is the exact STT/TTS stack architecture GCCs in Hyderabad — fintech, healthcare, customer service — are screening for in 2026.
+      </div>
+    </div>
+    <div class="demo-objective">
+      <div class="demo-objective-label">🎯 Demo Objective</div>
+      <div class="demo-objective-text">Show a full speak → transcribe → synthesize voice loop across Indic languages, using models built for Indian speech rather than retrofitted English ASR</div>
+    </div>
+
+    <div class="sv-body">
+      <!-- STEP 1: Speech to Text -->
+      <div class="sv-section">
+        <div class="sv-section-title"><span class="sv-step-num">1</span>SPEECH → TEXT &nbsp;·&nbsp; Saaras v3</div>
+        <div class="sv-lang-row" id="sv-lang-row">
+          <button class="sv-lang-pill active" data-lang="unknown" onclick="setSvLang(this)">Auto-detect</button>
+          <button class="sv-lang-pill" data-lang="hi-IN" onclick="setSvLang(this)">Hindi</button>
+          <button class="sv-lang-pill" data-lang="te-IN" onclick="setSvLang(this)">Telugu</button>
+          <button class="sv-lang-pill" data-lang="ta-IN" onclick="setSvLang(this)">Tamil</button>
+          <button class="sv-lang-pill" data-lang="kn-IN" onclick="setSvLang(this)">Kannada</button>
+          <button class="sv-lang-pill" data-lang="bn-IN" onclick="setSvLang(this)">Bengali</button>
+          <button class="sv-lang-pill" data-lang="mr-IN" onclick="setSvLang(this)">Marathi</button>
+          <button class="sv-lang-pill" data-lang="gu-IN" onclick="setSvLang(this)">Gujarati</button>
+          <button class="sv-lang-pill" data-lang="en-IN" onclick="setSvLang(this)">English (IN)</button>
+        </div>
+        <div class="sv-record-row">
+          <button class="sv-mic-btn" id="sv-mic-btn" onclick="toggleSvRecording()">🎤</button>
+          <div class="sv-record-status" id="sv-record-status">Tap the mic and speak — or <span class="sv-upload-link" onclick="document.getElementById('sv-file-input').click()">upload an audio file</span></div>
+          <input type="file" id="sv-file-input" accept="audio/*" style="display:none" onchange="handleSvFileUpload(event)">
+        </div>
+        <div class="sv-mode-row" id="sv-mode-row">
+          <button class="sv-mode-pill active" data-mode="transcribe" onclick="setSvMode(this)">Transcribe</button>
+          <button class="sv-mode-pill" data-mode="translate" onclick="setSvMode(this)">Translate → English</button>
+          <button class="sv-mode-pill" data-mode="codemix" onclick="setSvMode(this)">Code-Mix</button>
+          <button class="sv-mode-pill" data-mode="translit" onclick="setSvMode(this)">Transliterate</button>
+        </div>
+        <div class="sv-transcript-box empty" id="sv-transcript-box">Transcript will appear here after you record or upload audio...</div>
+        <div class="sv-transcript-meta" id="sv-transcript-meta"></div>
+        <div class="sv-status-line" id="sv-stt-status"></div>
+      </div>
+
+      <!-- STEP 2: Text to Speech -->
+      <div class="sv-section">
+        <div class="sv-section-title"><span class="sv-step-num">2</span>TEXT → SPEECH &nbsp;·&nbsp; Bulbul v3</div>
+        <div class="sv-tts-input-row">
+          <textarea class="sv-tts-textarea" id="sv-tts-text" placeholder="Type a reply — e.g. नमस्ते, आपका दिन शुभ हो (or copy the transcript above)"></textarea>
+        </div>
+        <div class="sv-mode-row" style="align-items:center;">
+          <select class="sv-speaker-select" id="sv-tts-lang">
+            <option value="hi-IN">Hindi</option>
+            <option value="te-IN">Telugu</option>
+            <option value="ta-IN">Tamil</option>
+            <option value="kn-IN">Kannada</option>
+            <option value="bn-IN">Bengali</option>
+            <option value="mr-IN">Marathi</option>
+            <option value="gu-IN">Gujarati</option>
+            <option value="en-IN">English (IN)</option>
+          </select>
+          <select class="sv-speaker-select" id="sv-tts-speaker">
+            <option value="shubh">Shubh (default)</option>
+            <option value="priya">Priya</option>
+            <option value="rahul">Rahul</option>
+            <option value="ritu">Ritu</option>
+            <option value="kavya">Kavya</option>
+          </select>
+          <button class="sv-tts-btn" id="sv-tts-btn" onclick="generateSvSpeech()">Generate Speech →</button>
+        </div>
+        <audio class="sv-audio-player" id="sv-audio-player" controls style="display:none;"></audio>
+        <div class="sv-status-line" id="sv-tts-status"></div>
+        <div class="sv-pipeline-note">Real API calls to Sarvam AI via a Cloudflare Worker proxy — your key never touches the browser. Same pattern as the Groq-powered demos above.</div>
+      </div>
+    </div>
+
+    <div class="sv-counter">
+      <span id="sv-counter-text">5 calls remaining this session</span>
+      <span>Saaras v3 · Bulbul v3 · 11 languages</span>
+    </div>
+  </div>
+</div>
+
 <script>
 /* ═══════════════════════════════════════════════════════════
    MCP TOOL INTEGRATION LAB
@@ -3074,6 +3239,239 @@ function closeMCP() {
   var m = document.getElementById('mcp-modal');
   if (m) { m.classList.remove('open'); m.setAttribute('aria-hidden','true'); document.body.style.overflow=''; }
 }
+</script>
+
+<script>
+/* ═══════════════════════════════════════════════════════════
+   INDIC VOICE LAB — Demo 10
+   STT : Sarvam Saaras v3   via  /api/sarvam-stt  (Cloudflare Worker)
+   TTS : Sarvam Bulbul v3   via  /api/sarvam-tts  (Cloudflare Worker)
+   The Worker holds the real Sarvam API key server-side —
+   the browser never sees it, same pattern as the Groq proxy.
+═══════════════════════════════════════════════════════════ */
+
+var svMaxCalls   = 5;
+var svCallCount  = 0;
+var svBusy       = false;
+var svSelectedLang = 'unknown';
+var svSelectedMode = 'transcribe';
+var svMediaRecorder = null;
+var svAudioChunks    = [];
+var svRecording       = false;
+
+var SV_MODE_LABELS = {
+  transcribe: 'Standard transcription with proper formatting',
+  translate:  'Translated directly to English',
+  codemix:    'Code-mixed — English words stay in English, Indic words in native script',
+  translit:   'Romanized — Indic speech written in Latin script'
+};
+
+function svUpdateCounter() {
+  var remaining = svMaxCalls - svCallCount;
+  var el = document.getElementById('sv-counter-text');
+  if (el) el.textContent = remaining + ' call' + (remaining===1?'':'s') + ' remaining this session';
+}
+
+function svSetStatus(elId, msg, cls) {
+  var el = document.getElementById(elId);
+  if (!el) return;
+  el.textContent = msg;
+  el.className = 'sv-status-line' + (cls ? ' ' + cls : '');
+}
+
+function setSvLang(btn) {
+  document.querySelectorAll('#sv-lang-row .sv-lang-pill').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  svSelectedLang = btn.getAttribute('data-lang');
+}
+
+function setSvMode(btn) {
+  document.querySelectorAll('#sv-mode-row .sv-mode-pill').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  svSelectedMode = btn.getAttribute('data-mode');
+}
+
+/* ── Recording via MediaRecorder ── */
+async function toggleSvRecording() {
+  if (svBusy) return;
+  if (svRecording) {
+    if (svMediaRecorder && svMediaRecorder.state !== 'inactive') svMediaRecorder.stop();
+    return;
+  }
+  if (svCallCount >= svMaxCalls) {
+    svSetStatus('sv-stt-status', 'Session limit reached. Refresh to start a new session.', 'error');
+    return;
+  }
+
+  try {
+    var stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    svAudioChunks = [];
+    svMediaRecorder = new MediaRecorder(stream);
+
+    svMediaRecorder.ondataavailable = function(e) { if (e.data.size > 0) svAudioChunks.push(e.data); };
+    svMediaRecorder.onstop = function() {
+      stream.getTracks().forEach(function(t){ t.stop(); });
+      svRecording = false;
+      var micBtn = document.getElementById('sv-mic-btn');
+      micBtn.classList.remove('recording');
+      document.getElementById('sv-record-status').classList.remove('recording');
+      var blob = new Blob(svAudioChunks, { type: 'audio/webm' });
+      svRunSTT(blob);
+    };
+
+    svMediaRecorder.start();
+    svRecording = true;
+    document.getElementById('sv-mic-btn').classList.add('recording');
+    var statusEl = document.getElementById('sv-record-status');
+    statusEl.textContent = 'Recording... tap again to stop';
+    statusEl.classList.add('recording');
+  } catch (err) {
+    svSetStatus('sv-stt-status', 'Microphone access denied or unavailable: ' + err.message, 'error');
+  }
+}
+
+function handleSvFileUpload(event) {
+  if (svBusy) return;
+  if (svCallCount >= svMaxCalls) {
+    svSetStatus('sv-stt-status', 'Session limit reached. Refresh to start a new session.', 'error');
+    return;
+  }
+  var file = event.target.files[0];
+  if (!file) return;
+  if (file.size > 10 * 1024 * 1024) {
+    svSetStatus('sv-stt-status', 'File too large — 10MB max for this demo.', 'error');
+    return;
+  }
+  svRunSTT(file);
+  event.target.value = '';
+}
+
+/* ── STT call ── */
+async function svRunSTT(audioBlob) {
+  svBusy = true;
+  svCallCount++;
+  svUpdateCounter();
+
+  var box = document.getElementById('sv-transcript-box');
+  box.className = 'sv-transcript-box';
+  box.textContent = 'Transcribing...';
+  document.getElementById('sv-transcript-meta').innerHTML = '';
+  svSetStatus('sv-stt-status', 'Sending audio to Saaras v3...', '');
+
+  var form = new FormData();
+  form.append('file', audioBlob, 'recording.webm');
+  form.append('mode', svSelectedMode);
+  form.append('language_code', svSelectedLang);
+
+  try {
+    var res = await fetch('https://nageshch.com/api/sarvam-stt', { method: 'POST', body: form });
+    var data = await res.json();
+
+    if (!res.ok) {
+      box.className = 'sv-transcript-box empty';
+      box.textContent = 'Transcript will appear here after you record or upload audio...';
+      svSetStatus('sv-stt-status', data.error || ('Error ' + res.status), 'error');
+      svBusy = false;
+      return;
+    }
+
+    box.textContent = data.transcript || '(empty transcript — try speaking more clearly or closer to the mic)';
+
+    var metaEl = document.getElementById('sv-transcript-meta');
+    var chips = [];
+    chips.push('<span class="sv-meta-chip">mode: ' + svSelectedMode + '</span>');
+    if (data.language_code) chips.push('<span class="sv-meta-chip">detected: ' + data.language_code + '</span>');
+    if (data.language_probability != null) {
+      chips.push('<span class="sv-meta-chip confidence">confidence: ' + Math.round(data.language_probability*100) + '%</span>');
+    }
+    metaEl.innerHTML = chips.join('');
+
+    svSetStatus('sv-stt-status', SV_MODE_LABELS[svSelectedMode] || 'Transcription complete', 'success');
+
+    /* Pre-fill the TTS box so the person can immediately hear it back */
+    var ttsBox = document.getElementById('sv-tts-text');
+    if (ttsBox && !ttsBox.value && data.transcript) ttsBox.value = data.transcript;
+
+  } catch (err) {
+    box.className = 'sv-transcript-box empty';
+    box.textContent = 'Transcript will appear here after you record or upload audio...';
+    svSetStatus('sv-stt-status', 'Request failed: ' + err.message, 'error');
+  }
+  svBusy = false;
+}
+
+/* ── TTS call ── */
+async function generateSvSpeech() {
+  if (svBusy) return;
+  if (svCallCount >= svMaxCalls) {
+    svSetStatus('sv-tts-status', 'Session limit reached. Refresh to start a new session.', 'error');
+    return;
+  }
+
+  var text = (document.getElementById('sv-tts-text').value || '').trim();
+  if (!text) { svSetStatus('sv-tts-status', 'Type some text first.', 'error'); return; }
+  if (text.length > 2500) { svSetStatus('sv-tts-status', 'Text too long — 2500 character max.', 'error'); return; }
+
+  var lang    = document.getElementById('sv-tts-lang').value;
+  var speaker = document.getElementById('sv-tts-speaker').value;
+
+  svBusy = true;
+  svCallCount++;
+  svUpdateCounter();
+  document.getElementById('sv-tts-btn').disabled = true;
+  svSetStatus('sv-tts-status', 'Generating speech with Bulbul v3...', '');
+
+  try {
+    var res = await fetch('https://nageshch.com/api/sarvam-tts', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text: text, target_language_code: lang, speaker: speaker })
+    });
+    var data = await res.json();
+
+    if (!res.ok || !data.audio_base64) {
+      svSetStatus('sv-tts-status', data.error || 'Speech generation failed', 'error');
+      document.getElementById('sv-tts-btn').disabled = false;
+      svBusy = false;
+      return;
+    }
+
+    var audioEl = document.getElementById('sv-audio-player');
+    audioEl.src = 'data:audio/wav;base64,' + data.audio_base64;
+    audioEl.style.display = 'block';
+    audioEl.play().catch(function(){ /* autoplay may be blocked — user can press play */ });
+
+    svSetStatus('sv-tts-status', 'Speech generated — ' + speaker + ' voice, ' + lang, 'success');
+  } catch (err) {
+    svSetStatus('sv-tts-status', 'Request failed: ' + err.message, 'error');
+  }
+  document.getElementById('sv-tts-btn').disabled = false;
+  svBusy = false;
+}
+
+/* ── Modal open/close ── */
+function openSarvam() {
+  var m = document.getElementById('sv-modal');
+  if (m) { m.classList.add('open'); m.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden'; }
+}
+
+function closeSarvam() {
+  var m = document.getElementById('sv-modal');
+  if (m) {
+    if (svRecording && svMediaRecorder && svMediaRecorder.state !== 'inactive') svMediaRecorder.stop();
+    m.classList.remove('open'); m.setAttribute('aria-hidden','true'); document.body.style.overflow='';
+  }
+}
+
+document.addEventListener('DOMContentLoaded', function(){
+  var closeBtn = document.getElementById('sv-close');
+  if (closeBtn) closeBtn.addEventListener('click', closeSarvam);
+  var modal = document.getElementById('sv-modal');
+  if (modal) modal.addEventListener('click', function(e){ if (e.target === modal) closeSarvam(); });
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && modal && modal.classList.contains('open')) closeSarvam();
+  });
+});
 </script>
 </body>
 </html>
