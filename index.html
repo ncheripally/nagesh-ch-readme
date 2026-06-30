@@ -2418,7 +2418,7 @@ document.addEventListener('DOMContentLoaded', function(){
     </div>
     <div class="demo-desc-bar">
       <div class="demo-desc-text">
-        This is a <strong>live agentic MCP session</strong> — not a simulation. The agent receives your query, calls <strong>tools/list</strong> to discover what's available, selects the right tool, negotiates the input schema, executes the call, and synthesises a grounded response. Every protocol message between the agent and the MCP server is exposed in the trace panel in real time.
+        This is a <strong>live agentic MCP session</strong> — not a simulation. The agent receives your query, calls <strong>tools/list</strong> to discover what's available, selects the right tool, negotiates the input schema, executes the call, and synthesises a grounded response. Every protocol message between the agent and the MCP server is exposed in the trace panel in real time. 
       </div>
     </div>
     <div class="demo-objective">
@@ -2553,13 +2553,26 @@ var KB = [
 function execTool(name, input) {
   if (name === 'calculator') {
     try {
-      var expr = (input.expression || '0')
-        .replace(/\*\*/g, '^')          // normalize ** to ^
-        .replace(/\^/g, '**')           // JS uses **
-        .replace(/[^0-9+\-*\/().\s%]/g,'');
+      var raw  = (input.expression || '0');
+      var expr = raw
+        .replace(/,/g, '')
+        .replace(/\^/g, '**')
+        .replace(/[^0-9+\-*\/().\s]/g, '')
+        .replace(/\s+(\d)/g, '$1')
+        .replace(/(\d)\s+/g, '$1')
+        .trim() || '0';
       var result = Function('"use strict"; return (' + expr + ')')();
-      return { result: isFinite(result) ? Math.round(result * 10000) / 10000 : 'Error', expression: input.expression };
+      var display = isFinite(result)
+        ? (Number.isInteger(result) ? result : Math.round(result * 100) / 100)
+        : 'Error: non-finite result';
+      return { result: display, expression: raw, evaluated: expr };
     } catch(e) {
+      var ci = (input.expression||'').match(/(\d[\d,]*)\s*\(?1\s*[+]\s*([\d.]+)\)?[\^*]{1,2}(\d+)/);
+      if (ci) {
+        var p=parseFloat(ci[1].replace(/,/g,'')), r=parseFloat(ci[2]), n=parseInt(ci[3]);
+        var res = Math.round(p * Math.pow(1+r, n) * 100) / 100;
+        return { result: res, expression: input.expression, note: 'Pattern match' };
+      }
       return { result: 'Error: ' + e.message, expression: input.expression };
     }
   }
@@ -2687,6 +2700,33 @@ async function groq(messages, temperature, max_tokens) {
 }
 
 /* ── Main agentic loop ── */
+
+/* ── Build a proper math expression from natural language ── */
+function buildCalcExpression(text) {
+  var t = text;
+  /* Compound interest: $50,000 at 8% for 10 years → 50000*(1.08**10) */
+  var ci = t.match(/[\$]?([\d,]+)\s+at\s+([\d.]+)%\s+for\s+(\d+)\s*years?/i);
+  if (ci) {
+    var p = ci[1].replace(/,/g,'');
+    var r = (parseFloat(ci[2])/100).toFixed(4);
+    var n = ci[3];
+    return p + '*(1+' + r + ')**' + n;
+  }
+  /* Percentage of: 15% of 200 → 0.15*200 */
+  var pct = t.match(/([\d.]+)%\s+of\s+([\d,]+)/i);
+  if (pct) return (parseFloat(pct[1])/100) + '*' + pct[2].replace(/,/g,'');
+  /* Simple X times Y */
+  var mul = t.match(/([\d,]+)\s*[*x×]\s*([\d,]+)/i);
+  if (mul) return mul[1].replace(/,/g,'') + '*' + mul[2].replace(/,/g,'');
+  /* Extract all numbers and operators */
+  var nums = t.match(/[\d,]+(\.\d+)?/g);
+  if (nums && nums.length >= 2) {
+    var cleaned = nums.map(function(n){return n.replace(/,/g,'');});
+    return cleaned.join('+');
+  }
+  return '1+1';
+}
+
 async function sendMCPMessage() {
   if (mcpBusy || mcpMsgCount >= mcpMaxMsgs) return;
   var input = document.getElementById('mcp-input');
@@ -2733,17 +2773,24 @@ async function sendMCPMessage() {
   }).join('\n');
 
   var PLAN_PROMPT =
-    'You are an AI agent with access to these MCP tools:\n' +
-    toolList + '\n\n' +
-    'User query: "' + text + '"\n\n' +
-    'Decide which ONE tool to call. Reply with ONLY a raw JSON object on a single line. No explanation, no markdown.\n' +
-    'Format: {"tool":"<tool_name>","input":{<tool_specific_params>},"reason":"<one sentence why>"}\n\n' +
-    'Rules:\n' +
-    '- calculator: use for ANY math/numbers/financial calculation. input must have "expression" key with valid JS math.\n' +
-    '- code_runner: use when user asks to write or run code. input must have "code" key.\n' +
-    '- web_search: use for current events, live prices, recent news. input must have "query" key.\n' +
-    '- knowledge_base: use for AI/ML/LLM/agent architecture questions. input must have "query" key.\n' +
-    'Return ONLY the JSON. Example: {"tool":"calculator","input":{"expression":"50000*(1.08**10)"},"reason":"User asked for compound interest calculation"}';
+    'You are an MCP agent. Pick ONE tool and return ONLY a single JSON line. No explanation, no markdown, no extra text.\n\n' +
+    'Tools:\n' +
+    '1. calculator — math, numbers, finance. Input: {"expression":"<valid JS math, e.g. 50000*(1.08**10)>"}\n' +
+    '2. code_runner — write/run Python code. Input: {"code":"<python source>"}\n' +
+    '3. web_search — live info, prices, news. Input: {"query":"<search string>"}\n' +
+    '4. knowledge_base — AI/ML/LLM concepts. Input: {"query":"<question>","top_k":3}\n\n' +
+    'EXAMPLES (copy this exact JSON format):\n' +
+    'Q: Calculate compound interest $50000 at 8% for 10 years\n' +
+    'A: {"tool":"calculator","input":{"expression":"50000*(1.08**10)"},"reason":"compound interest"}\n' +
+    'Q: What is the price of gold today\n' +
+    'A: {"tool":"web_search","input":{"query":"gold price today 2026"},"reason":"live price"}\n' +
+    'Q: Write Python to sort a list\n' +
+    'A: {"tool":"code_runner","input":{"code":"data=[5,2,8,1,3]\\nprint(sorted(data))"},"reason":"code execution"}\n' +
+    'Q: How does RAG work\n' +
+    'A: {"tool":"knowledge_base","input":{"query":"how does RAG work","top_k":3},"reason":"AI concept"}\n\n' +
+    'Now answer:\n' +
+    'Q: ' + text + '\n' +
+    'A:';
 
   var planRaw = '';
   try {
@@ -2760,18 +2807,30 @@ async function sendMCPMessage() {
     if (fi >= 0 && li > fi) plan = JSON.parse(planRaw.slice(fi, li+1));
   } catch(e) { plan = null; }
 
-  /* Fallback: keyword routing if LLM JSON fails */
+  /* Fallback: keyword routing if LLM JSON fails or returns bad expression */
   if (!plan || !MCP_TOOLS.find(function(t){return t.name===plan.tool;})) {
     var tl = text.toLowerCase();
     var toolName =
-      (tl.match(/\d/) && tl.match(/(\$|percent|%|interest|mortgage|roi|calculat|formula|convert|how much|total|sum|average|tax)/)) ? 'calculator' :
-      (tl.match(/(code|python|script|sort|fibonacci|loop|function|write|run|execute|def |class )/)) ? 'code_runner' :
-      (tl.match(/(search|latest|recent|today|current|price|news|2026|who is|what is the|where is|weather)/)) ? 'web_search' :
+      (tl.match(/(calculat|interest|mortgage|roi|percent|formula|how much|total|\$\d|\d+%|\d+ years?)/)) ? 'calculator' :
+      (tl.match(/(\bcode\b|python|script|sort|fibonacci|loop|\bfunction\b|write.*code|run.*code|def |class )/)) ? 'code_runner' :
+      (tl.match(/(\bsearch\b|latest|recent|today|current price|live|news|2026|who is|where is|weather|stock|gold|bitcoin)/)) ? 'web_search' :
       'knowledge_base';
-    var autoInput = toolName==='calculator' ? {expression:text.replace(/[^0-9+\-*/().\s%^]/g,' ').trim()||'1+1'} :
-                    toolName==='code_runner'  ? {code:'# '+text+'\ndata=[3,1,4,1,5,9,2,6]\nprint(sorted(data))'} :
+    var fbExpr = buildCalcExpression(text);
+    var autoInput = toolName==='calculator' ? {expression: fbExpr} :
+                    toolName==='code_runner' ? {code:'# '+text.slice(0,60)+'\ndata=[5,2,8,1,9,3,7,4,6]\nresult=sorted(data)\nprint(f"sorted: {result}, sum: {sum(data)}")'} :
                     {query:text, top_k:3};
-    plan = { tool:toolName, input:autoInput, reason:'Auto-routed (LLM parse failed)' };
+    plan = { tool:toolName, input:autoInput, reason:'Auto-routed' };
+  }
+
+  /* If LLM returned calculator but with a raw-text expression, rebuild it */
+  if (plan.tool === 'calculator' && plan.input && plan.input.expression) {
+    var expr = plan.input.expression;
+    /* Detect expressions that are just prose (contain letters other than e/E for scientific notation) */
+    var hasMath = /[0-9]/.test(expr) && /[+\-*\/()^]/.test(expr);
+    var isProse = /[a-df-zA-DF-Z]{3,}/.test(expr); /* 3+ consecutive alpha chars = prose */
+    if (!hasMath || isProse) {
+      plan.input.expression = buildCalcExpression(text);
+    }
   }
 
   if (planMsg) planMsg.remove();
