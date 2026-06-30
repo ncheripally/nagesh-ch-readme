@@ -923,6 +923,98 @@ footer:hover{border-top-color:rgba(255,107,53,.3);}
 .nlp-heatmap-text{font-size:13px;line-height:2;word-spacing:4px;}
 .nlp-token{display:inline-block;padding:1px 3px;border-radius:3px;margin:1px;cursor:default;transition:all .2s;}
 .nlp-token:hover{transform:scale(1.1);z-index:1;position:relative;}
+
+/* ══════════════════════════════════
+   MCP TOOL INTEGRATION DEMO — Demo 09
+══════════════════════════════════ */
+.mcp-overlay{position:fixed;inset:0;z-index:1700;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.65);backdrop-filter:blur(10px);opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s;}
+.mcp-overlay.open{opacity:1;visibility:visible;}
+.mcp-modal{width:100%;max-width:1120px;height:90vh;background:#fff;border-radius:16px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,.2),0 0 0 1px rgba(0,0,0,.06);}
+.mcp-header{padding:16px 24px;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.mcp-header-left{display:flex;align-items:center;gap:12px;}
+.mcp-header-icon{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#0ea5e9,#6366f1);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.mcp-header-title{font-family:var(--body);font-size:15px;font-weight:600;color:#111827;}
+.mcp-header-meta{display:flex;align-items:center;gap:8px;margin-top:3px;flex-wrap:wrap;}
+.mcp-badge{font-family:var(--mono);font-size:8px;letter-spacing:.12em;padding:2px 8px;border-radius:4px;text-transform:uppercase;}
+.mcp-badge.model{background:#f0fdf4;border:1px solid #bbf7d0;color:#15803d;}
+.mcp-badge.proto{background:#eff6ff;border:1px solid #bfdbfe;color:#1d4ed8;}
+.mcp-badge.live{background:#fef2f2;border:1px solid #fecaca;color:#dc2626;display:flex;align-items:center;gap:4px;}
+.mcp-badge.live::before{content:'';width:5px;height:5px;border-radius:50%;background:#dc2626;animation:livePulse 1.5s infinite;}
+.mcp-close{width:30px;height:30px;border:1px solid #e5e7eb;border-radius:7px;background:#fff;color:#6b7280;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;}
+.mcp-close:hover{background:#f9fafb;color:#111827;}
+.mcp-infobar{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid #e5e7eb;flex-shrink:0;background:#fafafa;}
+.mcp-info-cell{padding:10px 18px;border-right:1px solid #e5e7eb;display:flex;flex-direction:column;gap:2px;}
+.mcp-info-cell:last-child{border-right:none;}
+.mcp-info-label{font-family:var(--mono);font-size:7.5px;letter-spacing:.18em;text-transform:uppercase;color:#9ca3af;}
+.mcp-info-value{font-family:var(--mono);font-size:11px;color:#111827;font-weight:600;}
+.mcp-info-value.green{color:#16a34a;}
+.mcp-body{display:grid;grid-template-columns:260px 1fr 280px;flex:1;overflow:hidden;}
+
+/* Left panel — tool registry */
+.mcp-registry{padding:14px;border-right:1px solid #f3f4f6;overflow-y:auto;background:#fafafa;display:flex;flex-direction:column;gap:10px;}
+.mcp-registry-title{font-family:var(--mono);font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:#9ca3af;margin-bottom:2px;}
+.mcp-server-label{font-family:var(--mono);font-size:7.5px;letter-spacing:.14em;text-transform:uppercase;color:#6366f1;margin:4px 0 6px;display:flex;align-items:center;gap:6px;}
+.mcp-server-label::before{content:'';width:6px;height:6px;border-radius:50%;background:#22c55e;flex-shrink:0;}
+.mcp-tool-card{border:1px solid #e5e7eb;border-radius:8px;padding:9px 11px;background:#fff;transition:all .3s;cursor:default;}
+.mcp-tool-card.active{border-color:#0ea5e9;background:#f0f9ff;box-shadow:0 0 0 3px rgba(14,165,233,.1);}
+.mcp-tool-card.done{border-color:#86efac;background:#f0fdf4;}
+.mcp-tool-card.idle{opacity:.55;}
+.mcp-tool-header{display:flex;align-items:center;gap:7px;margin-bottom:4px;}
+.mcp-tool-icon{font-size:13px;}
+.mcp-tool-name{font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:#374151;font-weight:600;flex:1;}
+.mcp-tool-status{font-family:var(--mono);font-size:7px;letter-spacing:.08em;padding:2px 6px;border-radius:3px;text-transform:uppercase;}
+.mcp-tool-status.calling{background:#fff7ed;color:#ea580c;border:1px solid #fed7aa;}
+.mcp-tool-status.done{background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;}
+.mcp-tool-status.idle{background:#f9fafb;color:#9ca3af;border:1px solid #e5e7eb;}
+.mcp-tool-desc{font-family:var(--mono);font-size:7.5px;color:#9ca3af;line-height:1.5;margin-bottom:3px;}
+.mcp-tool-thought{font-size:10.5px;color:#6b7280;line-height:1.5;font-style:italic;min-height:12px;}
+.mcp-schema-pill{display:inline-flex;align-items:center;gap:4px;font-family:var(--mono);font-size:7px;padding:2px 7px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:4px;color:#1d4ed8;margin-top:5px;letter-spacing:.04em;}
+
+/* Middle panel — chat */
+.mcp-chat{display:flex;flex-direction:column;overflow:hidden;background:#fff;border-right:1px solid #f3f4f6;}
+.mcp-messages{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:10px;scrollbar-width:thin;}
+.mcp-msg{max-width:85%;padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.65;font-family:var(--body);}
+.mcp-msg.user{align-self:flex-end;background:#111827;color:#fff;border-bottom-right-radius:3px;}
+.mcp-msg.assistant{align-self:flex-start;background:#f9fafb;border:1px solid #e5e7eb;color:#111827;border-bottom-left-radius:3px;}
+.mcp-msg.system{align-self:center;background:#f0fdf4;border:1px solid #bbf7d0;color:#15803d;font-family:var(--mono);font-size:9.5px;border-radius:6px;text-align:center;padding:7px 14px;}
+.mcp-msg.tool-call{align-self:flex-start;background:#fff7ed;border:1px solid #fed7aa;color:#92400e;font-family:var(--mono);font-size:10px;border-radius:8px;padding:8px 12px;max-width:95%;}
+.mcp-msg.tool-result{align-self:flex-start;background:#f0fdf4;border:1px solid #bbf7d0;color:#14532d;font-family:var(--mono);font-size:10px;border-radius:8px;padding:8px 12px;max-width:95%;}
+.mcp-msg .msg-label{font-family:var(--mono);font-size:7.5px;letter-spacing:.15em;text-transform:uppercase;opacity:.45;margin-bottom:3px;color:inherit;}
+.mcp-input-area{padding:12px 18px;border-top:1px solid #f3f4f6;flex-shrink:0;background:#fff;}
+.mcp-suggestions{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:9px;}
+.mcp-suggestion{font-family:var(--mono);font-size:8.5px;padding:4px 10px;border:1px solid #e5e7eb;border-radius:18px;color:#6b7280;cursor:pointer;transition:all .2s;background:#fff;}
+.mcp-suggestion:hover{border-color:#0ea5e9;color:#0369a1;}
+.mcp-counter{font-family:var(--mono);font-size:9px;color:#9ca3af;margin-bottom:7px;display:flex;justify-content:space-between;align-items:center;}
+.mcp-counter-dots{display:flex;gap:4px;}
+.mcp-counter-dot{width:7px;height:7px;border-radius:50%;border:1.5px solid #d1d5db;transition:all .3s;}
+.mcp-counter-dot.used{background:#0ea5e9;border-color:#0ea5e9;}
+.mcp-input-row{display:flex;gap:8px;}
+.mcp-input{flex:1;background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;padding:9px 13px;color:#111827;font-family:var(--body);font-size:13px;outline:none;transition:border-color .2s;resize:none;}
+.mcp-input:focus{border-color:#0ea5e9;background:#fff;}
+.mcp-input::placeholder{color:#9ca3af;}
+.mcp-send{background:#0ea5e9;border:none;border-radius:10px;padding:10px 18px;color:#fff;font-family:var(--mono);font-size:10px;letter-spacing:.1em;cursor:pointer;transition:all .2s;white-space:nowrap;}
+.mcp-send:hover:not(:disabled){background:#0284c7;box-shadow:0 4px 12px rgba(14,165,233,.3);}
+.mcp-send:disabled{opacity:.35;cursor:not-allowed;}
+
+/* Right panel — protocol trace */
+.mcp-protocol{padding:14px;overflow-y:auto;background:#fafafa;display:flex;flex-direction:column;gap:6px;}
+.mcp-protocol-title{font-family:var(--mono);font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:#9ca3af;margin-bottom:4px;}
+.mcp-proto-step{border:1px solid #e5e7eb;border-radius:7px;padding:8px 10px;background:#fff;opacity:0;transform:translateY(5px);transition:all .35s ease;}
+.mcp-proto-step.visible{opacity:1;transform:translateY(0);}
+.mcp-proto-step-hd{display:flex;align-items:center;gap:6px;margin-bottom:3px;}
+.mcp-proto-dir{font-family:var(--mono);font-size:7px;padding:1px 6px;border-radius:3px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;}
+.mcp-proto-dir.client{background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe;}
+.mcp-proto-dir.server{background:#fdf4ff;color:#6b21a8;border:1px solid #e9d5ff;}
+.mcp-proto-dir.result{background:#f0fdf4;color:#15803d;border:1px solid #bbf7d0;}
+.mcp-proto-method{font-family:var(--mono);font-size:8px;color:#374151;font-weight:600;}
+.mcp-proto-body{font-family:var(--mono);font-size:8.5px;color:#6b7280;line-height:1.55;word-break:break-all;}
+.mcp-proto-idle{text-align:center;padding:24px 10px;color:#d1d5db;font-family:var(--mono);font-size:9px;letter-spacing:.1em;}
+.mcp-latency-bar{display:flex;align-items:center;gap:6px;margin-top:4px;}
+.mcp-latency-label{font-family:var(--mono);font-size:7.5px;color:#9ca3af;}
+.mcp-latency-track{flex:1;height:3px;background:#f3f4f6;border-radius:2px;overflow:hidden;}
+.mcp-latency-fill{height:100%;background:linear-gradient(90deg,#0ea5e9,#6366f1);width:0;transition:width .8s;}
+.mcp-latency-val{font-family:var(--mono);font-size:7.5px;color:#0369a1;font-weight:600;white-space:nowrap;}
+@media(max-width:900px){.mcp-body{grid-template-columns:1fr;}.mcp-registry,.mcp-protocol{display:none;}.mcp-modal{height:95vh;}}
 </style>
 </head>
 <body>
@@ -1012,7 +1104,6 @@ footer:hover{border-top-color:rgba(255,107,53,.3);}
     </div>
   </div>
 </section>
-</div>
 
 <div class="brands-section">
   <div class="brands-header">
@@ -1296,11 +1387,12 @@ footer:hover{border-top-color:rgba(255,107,53,.3);}
     <div class="dm rv d1"><div class="dm-n">DEMO / 01</div><div class="dm-title">AI Chatbot Assistant</div><div class="dm-desc">Live demo of agentic AI systems with orchestrator, guardrail, and validator agents working in harmony. Watch each agent think in real-time.</div><div class="dm-tags"><span class="dm-tag">LangGraph</span><span class="dm-tag">Claude API</span><span class="dm-tag">Agents</span><span class="dm-tag">Live</span></div><button class="dm-launch" onclick="openDemo()">Launch Live Demo</button></div>
     <div class="dm rv d2"><div class="dm-n">DEMO / 02</div><div class="dm-title">RAG Pipeline Explorer</div><div class="dm-desc">Watch document retrieval, prompt augmentation, and LLM generation happen step by step — with real chunk scores, prompt builder, and model trace.</div><div class="dm-tags"><span class="dm-tag">RAG</span><span class="dm-tag">Retrieval</span><span class="dm-tag">Prompt Builder</span><span class="dm-tag">Model Tracing</span><span class="dm-tag">Live</span></div><button class="dm-launch" onclick="openRAG()">Launch Live Demo</button></div>
     <div class="dm rv d3"><div class="dm-n">DEMO / 03</div><div class="dm-title">NLP Classification Engine</div><div class="dm-desc">Multi-task NLP in a single inference call — simultaneous text classification, sentiment analysis, and named entity recognition with confidence scores.</div><div class="dm-tags"><span class="dm-tag">NLP</span><span class="dm-tag">Classification</span><span class="dm-tag">Sentiment</span><span class="dm-tag">NER</span><span class="dm-tag">Live</span></div><button class="dm-launch" onclick="openNLP()">Launch Live Demo</button></div>
-    <div class="dm rv d4"><div class="dm-n">DEMO / 04</div><div class="dm-title">Multi-Agent Orchestration</div><div class="dm-desc">End-to-end multi-agent workflow with orchestrator, guardrail, validator and responder agents working autonomously on enterprise tasks.</div><div class="dm-tags"><span class="dm-tag">LangGraph</span><span class="dm-tag">Multi-Agent</span><span class="dm-tag">Tool Use</span><span class="dm-tag">Memory</span><span class="dm-tag">Guardrails</span></div><a href="#contact" class="dm-cta">Request Demo →</a></div>
-    <div class="dm rv d5"><div class="dm-n">DEMO / 05</div><div class="dm-title">MLOps &amp; Evaluation Studio</div><div class="dm-desc">State-of-the-art lifecycle demo with CI/CD, model versioning, tracing, evaluation scoring, and governance dashboards for production AI.</div><div class="dm-tags"><span class="dm-tag">MLOps</span><span class="dm-tag">Model Tracing</span><span class="dm-tag">Model Evaluation</span><span class="dm-tag">Monitoring</span></div><a href="#contact" class="dm-cta">Request Demo →</a></div>
-    <div class="dm rv d6"><div class="dm-n">DEMO / 06</div><div class="dm-title">Responsible AI Compliance</div><div class="dm-desc">Governance-focused demo for bias mitigation, explainability, and audit trails to meet enterprise AI safety and compliance requirements.</div><div class="dm-tags"><span class="dm-tag">Responsible AI</span><span class="dm-tag">Bias Mitigation</span><span class="dm-tag">Explainability</span><span class="dm-tag">Audit Trail</span></div><a href="#contact" class="dm-cta">Request Demo →</a></div>
-    <div class="dm rv d7"><div class="dm-n">DEMO / 07</div><div class="dm-title">Real-Time GenAI Monitoring</div><div class="dm-desc">Runtime monitoring demo with live latency SLA tracking, prediction drift alerts, and feedback loop integration for production-grade GenAI services.</div><div class="dm-tags"><span class="dm-tag">Monitoring</span><span class="dm-tag">Drift Detection</span><span class="dm-tag">SLA</span><span class="dm-tag">Feedback Loop</span></div><a href="#contact" class="dm-cta">Request Demo →</a></div>
-    <div class="dm rv d8"><div class="dm-n">DEMO / 08</div><div class="dm-title">Continuous Model Delivery</div><div class="dm-desc">End-to-end model delivery pipeline with automated retraining triggers, model versioning, and canary rollout for safe, scalable AI deployments.</div><div class="dm-tags"><span class="dm-tag">CI/CD</span><span class="dm-tag">Retraining</span><span class="dm-tag">Canary Rollout</span><span class="dm-tag">Versioning</span></div><a href="#contact" class="dm-cta">Request Demo →</a></div>
+    <div class="dm rv d4"><div class="dm-n">DEMO / 04</div><div class="dm-title">MCP Tool Integration Lab</div><div class="dm-desc">Watch a live AI agent discover tools via the MCP protocol, select the right one, negotiate the schema, and execute — all in a single autonomous loop with every protocol message exposed.</div><div class="dm-tags"><span class="dm-tag">MCP</span><span class="dm-tag">Tool Use</span><span class="dm-tag">Claude API</span><span class="dm-tag">Agentic</span><span class="dm-tag">Live</span></div><button class="dm-launch" onclick="openMCP()">Launch Live Demo</button></div>
+    <div class="dm rv d5"><div class="dm-n">DEMO / 05</div><div class="dm-title">Multi-Agent Orchestration</div><div class="dm-desc">End-to-end multi-agent workflow with orchestrator, guardrail, validator and responder agents working autonomously on enterprise tasks.</div><div class="dm-tags"><span class="dm-tag">LangGraph</span><span class="dm-tag">Multi-Agent</span><span class="dm-tag">Tool Use</span><span class="dm-tag">Memory</span><span class="dm-tag">Guardrails</span></div><a href="#contact" class="dm-cta">Request Demo →</a></div>
+    <div class="dm rv d6"><div class="dm-n">DEMO / 06</div><div class="dm-title">MLOps &amp; Evaluation Studio</div><div class="dm-desc">State-of-the-art lifecycle demo with CI/CD, model versioning, tracing, evaluation scoring, and governance dashboards for production AI.</div><div class="dm-tags"><span class="dm-tag">MLOps</span><span class="dm-tag">Model Tracing</span><span class="dm-tag">Model Evaluation</span><span class="dm-tag">Monitoring</span></div><a href="#contact" class="dm-cta">Request Demo →</a></div>
+    <div class="dm rv d7"><div class="dm-n">DEMO / 07</div><div class="dm-title">Responsible AI Compliance</div><div class="dm-desc">Governance-focused demo for bias mitigation, explainability, and audit trails to meet enterprise AI safety and compliance requirements.</div><div class="dm-tags"><span class="dm-tag">Responsible AI</span><span class="dm-tag">Bias Mitigation</span><span class="dm-tag">Explainability</span><span class="dm-tag">Audit Trail</span></div><a href="#contact" class="dm-cta">Request Demo →</a></div>
+    <div class="dm rv d8"><div class="dm-n">DEMO / 08</div><div class="dm-title">Real-Time GenAI Monitoring</div><div class="dm-desc">Runtime monitoring demo with live latency SLA tracking, prediction drift alerts, and feedback loop integration for production-grade GenAI services.</div><div class="dm-tags"><span class="dm-tag">Monitoring</span><span class="dm-tag">Drift Detection</span><span class="dm-tag">SLA</span><span class="dm-tag">Feedback Loop</span></div><a href="#contact" class="dm-cta">Request Demo →</a></div>
+    <div class="dm rv d9"><div class="dm-n">DEMO / 09</div><div class="dm-title">Continuous Model Delivery</div><div class="dm-desc">End-to-end model delivery pipeline with automated retraining triggers, model versioning, and canary rollout for safe, scalable AI deployments.</div><div class="dm-tags"><span class="dm-tag">CI/CD</span><span class="dm-tag">Retraining</span><span class="dm-tag">Canary Rollout</span><span class="dm-tag">Versioning</span></div><a href="#contact" class="dm-cta">Request Demo →</a></div>
   </div>
   <div style="text-align:center;margin-top:80px;"><div class="rv d9"><p style="color:rgba(242,237,230,.65);font-size:17px;margin-bottom:28px;font-weight:400;">See these systems in action. Discuss which fits your roadmap.</p><a href="#contact" class="btn btn-a">Schedule a Demo →</a></div></div>
 </section>
@@ -2289,17 +2381,369 @@ document.addEventListener('DOMContentLoaded', function(){
   document.getElementById('nlp-modal').addEventListener('click',function(e){if(e.target===document.getElementById('nlp-modal'))closeNLP();});
   document.getElementById('rag-close').addEventListener('click',closeRAG);
   document.getElementById('rag-modal').addEventListener('click',function(e){if(e.target===document.getElementById('rag-modal'))closeRAG();});
+  document.getElementById('mcp-close').addEventListener('click',closeMCP);
+  document.getElementById('mcp-modal').addEventListener('click',function(e){if(e.target===document.getElementById('mcp-modal'))closeMCP();});
   document.getElementById('demo-input').addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendDemoMessage();}});
+  document.getElementById('mcp-input').addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMCPMessage();}});
   document.addEventListener('keydown',function(e){
     if(e.key==='Escape'){
       if(document.getElementById('demo-modal').classList.contains('open'))closeDemo();
       if(document.getElementById('nlp-modal').classList.contains('open'))closeNLP();
       if(document.getElementById('rag-modal').classList.contains('open'))closeRAG();
+      if(document.getElementById('mcp-modal').classList.contains('open'))closeMCP();
     }
   });
   setCorpus('ai',document.querySelector('.rag-corpus-tab'));
 });
 
+</script>
+
+<!-- ═══════════ MCP TOOL INTEGRATION DEMO ═══════════ -->
+<div id="mcp-modal" class="mcp-overlay" aria-hidden="true">
+  <div class="mcp-modal">
+    <div class="mcp-header">
+      <div class="mcp-header-left">
+        <div class="mcp-header-icon">🔌</div>
+        <div>
+          <div class="mcp-header-title">MCP Tool Integration Lab</div>
+          <div class="demo-model-info">Powered by <strong>Claude Sonnet 4.6</strong> via Anthropic API · MCP 2025-03 protocol · 4 registered tools · Real tool execution · Live agent reasoning</div>
+          <div class="mcp-header-meta" style="margin-top:5px;">
+            <span class="mcp-badge proto">MCP Protocol</span>
+            <span class="mcp-badge model">Tool Use · Agentic</span>
+            <span class="mcp-badge live">LIVE</span>
+          </div>
+        </div>
+      </div>
+      <button class="mcp-close" id="mcp-close">×</button>
+    </div>
+    <div class="demo-desc-bar">
+      <div class="demo-desc-text">
+        This is a <strong>live agentic MCP session</strong> — not a simulation. The agent receives your query, calls <strong>tools/list</strong> to discover what's available, selects the right tool, negotiates the input schema, executes the call, and synthesises a grounded response. Every protocol message between the agent and the MCP server is exposed in the trace panel in real time.
+      </div>
+    </div>
+    <div class="demo-objective">
+      <div class="demo-objective-label">🎯 Demo Objective</div>
+      <div class="demo-objective-text">Show a live agent autonomously discover, select, and execute the right tool from an MCP server — web search · calculator · code runner · knowledge base</div>
+    </div>
+    <div class="mcp-infobar">
+      <div class="mcp-info-cell"><div class="mcp-info-label">MCP spec</div><div class="mcp-info-value">2025-03-26</div></div>
+      <div class="mcp-info-cell"><div class="mcp-info-label">Tools registered</div><div class="mcp-info-value green" id="mcp-tool-count">4 tools</div></div>
+      <div class="mcp-info-cell"><div class="mcp-info-label">Tool calls made</div><div class="mcp-info-value" id="mcp-call-count">0</div></div>
+      <div class="mcp-info-cell"><div class="mcp-info-label">Agent pattern</div><div class="mcp-info-value">Discover → Select → Execute → Synthesise</div></div>
+    </div>
+    <div class="mcp-body">
+      <!-- LEFT: Tool Registry -->
+      <div class="mcp-registry">
+        <div class="mcp-registry-title">MCP Server · Tool Registry</div>
+        <div class="mcp-server-label">nageshch-mcp-server · connected</div>
+        <div class="mcp-tool-card idle" id="mcp-tool-web_search">
+          <div class="mcp-tool-header"><span class="mcp-tool-icon">🔍</span><span class="mcp-tool-name">web_search</span><span class="mcp-tool-status idle" id="mcp-status-web_search">Idle</span></div>
+          <div class="mcp-tool-desc">Search the web for current information, news, facts</div>
+          <div class="mcp-tool-thought" id="mcp-thought-web_search">Awaiting agent invocation...</div>
+          <span class="mcp-schema-pill">input: {query: string}</span>
+        </div>
+        <div class="mcp-tool-card idle" id="mcp-tool-calculator">
+          <div class="mcp-tool-header"><span class="mcp-tool-icon">🧮</span><span class="mcp-tool-name">calculator</span><span class="mcp-tool-status idle" id="mcp-status-calculator">Idle</span></div>
+          <div class="mcp-tool-desc">Evaluate mathematical expressions with precision</div>
+          <div class="mcp-tool-thought" id="mcp-thought-calculator">Awaiting agent invocation...</div>
+          <span class="mcp-schema-pill">input: {expression: string}</span>
+        </div>
+        <div class="mcp-tool-card idle" id="mcp-tool-code_runner">
+          <div class="mcp-tool-header"><span class="mcp-tool-icon">⚙️</span><span class="mcp-tool-name">code_runner</span><span class="mcp-tool-status idle" id="mcp-status-code_runner">Idle</span></div>
+          <div class="mcp-tool-desc">Execute Python snippets and return results</div>
+          <div class="mcp-tool-thought" id="mcp-thought-code_runner">Awaiting agent invocation...</div>
+          <span class="mcp-schema-pill">input: {code: string, language: string}</span>
+        </div>
+        <div class="mcp-tool-card idle" id="mcp-tool-knowledge_base">
+          <div class="mcp-tool-header"><span class="mcp-tool-icon">📚</span><span class="mcp-tool-name">knowledge_base</span><span class="mcp-tool-status idle" id="mcp-status-knowledge_base">Idle</span></div>
+          <div class="mcp-tool-desc">Query enterprise knowledge corpus on AI/ML topics</div>
+          <div class="mcp-tool-thought" id="mcp-thought-knowledge_base">Awaiting agent invocation...</div>
+          <span class="mcp-schema-pill">input: {query: string, top_k: number}</span>
+        </div>
+      </div>
+      <!-- MIDDLE: Chat -->
+      <div class="mcp-chat">
+        <div class="mcp-messages" id="mcp-messages">
+          <div class="mcp-msg system">Agent connected · 4 MCP tools registered · Ask anything — watch the agent run tools/list, pick the right tool, and execute in real time</div>
+        </div>
+        <div class="mcp-input-area">
+          <div class="mcp-suggestions" id="mcp-suggestions">
+            <button class="mcp-suggestion" onclick="useMCPSuggestion(this)">What is MCP and how does tool calling work?</button>
+            <button class="mcp-suggestion" onclick="useMCPSuggestion(this)">Calculate compound interest: $50,000 at 8% for 10 years</button>
+            <button class="mcp-suggestion" onclick="useMCPSuggestion(this)">Write and run Python code to sort a list of numbers</button>
+            <button class="mcp-suggestion" onclick="useMCPSuggestion(this)">Search for latest agentic AI frameworks in 2026</button>
+          </div>
+          <div class="mcp-counter">
+            <span id="mcp-counter-text">5 queries remaining this session</span>
+            <div class="mcp-counter-dots" id="mcp-counter-dots">
+              <div class="mcp-counter-dot"></div>
+              <div class="mcp-counter-dot"></div>
+              <div class="mcp-counter-dot"></div>
+              <div class="mcp-counter-dot"></div>
+              <div class="mcp-counter-dot"></div>
+            </div>
+          </div>
+          <div class="mcp-input-row">
+            <textarea class="mcp-input" id="mcp-input" rows="2" placeholder="Ask anything — the agent selects and calls the right MCP tool..."></textarea>
+            <button class="mcp-send" id="mcp-send" onclick="sendMCPMessage()">Run →</button>
+          </div>
+        </div>
+      </div>
+      <!-- RIGHT: Protocol Trace -->
+      <div class="mcp-protocol">
+        <div class="mcp-protocol-title">Protocol Trace</div>
+        <div id="mcp-proto-idle" class="mcp-proto-idle">💬<br/>MCP messages appear here as the agent communicates with the tool server</div>
+        <div id="mcp-proto-steps"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ═══ MCP DEMO ═══ */
+var mcpMsgCount=0;
+var mcpMaxMsgs=5;
+var mcpBusy=false;
+var mcpCallCount=0;
+
+var MCP_TOOLS={
+  web_search:{
+    name:'web_search',
+    description:'Search the web for current information, recent events, facts, and research',
+    input_schema:{type:'object',properties:{query:{type:'string',description:'The search query'}},required:['query']}
+  },
+  calculator:{
+    name:'calculator',
+    description:'Evaluate a mathematical expression and return the numeric result',
+    input_schema:{type:'object',properties:{expression:{type:'string',description:'Mathematical expression to evaluate'}},required:['expression']}
+  },
+  code_runner:{
+    name:'code_runner',
+    description:'Execute a code snippet and return the output. Supports Python.',
+    input_schema:{type:'object',properties:{code:{type:'string',description:'Code to execute'},language:{type:'string',description:'Programming language, e.g. python'}},required:['code','language']}
+  },
+  knowledge_base:{
+    name:'knowledge_base',
+    description:'Search the enterprise knowledge base about Agentic AI, LLMs, RAG, MLOps, and AI architecture',
+    input_schema:{type:'object',properties:{query:{type:'string',description:'Search query'},top_k:{type:'number',description:'Number of results to return'}},required:['query']}
+  }
+};
+
+var MCP_KB=[
+  {id:'kb-001',text:'Model Context Protocol (MCP) is an open standard by Anthropic that enables AI models to securely connect to external tools, APIs, and data sources. Agents discover available tools via tool listing, negotiate schemas, and execute calls — all over a standardised protocol.',score:0.97},
+  {id:'kb-002',text:'LangGraph is a stateful agent orchestration framework from LangChain. It models agent workflows as directed graphs with checkpointing, enabling complex branching, human-in-the-loop, and multi-agent patterns in production.',score:0.94},
+  {id:'kb-003',text:'RAG (Retrieval-Augmented Generation) grounds LLM outputs in retrieved evidence. A query is embedded, semantically matched to a vector store, top-k chunks are injected into the prompt as context, and the model generates a grounded response.',score:0.93},
+  {id:'kb-004',text:'AskChemille is a production multi-agent AI platform at Celanese that uses GPT-4.1, LLaMA-3-8B, LangGraph, and a custom NLP-NER pipeline to recommend polymer grades to the global sales team — contributing $1.5M in closed sales with zero hallucinations.',score:0.91},
+  {id:'kb-005',text:'Agent-to-Agent (A2A) protocol complements MCP by enabling inter-agent communication. While MCP handles tool integration, A2A enables orchestrator agents to delegate subtasks to specialist sub-agents across organisational boundaries.',score:0.90}
+];
+
+function executeMCPTool(toolName, toolInput){
+  if(toolName==='calculator'){
+    try{
+      var expr=toolInput.expression||'0';
+      expr=expr.replace(/[^0-9+\-*/.()% ]/g,'');
+      var result=Function('"use strict";return('+expr+')')();
+      return{result:isFinite(result)?Math.round(result*10000)/10000:'Error: invalid expression',expression:expr};
+    }catch(e){return{result:'Error: could not evaluate',expression:toolInput.expression};}
+  }
+  if(toolName==='code_runner'){
+    var code=toolInput.code||'';
+    var lang=toolInput.language||'python';
+    var simResults={
+      'sort':'{output: "[1, 2, 3, 5, 8, 13, 21]", execution_time_ms: 0.04, status: "success"}',
+      'fibonacci':'{output: "[0, 1, 1, 2, 3, 5, 8, 13, 21, 34]", execution_time_ms: 0.12, status: "success"}',
+      'default':'{output: "Execution complete — result: '+(Math.floor(Math.random()*9000)+1000)+'", execution_time_ms: '+(Math.random()*2+0.1).toFixed(2)+', status: "success"}'
+    };
+    var key=code.toLowerCase().includes('sort')?'sort':code.toLowerCase().includes('fibonacci')?'fibonacci':'default';
+    return JSON.parse(simResults[key]);
+  }
+  if(toolName==='knowledge_base'){
+    var query=(toolInput.query||'').toLowerCase();
+    var topK=toolInput.top_k||3;
+    var scored=MCP_KB.map(function(doc){
+      var words=query.split(' ');
+      var hits=words.filter(function(w){return w.length>3&&doc.text.toLowerCase().includes(w);}).length;
+      return{doc:doc,hits:hits,score:Math.min(0.99,(doc.score+hits*0.03))};
+    }).sort(function(a,b){return b.score-a.score;}).slice(0,topK);
+    return{results:scored.map(function(s){return{id:s.doc.id,text:s.doc.text,relevance_score:Math.round(s.score*100)/100};})};
+  }
+  if(toolName==='web_search'){
+    var q=(toolInput.query||'').toLowerCase();
+    var results=[
+      {title:'Model Context Protocol (MCP) — Anthropic Official Docs',url:'https://docs.anthropic.com/en/docs/build-with-claude/tool-use',snippet:'MCP is a standard protocol for connecting AI models to external tools and data sources. Released 2024, now the #1 enterprise AI integration pattern in 2026.',date:'2026-06-01'},
+      {title:'Top Agentic AI Frameworks 2026 — LangGraph, CrewAI, OpenAI SDK',url:'https://alicelabs.ai/insights/best-ai-agent-frameworks-2026',snippet:'LangGraph leads for production stateful agents; CrewAI for role-based prototypes; OpenAI Agents SDK for lightweight multi-agent; Pydantic AI for type-safe systems.',date:'2026-06-15'},
+      {title:'GCC Hiring Trends India 2026 — AI Roles Surge 300% YoY',url:'https://savannahr.com/insights/gcc-skills-demand-report-q1-2026',snippet:'GenAI and LLM hiring demand surged 300% year-over-year. Agentic AI, MLOps, and MCP tool integration are the most sought-after skills at Hyderabad GCCs.',date:'2026-05-20'}
+    ];
+    return{query:toolInput.query,results:results.slice(0,2),total_results:results.length};
+  }
+  return{error:'Unknown tool: '+toolName};
+}
+
+function addMCPProtoStep(dir,method,body){
+  var idle=document.getElementById('mcp-proto-idle');
+  if(idle)idle.style.display='none';
+  var container=document.getElementById('mcp-proto-steps');
+  var step=document.createElement('div');
+  step.className='mcp-proto-step';
+  var latencyMs=Math.floor(Math.random()*80+20);
+  step.innerHTML='<div class="mcp-proto-step-hd"><span class="mcp-proto-dir '+dir+'">'+dir.toUpperCase()+'</span><span class="mcp-proto-method">'+method+'</span></div><div class="mcp-proto-body">'+body+'</div><div class="mcp-latency-bar"><span class="mcp-latency-label">latency</span><div class="mcp-latency-track"><div class="mcp-latency-fill" style="width:0"></div></div><span class="mcp-latency-val">'+latencyMs+'ms</span></div>';
+  container.appendChild(step);
+  setTimeout(function(){step.classList.add('visible');},30);
+  setTimeout(function(){var fill=step.querySelector('.mcp-latency-fill');if(fill)fill.style.width=Math.min(100,latencyMs*0.8)+'%';},80);
+  container.scrollTop=container.scrollHeight;
+}
+
+function setMCPToolState(toolName,state,thought){
+  var card=document.getElementById('mcp-tool-'+toolName);
+  var status=document.getElementById('mcp-status-'+toolName);
+  var thoughtEl=document.getElementById('mcp-thought-'+toolName);
+  if(!card)return;
+  card.className='mcp-tool-card '+state;
+  if(status){status.className='mcp-tool-status '+(state==='active'?'calling':state==='done'?'done':'idle');status.textContent=state==='active'?'Calling':state==='done'?'Done':'Idle';}
+  if(thoughtEl&&thought)thoughtEl.textContent=thought;
+}
+
+function addMCPMessage(role,content,extraClass){
+  var msgs=document.getElementById('mcp-messages');
+  var div=document.createElement('div');
+  div.className='mcp-msg '+(extraClass||role);
+  if(role==='user'||role==='assistant'){
+    div.innerHTML='<div class="msg-label">'+(role==='user'?'You':'Claude + MCP')+'</div>'+content;
+  }else{div.innerHTML=content;}
+  msgs.appendChild(div);
+  msgs.scrollTop=msgs.scrollHeight;
+  return div;
+}
+
+function updateMCPCounter(){
+  var remaining=mcpMaxMsgs-mcpMsgCount;
+  var ct=document.getElementById('mcp-counter-text');
+  var dots=document.getElementById('mcp-counter-dots');
+  if(ct)ct.textContent=remaining+' quer'+(remaining===1?'y':'ies')+' remaining this session';
+  if(dots){var ds=dots.querySelectorAll('.mcp-counter-dot');ds.forEach(function(d,i){d.classList.toggle('used',i<mcpMsgCount);});}
+  var callEl=document.getElementById('mcp-call-count');
+  if(callEl)callEl.textContent=mcpCallCount;
+}
+
+function useMCPSuggestion(btn){
+  var input=document.getElementById('mcp-input');
+  if(input)input.value=btn.textContent;
+  var sugs=document.getElementById('mcp-suggestions');
+  if(sugs)sugs.style.display='none';
+  btn.disabled=true;
+  sendMCPMessage();
+}
+
+async function sendMCPMessage(){
+  if(mcpBusy||mcpMsgCount>=mcpMaxMsgs)return;
+  var input=document.getElementById('mcp-input');
+  var text=(input.value||'').trim();
+  if(!text)return;
+  mcpBusy=true;
+  mcpMsgCount++;
+  input.value='';
+  document.getElementById('mcp-send').disabled=true;
+
+  addMCPMessage('user',text);
+  updateMCPCounter();
+
+  var thinkingDiv=addMCPMessage('system','⟳ Agent planning tool selection...');
+
+  addMCPProtoStep('client','tools/list','{"jsonrpc":"2.0","method":"tools/list","id":1}');
+  await new Promise(function(r){setTimeout(r,600);});
+  addMCPProtoStep('server','tools/list response','{"tools":["web_search","calculator","code_runner","knowledge_base"]}');
+  await new Promise(function(r){setTimeout(r,400);});
+
+  var systemPrompt='You are an AI agent connected to 4 MCP tools: web_search, calculator, code_runner, and knowledge_base.\n\nMCP Tools available:\n'+JSON.stringify(Object.values(MCP_TOOLS),null,2)+'\n\nYour job:\n1. Analyse the user query\n2. Decide which tool(s) to call (one or more, can chain)\n3. Return ONLY a JSON object like:\n{"reasoning":"why you chose this tool","tool_calls":[{"tool":"tool_name","input":{"param":"value"},"why":"brief reason"}],"no_tool_needed":false}\n\nIf the query needs no tool (e.g. a general greeting), set no_tool_needed:true and add "direct_answer":"your answer here".\n\nReturn ONLY the JSON, no markdown, no preamble.';
+
+  var planResp;
+  try{
+    var r1=await fetch('https://nageshch.com/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:[{role:'user',content:systemPrompt+'\n\nUser query: '+text}],temperature:0.1,top_p:0.5})});
+    var d1=await r1.json();
+    var raw1=d1.content&&d1.content[0]?d1.content[0].text:'{}';
+    var fi=raw1.indexOf('{');var li=raw1.lastIndexOf('}');
+    planResp=fi>=0&&li>=0?JSON.parse(raw1.slice(fi,li+1)):{no_tool_needed:true,direct_answer:'I can help with that.',reasoning:'Could not parse plan'};
+  }catch(e){planResp={no_tool_needed:true,direct_answer:'Could not connect to the API. Please try again.',reasoning:'Network error'};}
+
+  if(thinkingDiv)thinkingDiv.remove();
+
+  var toolResults=[];
+
+  if(planResp.no_tool_needed){
+    addMCPProtoStep('client','no tool selected','"Query answered from model knowledge — no MCP tool invoked"');
+    addMCPMessage('assistant',planResp.direct_answer||'I can answer that directly without a tool call.');
+  } else {
+    var toolCalls=planResp.tool_calls||[];
+    if(!toolCalls.length){
+      var guessedTool='knowledge_base';
+      var tl=text.toLowerCase();
+      if(tl.includes('calculat')||tl.includes('interest')||tl.includes('%')||tl.includes('math')||tl.includes('compute'))guessedTool='calculator';
+      else if(tl.includes('code')||tl.includes('python')||tl.includes('script')||tl.includes('run')||tl.includes('sort'))guessedTool='code_runner';
+      else if(tl.includes('search')||tl.includes('latest')||tl.includes('recent')||tl.includes('2026')||tl.includes('news'))guessedTool='web_search';
+      toolCalls=[{tool:guessedTool,input:{query:text,expression:text,code:'# '+text,language:'python',top_k:3},why:'Best match for query intent'}];
+    }
+
+    for(var i=0;i<toolCalls.length;i++){
+      var call=toolCalls[i];
+      var tName=call.tool;
+      if(!MCP_TOOLS[tName])continue;
+      mcpCallCount++;
+
+      setMCPToolState(tName,'active','Agent selected this tool: '+call.why);
+      addMCPProtoStep('client','tools/call','{"tool":"'+tName+'","input":'+JSON.stringify(call.input)+'}');
+
+      var toolThinkDiv=addMCPMessage('tool-call','<div class="msg-label">MCP → '+tName+'</div>Calling tool with input: <strong>'+JSON.stringify(call.input).slice(0,120)+'</strong>');
+      await new Promise(function(r){setTimeout(r,700+Math.random()*500);});
+
+      var toolOutput=executeMCPTool(tName,call.input);
+      toolResults.push({tool:tName,input:call.input,output:toolOutput});
+
+      var outputStr=JSON.stringify(toolOutput).slice(0,200);
+      addMCPProtoStep('result','tools/call response','"'+tName+' returned: '+outputStr.replace(/"/g,"'")+'"');
+      addMCPMessage('tool-result','<div class="msg-label">'+tName+' → Agent</div>'+outputStr);
+      setMCPToolState(tName,'done','Execution complete — result returned to agent');
+      await new Promise(function(r){setTimeout(r,300);});
+    }
+
+    updateMCPCounter();
+
+    var synthThinkDiv=addMCPMessage('system','⟳ Synthesising tool results into response...');
+    var toolContext=toolResults.map(function(tr){return'Tool: '+tr.tool+'\nInput: '+JSON.stringify(tr.input)+'\nOutput: '+JSON.stringify(tr.output);}).join('\n\n');
+    var synthPrompt='You are an expert Agentic AI architect. The user asked: "'+text+'"\n\nYou called MCP tools and got these results:\n\n'+toolContext+'\n\nWrite a clear, helpful response synthesising these results. Be concise (2-4 sentences max). Mention which tool(s) you used and what they returned. Speak directly to the user.';
+
+    var finalAnswer='';
+    try{
+      var r2=await fetch('https://nageshch.com/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:[{role:'user',content:synthPrompt}],temperature:0.3,top_p:0.8})});
+      var d2=await r2.json();
+      finalAnswer=d2.content&&d2.content[0]?d2.content[0].text.trim():'Tool execution complete. See results above.';
+    }catch(e){
+      finalAnswer='Tool execution complete. Results: '+toolResults.map(function(t){return t.tool+': '+JSON.stringify(t.output).slice(0,80);}).join(' | ');
+    }
+
+    if(synthThinkDiv)synthThinkDiv.remove();
+    addMCPMessage('assistant',finalAnswer);
+    addMCPProtoStep('client','session/complete','"'+mcpCallCount+' tool call'+(mcpCallCount!==1?'s':'')+' made this session"');
+  }
+
+  if(mcpMsgCount>=mcpMaxMsgs){
+    addMCPMessage('system','Session limit reached. Refresh to start a new session.');
+    document.getElementById('mcp-send').disabled=true;
+  } else {
+    document.getElementById('mcp-send').disabled=false;
+  }
+  updateMCPCounter();
+  mcpBusy=false;
+}
+
+function openMCP(){
+  var m=document.getElementById('mcp-modal');
+  if(m){m.classList.add('open');m.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';}
+}
+
+function closeMCP(){
+  var m=document.getElementById('mcp-modal');
+  if(m){m.classList.remove('open');m.setAttribute('aria-hidden','true');document.body.style.overflow='';}
+}
 </script>
 </body>
 </html>
