@@ -2,9 +2,18 @@ name = "nageshch-claude-proxy"
 main = "worker.js"
 compatibility_date = "2024-01-01"
 
-# Do NOT put your API key here — add via CLI:
+# Secrets — add via CLI, never commit these:
 # wrangler secret put GROQ_API_KEY
+# wrangler secret put SARVAM_API_KEY
 
 [[routes]]
 pattern = "nageshch.com/api/chat"
+zone_name = "nageshch.com"
+
+[[routes]]
+pattern = "nageshch.com/api/sarvam-stt"
+zone_name = "nageshch.com"
+
+[[routes]]
+pattern = "nageshch.com/api/sarvam-tts"
 zone_name = "nageshch.com"
